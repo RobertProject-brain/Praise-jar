@@ -397,6 +397,8 @@ legend{font-size:13px;font-weight:600;color:var(--ink-2);padding:0;margin-bottom
 .map-note{margin:8px 2px 0;font-size:12px;color:var(--ink-3)}
 .map-note:empty{display:none}
 .leaflet-container{font-family:var(--font-ui)!important;background:var(--sheet-2)!important}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) brightness(.9) contrast(.85) saturate(.55)}}
+:root[data-theme="dark"] .leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) brightness(.9) contrast(.85) saturate(.55)}
 .leaflet-control-attribution{font-size:9.5px!important;background:color-mix(in srgb,var(--sheet) 75%,transparent)!important;color:var(--ink-3)!important}
 .leaflet-control-attribution a{color:var(--ink-2)!important}
 .leaflet-tooltip{font-family:var(--font-ui);font-size:12px;border-radius:8px}
@@ -410,7 +412,10 @@ legend{font-size:13px;font-weight:600;color:var(--ink-2);padding:0;margin-bottom
 @keyframes beacon{0%{box-shadow:0 0 0 0 rgba(35,80,62,.5)}100%{box-shadow:0 0 0 16px rgba(35,80,62,0)}}
 @keyframes drop-pin{from{transform:translateY(-24px) rotate(-45deg);opacity:0}to{transform:rotate(-45deg);opacity:1}}
 .places{display:grid;gap:8px;margin-top:12px}
-.place-card{appearance:none;width:100%;text-align:left;border:1px solid var(--rule);background:var(--sheet);border-radius:14px;padding:10px 12px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;cursor:pointer}
+.place-card{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:stretch;border:1px solid var(--rule);background:var(--sheet);border-radius:14px;overflow:hidden}
+.pc-main{appearance:none;border:0;background:none;width:100%;text-align:left;padding:10px 12px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;cursor:pointer;min-width:0;color:inherit}
+.pc-main:active{background:var(--sheet-2)}
+.pc-edit{appearance:none;border:0;border-left:1px solid var(--rule);background:none;width:46px;display:grid;place-items:center;color:var(--ink-3);cursor:pointer}
 .place-card .dot{width:16px;height:16px;border-radius:50%;background:radial-gradient(circle at 34% 30%,rgba(255,255,255,.9) 0 10%,transparent 42%),var(--c)}
 .place-card b{display:block;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .place-card small{display:block;font-size:12px;color:var(--ink-3)}
@@ -434,6 +439,30 @@ legend{font-size:13px;font-weight:600;color:var(--ink-2);padding:0;margin-bottom
 .pl-res b{display:block;font-size:14px;color:var(--ink)}
 .pick-map{position:relative;z-index:0;height:clamp(220px,38vh,330px);border-radius:14px;overflow:hidden;border:1px solid var(--rule);background:var(--sheet-2)}
 .chip.add{border-style:dashed;color:var(--board-text)}
+
+/* ---- schedules ---- */
+.today{display:flex;align-items:center;gap:10px;padding:9px 9px 9px 12px;border-radius:16px;background:var(--sheet);border:1px solid var(--rule);box-shadow:var(--shadow);font-size:13.5px;animation:rise .5s var(--ease-out) both}
+.today.due{border-color:color-mix(in srgb,var(--stamp) 55%,var(--rule));background:color-mix(in srgb,var(--stamp) 6%,var(--sheet))}
+.today.done{opacity:.85}
+.today-ic{flex:none;font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:999px;background:var(--board);color:var(--board-ink)}
+.today.due .today-ic{background:var(--stamp);color:#fff}
+.today-t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink-2)}
+.today-t b{color:var(--ink);font-variant-numeric:tabular-nums}
+.today-btn{flex:none;border:0;border-radius:999px;padding:8px 13px;font-size:13px;font-weight:700;background:var(--board);color:var(--board-ink);cursor:pointer}
+.today.due .today-btn{background:var(--stamp);color:#fff;animation:nudge-btn 2.4s ease-in-out infinite}
+@keyframes nudge-btn{0%,70%,100%{transform:none}78%{transform:scale(1.06)}86%{transform:scale(.98)}}
+.sched-list{display:grid;gap:8px}
+.sched-card{appearance:none;width:100%;text-align:left;border:1px solid var(--rule);background:var(--sheet);border-radius:14px;padding:10px 12px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;cursor:pointer}
+.sched-card .dot{width:16px;height:16px;border-radius:50%;background:radial-gradient(circle at 34% 30%,rgba(255,255,255,.9) 0 10%,transparent 42%),var(--c)}
+.sched-card b{display:block;font-size:14px;font-variant-numeric:tabular-nums}
+.sched-card small{display:block;font-size:12px;color:var(--ink-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sched-card .wk-days{display:flex;gap:3px}
+.sched-card .wk-days i{font-style:normal;font-size:11px;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;background:var(--meter-track);color:var(--ink-3)}
+.sched-card .wk-days i.on{background:var(--board);color:var(--board-ink);font-weight:700}
+.chips.days .chip{min-width:42px;justify-content:center;text-align:center}
+@media (max-width:440px){.sched-card .wk-days{display:none}}
+.steps{margin:0;padding-left:20px;display:grid;gap:6px;font-size:14px;color:var(--ink-2)}
+.steps b{color:var(--ink)}
 
 /* ---- motion ---- */
 @keyframes fade{from{opacity:0}to{opacity:1}}
@@ -490,6 +519,7 @@ legend{font-size:13px;font-weight:600;color:var(--ink-2);padding:0;margin-bottom
   <div class="banner" id="modeBanner" hidden></div>
 
   <section class="hero" aria-label="실습 시간 현황">
+    <div class="today" id="todayBanner" hidden></div>
     <div class="hero-nums" id="heroNums">
       <div>
         <p class="eyebrow">지금까지 채운 실습 시간</p>
@@ -525,6 +555,12 @@ legend{font-size:13px;font-weight:600;color:var(--ink-2);padding:0;margin-bottom
       <button class="link-btn" type="button" id="btnDemo">예시로 먼저 둘러보기</button>
     </form>
     <p class="loading-note" id="loadingNote">구슬병을 여는 중이에요…</p>
+  </section>
+
+  <section class="block" id="schedBlock" aria-labelledby="schedH">
+    <div class="block-h"><h2 id="schedH">수업 일정</h2><p id="schedSub"></p></div>
+    <div class="sched-list" id="schedList"></div>
+    <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:10px"><button class="btn-ghost" id="btnAddSched" type="button">+ 수업 일정 등록</button><button class="link-btn" id="btnCal" type="button">아이폰 캘린더에 알림 넣기</button></div>
   </section>
 
   <section class="block" id="paceBlock" aria-labelledby="paceH">
@@ -693,6 +729,37 @@ legend{font-size:13px;font-weight:600;color:var(--ink-2);padding:0;margin-bottom
       <button class="btn-primary" type="submit">숨겨 두기</button>
     </div>
   </form>
+</div>
+
+<div class="sheet" id="sheetSched" role="dialog" aria-modal="true" aria-labelledby="schedTitle" hidden>
+  <div class="sheet-head"><h2 id="schedTitle">수업 일정 등록</h2><button class="icon-btn" type="button" data-close aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <form id="schedForm" autocomplete="off">
+    <div class="field"><span class="lbl">장소</span><div class="chips" id="scPlaceChips"></div></div>
+    <div class="field"><span class="lbl">요일</span><div class="chips days" id="scDays"></div></div>
+    <div class="field"><span class="lbl">시간</span><div class="dur"><input id="scStart" type="time" value="14:00" aria-label="시작 시간"><span>부터</span><input id="scEnd" type="time" value="17:00" aria-label="끝나는 시간"><span>까지</span></div><p class="hint" id="scDurHint"></p></div>
+    <div class="field" id="scCatField"><span class="lbl">구분</span><div class="chips" id="scCats"></div></div>
+    <div class="field"><span class="lbl">기간</span><div class="dur"><input id="scFrom" type="date" aria-label="시작일"><span>부터</span><input id="scUntil" type="date" aria-label="종료일"><span>까지</span></div></div>
+    <label class="field"><span>알림</span>
+      <select id="scRemind"><option value="60">실습 1시간 전</option><option value="30">실습 30분 전</option><option value="120">실습 2시간 전</option><option value="1440">전날 같은 시간</option><option value="0">시작 전 알림 없음</option></select>
+    </label>
+    <label class="switch"><span>끝나고 '기록하기' 알림도 받기</span><input type="checkbox" id="scRecAlarm" checked></label>
+    <p class="hint" id="scErr" role="alert"></p>
+    <div class="sheet-actions"><button class="btn-ghost danger" type="button" id="btnDelSched" hidden>삭제</button><button class="btn-primary" type="submit">일정 저장</button></div>
+  </form>
+</div>
+
+<div class="sheet" id="sheetCal" role="dialog" aria-modal="true" aria-labelledby="calTitle2" hidden>
+  <div class="sheet-head"><h2 id="calTitle2">캘린더에 알림 넣기</h2><button class="icon-btn" type="button" data-close aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="stack">
+    <p class="hint" id="calSummary"></p>
+    <ol class="steps">
+      <li><b>캘린더로 열기</b>를 누르고, 일정 미리보기가 뜨면 <b>모두 추가</b>를 눌러 주세요.</li>
+      <li>미리보기가 안 뜨면 <b>파일로 저장</b> → 파일 앱에서 그 파일을 눌러 추가해요.</li>
+      <li>그 뒤로는 앱을 열지 않아도 아이폰 캘린더가 실습 전과 끝난 뒤에 알려 줘요.</li>
+    </ol>
+    <div class="row" style="gap:8px"><button class="btn-primary" type="button" id="btnIcsOpen" style="flex:1">캘린더로 열기</button><button class="btn-ghost" type="button" id="btnIcsShare">파일로 저장</button></div>
+    <p class="hint">일정을 바꾼 뒤에는 캘린더에 있던 이전 일정을 지우고 다시 넣어 주세요.</p>
+  </div>
 </div>
 
 <div class="sheet" id="sheetPlace" role="dialog" aria-modal="true" aria-labelledby="placeTitle" hidden>
@@ -933,6 +1000,20 @@ function derive(st){
   }
   const visits = new Map(); for (const t of trips) visits.set(t.p.id, (visits.get(t.p.id) || 0) + 1);
   const unmapped = byDate.filter(x => x.kind !== 'carry' && !resolvePlace(x)).length;
+  const toMin = t => { const [h, m] = String(t).split(':').map(Number); return (h || 0) * 60 + (m || 0); };
+  const schedules = (st.schedules || []).filter(x => x && x.id && Array.isArray(x.days) && x.days.length && /^\d\d:\d\d$/.test(x.start || '') && /^\d\d:\d\d$/.test(x.end || ''))
+    .sort((a, b) => Math.min(...a.days.map(d => (d + 6) % 7)) - Math.min(...b.days.map(d => (d + 6) % 7)) || a.start.localeCompare(b.start));
+  const schedDur = sc => Math.max(0, toMin(sc.end) - toMin(sc.start)) / 60;
+  const activeOn = (sc, ds) => sc.days.includes(parseD(ds).getDay()) && (!sc.from || ds >= sc.from) && (!sc.until || ds <= sc.until);
+  const recorded = new Set(real.map(x => x.date)), nowD = new Date(), nowMin = nowD.getHours() * 60 + nowD.getMinutes();
+  const todayScheds = schedules.filter(sc => activeOn(sc, today)).sort((a, b) => a.start.localeCompare(b.start));
+  const missed = [];
+  for (let i = 14; i >= 0; i--){
+    const ds = addDays(today, -i);
+    if (recorded.has(ds)) continue;
+    const sc = schedules.filter(x => activeOn(x, ds) && (i > 0 || nowMin >= toMin(x.end)))[0];
+    if (sc) missed.push({ date:ds, sc });
+  }
   const opened = st.opened || {};
   const noteInfo = (st.notes || []).filter(n => n && n.text).map(n => Object.assign({}, n, { kind: n.kind || 'next', opened: !!opened[n.id], openedDate: opened[n.id] || null }));
   const nextStage = STAGES.find(b => b.pct != null && !reached[b.id]) || null;
@@ -940,7 +1021,8 @@ function derive(st){
   return { settings:s, target, unit, total, remaining, pct: total / target * 100, count, realHours, marbles, targetMarbles,
     reached, reachedBy, byDate, byCreated, sessions, thisWeek, thisMonth, weeks, perWeek, projected, needPerWeek, daysLeft,
     cats, catMap, catTotals, noteInfo, nextStage, today,
-    origin, roundTrip, oKey, places, placeMap, placeDist, routed, resolvePlace, trips, totalKm, visits, unmapped };
+    origin, roundTrip, oKey, places, placeMap, placeDist, routed, resolvePlace, trips, totalKm, visits, unmapped,
+    schedules, schedDur, activeOn, todayScheds, missed, toMin, nowMin, recordedToday: recorded.has(today) };
 }
 
 /* ================= storage (this phone only) ================= */
@@ -972,7 +1054,7 @@ async function hashPin(pin){
 
 const Store = (() => {
   let mode = 'boot', prevMode = 'local', localOk = true, demo = null, remote = [];
-  const data = { settings:null, sessions:new Map(), notes:new Map(), places:new Map(), opened:{}, secret:null };
+  const data = { settings:null, sessions:new Map(), notes:new Map(), places:new Map(), schedules:new Map(), opened:{}, secret:null };
   const listeners = []; let notifier = () => {};
   const emit = () => listeners.forEach(f => { try { f(); } catch (e) { console.error(e); } });
   function fill(o){
@@ -980,24 +1062,25 @@ const Store = (() => {
     data.sessions = new Map((o.sessions || []).filter(x => x && x.id).map(x => [x.id, x]));
     data.notes = new Map((o.notes || []).filter(x => x && x.id).map(x => [x.id, x]));
     data.places = new Map((o.places || []).filter(x => x && x.id).map(x => [x.id, x]));
+    data.schedules = new Map((o.schedules || []).filter(x => x && x.id).map(x => [x.id, x]));
     data.opened = o.opened && typeof o.opened === 'object' ? o.opened : {};
     data.secret = o.secret || null;
   }
   function load(){ const raw = LS.get(DATA_KEY); if (!raw) return; try { fill(JSON.parse(raw)); } catch (e) {} }
-  function snapshot(){ return { v:3, settings:data.settings, sessions:[...data.sessions.values()], notes:[...data.notes.values()], places:[...data.places.values()], opened:data.opened, secret:data.secret }; }
+  function snapshot(){ return { v:3, settings:data.settings, sessions:[...data.sessions.values()], notes:[...data.notes.values()], places:[...data.places.values()], schedules:[...data.schedules.values()], opened:data.opened, secret:data.secret }; }
   function save(){ localOk = LS.set(DATA_KEY, JSON.stringify(snapshot())); return localOk; }
   function view(){
-    if (mode === 'demo') return { settings:demo.settings, sessions:[...demo.sessions.values()], notes:[...demo.notes.values()], places:[...demo.places.values()], opened:demo.opened };
+    if (mode === 'demo') return { settings:demo.settings, sessions:[...demo.sessions.values()], notes:[...demo.notes.values()], places:[...demo.places.values()], schedules:[...demo.schedules.values()], opened:demo.opened };
     const notes = [...data.notes.values()];
     for (const r of remote) if (!data.notes.has(r.id)) notes.push(r);
-    return { settings:data.settings, sessions:[...data.sessions.values()], notes, places:[...data.places.values()], opened:data.opened };
+    return { settings:data.settings, sessions:[...data.sessions.values()], notes, places:[...data.places.values()], schedules:[...data.schedules.values()], opened:data.opened };
   }
   function applyTo(t, op){
     if (op.t === 'settings'){ t.settings = clone(op.data); return; }
     if (op.t === 'secret'){ t.secret = clone(op.data); return; }
     if (op.t === 'open'){ if (!t.opened[op.id]) t.opened[op.id] = op.date; return; }
-    const m = (op.t === 'session' || op.t === 'delSession') ? t.sessions : (op.t === 'place' || op.t === 'delPlace') ? t.places : t.notes;
-    if (op.t === 'session' || op.t === 'note' || op.t === 'place') m.set(op.id, Object.assign(clone(op.data), {id:op.id})); else m.delete(op.id);
+    const m = (op.t === 'session' || op.t === 'delSession') ? t.sessions : (op.t === 'place' || op.t === 'delPlace') ? t.places : (op.t === 'sched' || op.t === 'delSched') ? t.schedules : t.notes;
+    if (op.t === 'session' || op.t === 'note' || op.t === 'place' || op.t === 'sched') m.set(op.id, Object.assign(clone(op.data), {id:op.id})); else m.delete(op.id);
   }
   async function exec(op){
     if (mode === 'demo'){ applyTo(demo, op); emit(); return true; }
@@ -1056,7 +1139,11 @@ function makeDemo(){
   ]);
   const byName = { '다온언어치료센터':'dp1', '한빛아동발달센터':'dp2', '학교 부설 언어치료실':'dp3' };
   for (const x of sessions.values()) x.placeId = byName[x.place] || '';
-  return { settings, sessions, notes, places, opened:{ dn1:addDays(t, -5), dn2:addDays(t, -2) } };
+  const schedules = new Map([
+    ['ds1', { id:'ds1', placeId:'dp1', days:[1, 3], start:'14:00', end:'16:30', cat:'clin', from:addDays(t, -40), until:addDays(t, 80), remind:60, recordAlarm:true }],
+    ['ds2', { id:'ds2', placeId:'dp3', days:[t ? parseD(t).getDay() : 5], start:'10:00', end:'13:00', cat:'clin', from:addDays(t, -10), until:addDays(t, 80), remind:60, recordAlarm:true }],
+  ]);
+  return { settings, sessions, notes, places, schedules, opened:{ dn1:addDays(t, -5), dn2:addDays(t, -2) } };
 }
 
 /* ================= the jar (canvas) ================= */
@@ -1416,7 +1503,7 @@ function render(){
   if (Store.mode !== 'boot') S = Store.view();
   D = derive(S);
   const ready = Store.ready();
-  renderTop(); renderHero(ready); renderPace(); renderMap(); renderBadges(); renderNotes(); renderHistory(); renderFoot();
+  renderTop(); renderHero(ready); renderSched(); renderPace(); renderMap(); renderBadges(); renderNotes(); renderHistory(); renderFoot();
   $('#demoBanner').hidden = Store.mode !== 'demo';
   const mb = $('#modeBanner');
   mb.hidden = Store.localOk || Store.mode === 'demo';
@@ -1734,20 +1821,21 @@ function renderCatChips(){
   $('#catField').hidden = !D.cats.length;
   $('#catChips').innerHTML = D.cats.map(c => `<button type="button" class="chip" data-cat="${esc(c.id)}" aria-pressed="${c.id === pickedCat}">${esc(c.name)}</button>`).join('');
 }
-function openSession(id){
+function openSession(id, pre){
   editingId = id || null;
   const x = id ? S.sessions.find(s => s.id === id) : null;
   const last = D.byCreated.filter(s => s.kind !== 'carry').slice(-1)[0];
   $('#sessTitle').textContent = x ? (x.kind === 'carry' ? '이전까지 채운 시간' : '기록 고치기') : '실습 기록하기';
-  $('#fDate').value = x ? x.date : D.today;
-  setDur(x ? Number(x.hours) : last ? Number(last.hours) : 3);
-  pickedCat = x ? (x.cat || '') : (last && D.catMap.has(last.cat) ? last.cat : (D.cats[0] ? D.cats[0].id : ''));
+  $('#fDate').value = x ? x.date : (pre && pre.date) || D.today;
+  setDur(x ? Number(x.hours) : pre && pre.hours ? pre.hours : last ? Number(last.hours) : 3);
+  pickedCat = x ? (x.cat || '') : pre && pre.cat ? pre.cat : (last && D.catMap.has(last.cat) ? last.cat : (D.cats[0] ? D.cats[0].id : ''));
   renderCatChips();
   const places = [...new Set(D.byDate.slice().reverse().map(s => s.place).filter(Boolean))].slice(0, 12);
   $('#placeList').innerHTML = places.map(p => `<option value="${esc(p)}"></option>`).join('');
   $('#fPlace').value = x ? (x.place || '') : (last ? last.place || '' : '');
   const rp = x ? D.resolvePlace(x) : last ? D.resolvePlace(last) : null;
   pickedPlace = rp ? rp.id : ''; if (rp) $('#fPlace').value = rp.name;
+  if (pre && !x){ pickedPlace = pre.placeId || ''; $('#fPlace').value = pre.place || ''; }
   renderPlaceChips();
   $('#fMemo').value = x ? (x.memo || '') : '';
   $('#sessErr').textContent = '';
@@ -2104,7 +2192,7 @@ function installHint(){
 /* ================= wiring ================= */
 function wire(){
   $('#setupCard').addEventListener('submit', submitSetup);
-  $('#btnDemo').addEventListener('click', () => { Store.startDemo(); window.scrollTo({ top:0 }); toast('예시 화면이에요. 구슬도 넣어 볼 수 있어요.'); });
+  $('#btnDemo').addEventListener('click', () => { Store.startDemo(); window.scrollTo({ top:0 }); toast('예시 화면이에요. 구슬도 넣어 볼 수 있어요.'); setTimeout(() => Router.fill(), 1500); });
   $('#btnExitDemo').addEventListener('click', () => Store.stopDemo());
   $('#btnInstallClose').addEventListener('click', () => { $('#installBanner').hidden = true; LS.set('praisejar:installHint', 'off'); });
   $('#btnAdd').addEventListener('click', () => {
@@ -2221,9 +2309,8 @@ function loadLeaflet(){
 }
 const isDark = () => { const t = document.documentElement.getAttribute('data-theme'); if (t) return t === 'dark'; return !!(window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches); };
 function tileLayer(L){
-  const url = isDark() ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png' : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
-  return L.tileLayer(url, { subdomains:'abcd', maxZoom:19, crossOrigin:true,
-    attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> © <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>' });
+  return L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:19,
+    attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>' });
 }
 const placeColor = (p, d = D) => MARBLES[Math.max(0, d.places.findIndex(x => x.id === p.id)) % MARBLES.length];
 function marbleIcon(L, color, label, size = 24){
@@ -2253,9 +2340,10 @@ const MapView = {
     this.dark = isDark(); this.tiles = tileLayer(L).addTo(this.map);
     this.layers = L.layerGroup().addTo(this.map);
     this.draw(true);
+    Router.fill();
     return this.map;
   },
-  retheme(){ if (!this.map) return; const d = isDark(); if (d === this.dark) return; this.dark = d; this.map.removeLayer(this.tiles); this.tiles = tileLayer(this.L).addTo(this.map); },
+  retheme(){},
   fit(animate){
     if (!this.map) return;
     const pts = [[D.origin.lat, D.origin.lng], ...D.places.map(p => [p.lat, p.lng])];
@@ -2388,7 +2476,7 @@ function renderMap(){
   if (!MapView.failed) $('#mapNote').textContent = notes.join(' ');
   $('#placesWrap').innerHTML = D.places.map(p => {
     const v = D.visits.get(p.id) || 0, one = D.placeDist(p) / 1000, sum = D.trips.filter(t => t.p.id === p.id).reduce((a, t) => a + t.km, 0);
-    return `<button type="button" class="place-card" data-place="${esc(p.id)}" style="--c:${placeColor(p)}"><span class="dot" aria-hidden="true"></span><span style="min-width:0"><b>${esc(p.name)}</b><small>편도 ${D.routed(p) ? '' : '약 '}${esc(fmtKm(one))}km · ${v}회</small></span><span class="kmv">${esc(fmtKm(sum))}km</span></button>`;
+    return `<div class="place-card" style="--c:${placeColor(p)}"><button type="button" class="pc-main" data-rec="${esc(p.id)}" aria-label="${esc(p.name)}에서 실습 기록하기"><span class="dot" aria-hidden="true"></span><span style="min-width:0"><b>${esc(p.name)}</b><small>편도 ${D.routed(p) ? '' : '약 '}${esc(fmtKm(one))}km · ${v}회 · 눌러서 기록</small></span><span class="kmv">${esc(fmtKm(sum))}km</span></button><button type="button" class="pc-edit" data-place="${esc(p.id)}" aria-label="${esc(p.name)} 고치기"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></button></div>`;
   }).join('');
   const list = D.trips.slice().reverse();
   $('#tripList').innerHTML = list.slice(0, tripLimit).map(t => `<li class="trip" style="--c:${placeColor(t.p)}"><i aria-hidden="true"></i><p><b>${esc(korDateShort(t.s.date))}</b> ${esc(t.p.name)}</p><em><b>+${esc(fmtKm(t.km))}km</b>누적 ${esc(fmtKm(t.cum))}km</em></li>`).join('')
@@ -2508,7 +2596,13 @@ function wireMap(){
   $('#btnAddPlace').addEventListener('click', () => openPicker('place'));
   $('#btnOrigin').addEventListener('click', () => openPicker('origin'));
   $('#btnSetOrigin').addEventListener('click', () => openPicker('origin'));
-  $('#placesWrap').addEventListener('click', e => { const b = e.target.closest('[data-place]'); if (b) openPicker('place', b.dataset.place); });
+  $('#placesWrap').addEventListener('click', e => {
+    const ed = e.target.closest('[data-place]'); if (ed){ openPicker('place', ed.dataset.place); return; }
+    const r = e.target.closest('[data-rec]'); if (!r) return;
+    const p = D.placeMap.get(r.dataset.rec); if (!p) return;
+    const sc = D.schedules.find(x => x.placeId === p.id);
+    openSession(null, { date:D.today, hours:sc ? D.schedDur(sc) : 0, placeId:p.id, place:p.name, cat:sc ? sc.cat : '' });
+  });
   $('#tripList').addEventListener('click', e => { if (e.target.closest('#btnMoreTrips')){ tripLimit += 20; renderMap(); } });
   $('#placeForm').addEventListener('submit', savePicker);
   $('#btnPlSearch').addEventListener('click', searchPlaces);
@@ -2531,10 +2625,172 @@ function wireMap(){
   window.addEventListener('online', () => Router.fill());
 }
 
+/* ================= class schedules ================= */
+const DAY_KO = ['일', '월', '화', '수', '목', '금', '토'];
+const DAY_ORDER = [1, 2, 3, 4, 5, 6, 0];
+const ICS_DAY = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
+const schedPlace = sc => (sc.placeId && D.placeMap.get(sc.placeId)) || null;
+const schedName = sc => { const p = schedPlace(sc); return p ? p.name : (sc.placeName || '실습'); };
+const daysLabel = days => DAY_ORDER.filter(d => days.includes(d)).map(d => DAY_KO[d]).join('·');
+
+function quickRecord(date, sc){
+  const p = schedPlace(sc);
+  openSession(null, { date, hours:D.schedDur(sc) || 3, placeId:p ? p.id : '', place:p ? p.name : (sc.placeName || ''), cat:sc.cat || '' });
+}
+function renderSched(){
+  const has = !!D.settings;
+  $('#schedBlock').hidden = !has;
+  const tb = $('#todayBanner');
+  if (!has || Store.mode === 'boot'){ tb.hidden = true; return; }
+  // today banner: next class, or a reminder to record one that ended
+  const miss = D.missed.filter(m => m.date !== D.today);
+  const sc = D.todayScheds.find(x => D.nowMin < D.toMin(x.end)) || D.todayScheds[D.todayScheds.length - 1];
+  let html = '', cls = 'today';
+  if (sc && D.recordedToday){ cls += ' done'; html = `<span class="today-ic">오늘</span><span class="today-t"><b>기록 완료</b> ${esc(schedName(sc))} 실습, 수고했어요</span>`; }
+  else if (sc && D.nowMin >= D.toMin(sc.end)){ cls += ' due'; html = `<span class="today-ic">오늘</span><span class="today-t"><b>${esc(sc.start)}–${esc(sc.end)}</b> ${esc(schedName(sc))} 끝났어요?</span><button type="button" class="today-btn" data-quick="${esc(D.today)}|${esc(sc.id)}">${esc(fmtDur(D.schedDur(sc)))} 기록</button>`; }
+  else if (sc){ html = `<span class="today-ic">오늘</span><span class="today-t"><b>${esc(sc.start)}</b> ${esc(schedName(sc))} 실습이 있어요</span><button type="button" class="today-btn" data-quick="${esc(D.today)}|${esc(sc.id)}">기록</button>`; }
+  else if (miss.length){ const m = miss[0]; cls += ' due'; html = `<span class="today-ic">놓침</span><span class="today-t"><b>${esc(korDateShort(m.date))}</b> ${esc(schedName(m.sc))} 기록이 없어요${miss.length > 1 ? ` 외 ${miss.length - 1}건` : ''}</span><button type="button" class="today-btn" data-quick="${esc(m.date)}|${esc(m.sc.id)}">기록</button>`; }
+  tb.className = cls; tb.innerHTML = html; tb.hidden = !html;
+  // schedule list
+  const list = D.schedules;
+  $('#schedSub').textContent = list.length ? `${list.length}개` : '';
+  $('#schedList').innerHTML = list.length ? list.map(x => {
+    const p = schedPlace(x), col = p ? placeColor(p) : MARBLES[0];
+    const period = (x.from ? korDateShort(x.from) : '') + (x.until ? ` ~ ${korDateShort(x.until)}` : ' ~');
+    return `<button type="button" class="sched-card" data-sched="${esc(x.id)}" style="--c:${col}"><span class="dot" aria-hidden="true"></span><span style="min-width:0"><b>${esc(daysLabel(x.days))} ${esc(x.start)}–${esc(x.end)}</b><small>${esc(schedName(x))} · ${esc(fmtDur(D.schedDur(x)))} · ${esc(period)}</small></span><span class="wk-days" aria-hidden="true">${DAY_ORDER.map(d => `<i class="${x.days.includes(d) ? 'on' : ''}">${DAY_KO[d]}</i>`).join('')}</span></button>`;
+  }).join('') : '<p class="empty">수업 일정을 등록하면 실습 날 알림이 오고, 끝난 뒤 한 번에 기록할 수 있어요.</p>';
+  $('#btnCal').hidden = !list.length;
+}
+
+/* ---- editor ---- */
+let scEdit = null, scDays = [], scPlace = '', scCat = '';
+function renderScChips(){
+  const d = derive(Store.view());
+  $('#scPlaceChips').innerHTML = d.places.map(p => `<button type="button" class="chip" data-pid="${esc(p.id)}" aria-pressed="${p.id === scPlace}">${esc(p.name)}</button>`).join('') + '<button type="button" class="chip add" data-pid="+">+ 지도에서 추가</button>';
+  $('#scDays').innerHTML = DAY_ORDER.map(dd => `<button type="button" class="chip" data-day="${dd}" aria-pressed="${scDays.includes(dd)}">${DAY_KO[dd]}</button>`).join('');
+  $('#scCatField').hidden = !d.cats.length;
+  $('#scCats').innerHTML = d.cats.map(c => `<button type="button" class="chip" data-cat="${esc(c.id)}" aria-pressed="${c.id === scCat}">${esc(c.name)}</button>`).join('');
+  const s = $('#scStart').value, e = $('#scEnd').value, mins = D.toMin(e) - D.toMin(s);
+  $('#scDurHint').textContent = s && e ? (mins > 0 ? `한 번에 ${fmtDur(mins / 60)} 실습` : '끝나는 시간이 시작 시간보다 늦어야 해요') : '';
+}
+function openSched(id){
+  const x = id ? D.schedules.find(v => v.id === id) : null;
+  scEdit = x ? x.id : null; scDays = x ? x.days.slice() : []; scPlace = x ? x.placeId || '' : (D.places[0] ? D.places[0].id : ''); scCat = x ? x.cat || '' : (D.cats[1] ? D.cats[1].id : D.cats[0] ? D.cats[0].id : '');
+  $('#schedTitle').textContent = x ? '수업 일정 고치기' : '수업 일정 등록';
+  $('#scStart').value = x ? x.start : '14:00'; $('#scEnd').value = x ? x.end : '17:00';
+  $('#scFrom').value = x ? x.from || D.today : D.today; $('#scUntil').value = x ? x.until || '' : addDays(D.today, 16 * 7);
+  $('#scRemind').value = String(x ? x.remind ?? 60 : 60); $('#scRecAlarm').checked = x ? x.recordAlarm !== false : true;
+  $('#btnDelSched').hidden = !x; $('#scErr').textContent = '';
+  renderScChips();
+  openLayer($('#sheetSched'));
+}
+async function saveSched(e){
+  e.preventDefault();
+  const err = $('#scErr'), start = $('#scStart').value, end = $('#scEnd').value, from = $('#scFrom').value, until = $('#scUntil').value;
+  if (!scDays.length){ err.textContent = '요일을 하나 이상 골라 주세요.'; return; }
+  if (!/^\d\d:\d\d$/.test(start) || !/^\d\d:\d\d$/.test(end) || D.toMin(end) <= D.toMin(start)){ err.textContent = '시간을 확인해 주세요. 끝나는 시간이 시작 시간보다 늦어야 해요.'; return; }
+  if (until && from && until < from){ err.textContent = '종료일이 시작일보다 빨라요.'; return; }
+  const p = derive(Store.view()).placeMap.get(scPlace);
+  const data = { placeId:p ? p.id : '', placeName:p ? p.name : '', days:scDays.slice().sort(), start, end, cat:scCat, from:from || D.today, until:until || '', remind:Number($('#scRemind').value), recordAlarm:$('#scRecAlarm').checked, createdAt:new Date().toISOString() };
+  closeLayer($('#sheetSched'));
+  await Store.exec({ t:'sched', id:scEdit || uid('c'), data });
+  toast(scEdit ? '일정을 고쳤어요' : '일정을 등록했어요. 캘린더에 알림도 넣어 두세요.', 3600);
+}
+
+/* ---- calendar file (.ics) ---- */
+function icsText(v){ return String(v || '').replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/([,;])/g, '\\$1'); }
+function icsFold(line){
+  const enc = new TextEncoder(), out = []; let cur = '', bytes = 0;
+  for (const ch of line){
+    const b = enc.encode(ch).length;
+    if (bytes + b > (out.length ? 74 : 75)){ out.push(cur); cur = ''; bytes = 0; }
+    cur += ch; bytes += b;
+  }
+  out.push(cur);
+  return out.join('\r\n ');
+}
+const icsLocal = (ds, hm) => ds.replace(/-/g, '') + 'T' + hm.replace(':', '') + '00';
+const icsUntil = ds => ds.replace(/-/g, '') + 'T145959Z';   // 23:59:59 KST that day
+function addMinutes(ds, hm, add){ const d = parseD(ds); const t = D.toMin(hm) + add; d.setMinutes(t); return { ds:fmtD(d), hm:`${pad(d.getHours())}:${pad(d.getMinutes())}` }; }
+function firstDate(sc){ let ds = sc.from || D.today; for (let i = 0; i < 7; i++){ if (sc.days.includes(parseD(ds).getDay())) return ds; ds = addDays(ds, 1); } return ds; }
+function buildICS(){
+  const now = new Date(), stamp = now.toISOString().replace(/[-:]/g, '').replace(/\.\d+/, '');
+  const appUrl = location.origin + location.pathname;
+  const L = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//praise-jar//KO', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', 'X-WR-CALNAME:칭찬 구슬병 실습', 'X-WR-TIMEZONE:Asia/Seoul',
+    'BEGIN:VTIMEZONE', 'TZID:Asia/Seoul', 'BEGIN:STANDARD', 'DTSTART:19700101T000000', 'TZOFFSETFROM:+0900', 'TZOFFSETTO:+0900', 'TZNAME:KST', 'END:STANDARD', 'END:VTIMEZONE'];
+  for (const sc of D.schedules){
+    const day1 = firstDate(sc), name = schedName(sc), cat = (D.catMap.get(sc.cat) || {}).name || '실습';
+    const rrule = 'RRULE:FREQ=WEEKLY;BYDAY=' + DAY_ORDER.filter(d => sc.days.includes(d)).map(d => ICS_DAY[d]).join(',') + (sc.until ? ';UNTIL=' + icsUntil(sc.until) : '');
+    L.push('BEGIN:VEVENT', `UID:class-${sc.id}@praise-jar`, `DTSTAMP:${stamp}`, `DTSTART;TZID=Asia/Seoul:${icsLocal(day1, sc.start)}`, `DTEND;TZID=Asia/Seoul:${icsLocal(day1, sc.end)}`, rrule,
+      `SUMMARY:${icsText(`언어재활 ${cat} · ${name}`)}`, `LOCATION:${icsText(name)}`, `DESCRIPTION:${icsText(`칭찬 구슬병 ${appUrl}`)}`, `URL:${appUrl}`);
+    if (sc.remind > 0) L.push('BEGIN:VALARM', 'ACTION:DISPLAY', `DESCRIPTION:${icsText(sc.remind >= 1440 ? `내일 ${sc.start} ${name} 실습이 있어요` : `${sc.remind >= 60 ? sc.remind / 60 + '시간' : sc.remind + '분'} 뒤 ${name} 실습이에요`)}`, `TRIGGER:-PT${sc.remind}M`, 'END:VALARM');
+    L.push('END:VEVENT');
+    if (sc.recordAlarm !== false){
+      const a = addMinutes(day1, sc.end, 10), b = addMinutes(day1, sc.end, 20);
+      L.push('BEGIN:VEVENT', `UID:record-${sc.id}@praise-jar`, `DTSTAMP:${stamp}`, `DTSTART;TZID=Asia/Seoul:${icsLocal(a.ds, a.hm)}`, `DTEND;TZID=Asia/Seoul:${icsLocal(b.ds, b.hm)}`, rrule,
+        `SUMMARY:${icsText('칭찬 구슬병에 오늘 실습 기록하기')}`, `DESCRIPTION:${icsText(`오늘 ${name} 실습 ${fmtDur(D.schedDur(sc))}을 구슬병에 넣어 주세요. ${appUrl}`)}`, `URL:${appUrl}`,
+        'BEGIN:VALARM', 'ACTION:DISPLAY', `DESCRIPTION:${icsText('오늘 실습, 구슬병에 기록할 시간이에요')}`, 'TRIGGER:PT0S', 'END:VALARM', 'END:VEVENT');
+    }
+  }
+  L.push('END:VCALENDAR');
+  return L.map(icsFold).join('\r\n') + '\r\n';
+}
+function openCalSheet(){
+  if (!D.schedules.length){ toast('먼저 수업 일정을 등록해 주세요'); return; }
+  const n = D.schedules.length;
+  $('#calSummary').textContent = `수업 일정 ${n}개를 반복 일정으로 넣어요. 실습 전 알림과, 끝나고 10분 뒤 '기록하기' 알림이 와요.`;
+  openLayer($('#sheetCal'));
+}
+const icsFile = () => new File([buildICS()], '칭찬구슬병-실습일정.ics', { type:'text/calendar' });
+function icsOpen(){
+  const url = URL.createObjectURL(icsFile());
+  const a = document.createElement('a'); a.href = url; a.target = '_blank'; a.rel = 'noopener';
+  if (!/iPhone|iPad|iPod/.test(navigator.userAgent)) a.download = '칭찬구슬병-실습일정.ics';
+  document.body.appendChild(a); a.click(); setTimeout(() => { a.remove(); URL.revokeObjectURL(url); }, 60000);
+}
+async function icsShare(){
+  const f = icsFile();
+  try { if (navigator.canShare && navigator.canShare({ files:[f] })){ await navigator.share({ files:[f], title:'칭찬 구슬병 실습 일정' }); return; } }
+  catch (e) { if (e && e.name === 'AbortError') return; }
+  const url = URL.createObjectURL(f), a = document.createElement('a'); a.href = url; a.download = f.name;
+  document.body.appendChild(a); a.click(); setTimeout(() => { a.remove(); URL.revokeObjectURL(url); }, 60000);
+  toast('일정 파일을 내려받았어요');
+}
+
+function wireSched(){
+  $('#btnAddSched').addEventListener('click', () => openSched(null));
+  $('#schedList').addEventListener('click', e => { const b = e.target.closest('[data-sched]'); if (b) openSched(b.dataset.sched); });
+  $('#todayBanner').addEventListener('click', e => {
+    const b = e.target.closest('[data-quick]'); if (!b) return;
+    const [date, id] = b.dataset.quick.split('|'), sc = D.schedules.find(x => x.id === id);
+    if (sc) quickRecord(date, sc);
+  });
+  $('#schedForm').addEventListener('submit', saveSched);
+  $('#scPlaceChips').addEventListener('click', e => {
+    const c = e.target.closest('[data-pid]'); if (!c) return;
+    if (c.dataset.pid === '+'){ openPicker('place', null, id => { scPlace = id; renderScChips(); }); return; }
+    scPlace = scPlace === c.dataset.pid ? '' : c.dataset.pid; renderScChips();
+  });
+  $('#scDays').addEventListener('click', e => { const c = e.target.closest('[data-day]'); if (!c) return; const d = Number(c.dataset.day); scDays = scDays.includes(d) ? scDays.filter(x => x !== d) : scDays.concat(d); renderScChips(); });
+  $('#scCats').addEventListener('click', e => { const c = e.target.closest('[data-cat]'); if (!c) return; scCat = scCat === c.dataset.cat ? '' : c.dataset.cat; renderScChips(); });
+  ['#scStart', '#scEnd'].forEach(id => $(id).addEventListener('input', renderScChips));
+  $('#btnDelSched').addEventListener('click', async () => {
+    if (!scEdit) return;
+    if (!(await confirmBox('이 일정을 지울까요?', '이미 넣은 실습 기록은 그대로 남아요. 캘린더에 넣은 일정은 캘린더에서 따로 지워 주세요.'))) return;
+    closeLayer($('#sheetSched')); await Store.exec({ t:'delSched', id:scEdit }); toast('일정을 지웠어요');
+  });
+  $('#btnCal').addEventListener('click', openCalSheet);
+  $('#btnIcsOpen').addEventListener('click', icsOpen);
+  $('#btnIcsShare').addEventListener('click', icsShare);
+  // keep the today banner current while the app stays open
+  setInterval(() => { if (!document.hidden && !layers.length) renderSched(); }, 60000);
+}
+
 /* ================= boot ================= */
 jar = new Jar($('#jar'));
 wire();
 wireMap();
+wireSched();
 Store.onChange(() => { scheduleRender(); if (secretOpen) setTimeout(renderSecretList, 0); });
 render();
 installHint();
