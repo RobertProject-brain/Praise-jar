@@ -17,125 +17,151 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Nanum+Pen+Script&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&text=%EC%B0%B8%EC%9E%98%ED%96%88%EC%96%B4%EC%9A%94&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&text=%EC%B0%B8%EC%9E%98%ED%96%88%EC%96%B4%EC%9A%94%EC%B9%AD&display=swap">
 <style>
-/* Layout: phone-first single column (numbers, jar, meter, then sections); from 820px the jar sits left of the numbers.
-   World: a Korean classroom turned on its teacher — 원고지 paper ground, 칠판 green actions, a red 참 잘했어요 stamp.
+/* Layout: one phone-width column (max 520px) on every device. First screen = numbers, the whole jar, the meter, and the record button.
+   World: a Korean classroom turned on its teacher — 원고지 paper ground, 칠판 green actions, a red 참 잘했어요 stamp, marbles for color.
    Dark mode is the chalkboard itself. */
 :root{
-  --paper:#F1F4EE; --sheet:#FBFCF9; --field:#FFFFFF;
-  --ink:#1B2A24; --ink-2:#4A5A53; --ink-3:#6F7E77;
-  --rule:#DCE3D8; --rule-strong:#BFCBBC;
-  --grid:#9EC4A8; --grid-faint:rgba(110,160,125,.11);
-  --board:#245240; --board-ink:#F3F7F1; --board-text:#1F5A43; --board-shadow:rgba(36,82,64,.5);
-  --stamp:#D3402F; --meter-track:#DCE5D9; --bubble:#E6EFE4; --focus:#1F6FE0;
-  --glass:rgba(150,190,175,.14); --glass-edge:rgba(36,70,58,.45); --glass-hi:rgba(255,255,255,.9);
-  --table-shadow:rgba(30,50,40,.16); --lid:#245240; --lid-hi:#3E7A61;
-  --tag:#FFF7E2; --tag-ink:#5A4A2A; --string:#A08E6A;
-  --scrim:rgba(14,26,20,.46); --shadow:0 1px 0 rgba(27,42,36,.04),0 14px 30px -18px rgba(27,42,36,.35);
+  --paper:#F2F6F0; --paper-top:#E3EFE6; --sheet:#FFFFFF; --sheet-2:#F7FAF5; --field:#FFFFFF;
+  --ink:#18261F; --ink-2:#47574F; --ink-3:#718078;
+  --rule:#DDE5DA; --rule-strong:#BCC9BA;
+  --grid:#9EC4A8; --grid-faint:rgba(110,160,125,.10);
+  --board:#23503E; --board-2:#33725A; --board-ink:#F3F7F1; --board-text:#1F5A43; --board-shadow:rgba(35,80,62,.42);
+  --stamp:#D7402F; --meter-track:#DCE6DA; --focus:#1F6FE0;
+  --glass:rgba(150,190,175,.13); --glass-edge:rgba(36,70,58,.42); --glass-hi:rgba(255,255,255,.92);
+  --table-shadow:rgba(30,50,40,.16); --lid:#23503E; --lid-hi:#3E7A61;
+  --tag:#FFF6DF; --tag-ink:#5A4A2A; --string:#A08E6A;
+  --env-back:#E6CF9C; --env-pocket:#F6E6BE; --env-flap:#EFD9A6; --env-line:rgba(120,90,40,.18);
+  --glow-1:rgba(239,106,91,.20); --glow-2:rgba(242,179,61,.22); --glow-3:rgba(74,162,220,.18); --glow-4:rgba(108,191,114,.22);
+  --scrim:rgba(14,26,20,.46);
+  --shadow:0 1px 0 rgba(24,38,31,.03),0 10px 26px -18px rgba(24,38,31,.32);
   --font-display:'Gowun Batang','AppleMyungjo','Batang',serif;
   --font-ui:'IBM Plex Sans KR','Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif;
   --font-hand:'Nanum Pen Script','Gowun Batang','AppleMyungjo',cursive;
   --font-stamp:'Jua','IBM Plex Sans KR','Apple SD Gothic Neo',sans-serif;
-  --r-card:18px; --r-ctl:14px;
+  --spring:cubic-bezier(.2,1.25,.35,1); --ease-out:cubic-bezier(.2,.8,.2,1);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --paper:#17221D; --sheet:#1F2C26; --field:#1A2621;
-    --ink:#E8EEE6; --ink-2:#B9C6BE; --ink-3:#8E9D95;
-    --rule:#2D3C35; --rule-strong:#40544A;
-    --grid:#4C7360; --grid-faint:rgba(170,210,185,.06);
-    --board:#8FD0AE; --board-ink:#0E1E17; --board-text:#9AD8B8; --board-shadow:rgba(0,0,0,.55);
-    --stamp:#F26E5F; --meter-track:#2A3A33; --bubble:#26362F; --focus:#8DB8FF;
-    --glass:rgba(200,235,220,.06); --glass-edge:rgba(215,240,228,.5); --glass-hi:rgba(255,255,255,.4);
+    --paper:#15201B; --paper-top:#1C2C25; --sheet:#1E2B25; --sheet-2:#1A2620; --field:#18241F;
+    --ink:#E8EEE6; --ink-2:#B7C4BC; --ink-3:#8C9B93;
+    --rule:#2B3A33; --rule-strong:#3F5348;
+    --grid:#4C7360; --grid-faint:rgba(170,210,185,.05);
+    --board:#8FD0AE; --board-2:#B5E3C9; --board-ink:#0E1E17; --board-text:#9AD8B8; --board-shadow:rgba(0,0,0,.5);
+    --stamp:#F26E5F; --meter-track:#293932; --focus:#8DB8FF;
+    --glass:rgba(200,235,220,.06); --glass-edge:rgba(215,240,228,.48); --glass-hi:rgba(255,255,255,.38);
     --table-shadow:rgba(0,0,0,.45); --lid:#8FD0AE; --lid-hi:#C3EBD5;
     --tag:#2B3A33; --tag-ink:#E8EEE6; --string:#6F8A7C;
-    --scrim:rgba(4,10,7,.62); --shadow:0 1px 0 rgba(0,0,0,.2),0 16px 34px -18px rgba(0,0,0,.7);
+    --env-back:#6B5A3A; --env-pocket:#8B7650; --env-flap:#7C6845; --env-line:rgba(255,240,210,.14);
+    --glow-1:rgba(239,106,91,.12); --glow-2:rgba(242,179,61,.10); --glow-3:rgba(74,162,220,.12); --glow-4:rgba(108,191,114,.12);
+    --scrim:rgba(4,10,7,.62); --shadow:0 1px 0 rgba(0,0,0,.2),0 14px 30px -18px rgba(0,0,0,.7);
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --paper:#17221D; --sheet:#1F2C26; --field:#1A2621;
-  --ink:#E8EEE6; --ink-2:#B9C6BE; --ink-3:#8E9D95;
-  --rule:#2D3C35; --rule-strong:#40544A;
-  --grid:#4C7360; --grid-faint:rgba(170,210,185,.06);
-  --board:#8FD0AE; --board-ink:#0E1E17; --board-text:#9AD8B8; --board-shadow:rgba(0,0,0,.55);
-  --stamp:#F26E5F; --meter-track:#2A3A33; --bubble:#26362F; --focus:#8DB8FF;
-  --glass:rgba(200,235,220,.06); --glass-edge:rgba(215,240,228,.5); --glass-hi:rgba(255,255,255,.4);
+  --paper:#15201B; --paper-top:#1C2C25; --sheet:#1E2B25; --sheet-2:#1A2620; --field:#18241F;
+  --ink:#E8EEE6; --ink-2:#B7C4BC; --ink-3:#8C9B93;
+  --rule:#2B3A33; --rule-strong:#3F5348;
+  --grid:#4C7360; --grid-faint:rgba(170,210,185,.05);
+  --board:#8FD0AE; --board-2:#B5E3C9; --board-ink:#0E1E17; --board-text:#9AD8B8; --board-shadow:rgba(0,0,0,.5);
+  --stamp:#F26E5F; --meter-track:#293932; --focus:#8DB8FF;
+  --glass:rgba(200,235,220,.06); --glass-edge:rgba(215,240,228,.48); --glass-hi:rgba(255,255,255,.38);
   --table-shadow:rgba(0,0,0,.45); --lid:#8FD0AE; --lid-hi:#C3EBD5;
   --tag:#2B3A33; --tag-ink:#E8EEE6; --string:#6F8A7C;
-  --scrim:rgba(4,10,7,.62); --shadow:0 1px 0 rgba(0,0,0,.2),0 16px 34px -18px rgba(0,0,0,.7);
+  --env-back:#6B5A3A; --env-pocket:#8B7650; --env-flap:#7C6845; --env-line:rgba(255,240,210,.14);
+  --glow-1:rgba(239,106,91,.12); --glow-2:rgba(242,179,61,.10); --glow-3:rgba(74,162,220,.12); --glow-4:rgba(108,191,114,.12);
+  --scrim:rgba(4,10,7,.62); --shadow:0 1px 0 rgba(0,0,0,.2),0 14px 30px -18px rgba(0,0,0,.7);
   color-scheme:dark;
 }
 
 *,*::before,*::after{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
-body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-ui);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent;background:var(--paper)}
+body{margin:0;background:linear-gradient(180deg,var(--paper-top) 0,var(--paper) 340px) no-repeat,var(--paper);color:var(--ink);font-family:var(--font-ui);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
-  background-image:linear-gradient(var(--grid-faint) 1px,transparent 1px),linear-gradient(90deg,var(--grid-faint) 1px,transparent 1px);
-  background-size:26px 26px;
-  -webkit-mask-image:linear-gradient(to bottom,#000 0%,transparent 75%);mask-image:linear-gradient(to bottom,#000 0%,transparent 75%)}
+  background-image:linear-gradient(var(--grid-faint) 1px,transparent 1px),linear-gradient(90deg,var(--grid-faint) 1px,transparent 1px);background-size:26px 26px;
+  -webkit-mask-image:linear-gradient(to bottom,#000 0%,transparent 70%);mask-image:linear-gradient(to bottom,#000 0%,transparent 70%)}
 button{font:inherit;color:inherit}
 h1,h2,h3{text-wrap:balance}
 :focus-visible{outline:2.5px solid var(--focus);outline-offset:2px}
-.sr-only{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+[hidden]{display:none!important}
 .num{font-variant-numeric:tabular-nums}
 
-.app{position:relative;z-index:1;max-width:980px;margin:0 auto;padding-inline:16px;padding-block:6px 128px}
+.app{position:relative;z-index:1;max-width:520px;margin:0 auto;padding-inline:16px;padding-block:4px 112px;overflow-x:clip}
 
-/* top bar */
-.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:10px 2px}
-.brand{min-width:0}
-.brand h1{font-family:var(--font-display);font-weight:700;font-size:clamp(22px,6vw,28px);line-height:1.15;letter-spacing:-.01em;margin:0}
-.brand p{margin:3px 0 0;color:var(--ink-2);font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.top-actions{display:flex;gap:8px;flex:none}
-.icon-btn{width:42px;height:42px;border-radius:13px;border:1px solid var(--rule);background:var(--sheet);color:var(--ink);display:grid;place-items:center;cursor:pointer;padding:0}
-.icon-btn svg{width:20px;height:20px}
+/* ---- top bar ---- */
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-block:8px 2px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation}
+.mark{flex:none;width:36px;height:36px;border-radius:12px;background:linear-gradient(160deg,var(--board-2),var(--board));display:grid;place-items:center;box-shadow:0 6px 14px -8px var(--board-shadow)}
+.mark svg{width:24px;height:24px}
+.brand-t{min-width:0}
+.brand h1{font-family:var(--font-display);font-weight:700;font-size:20px;line-height:1.15;letter-spacing:-.01em;margin:0}
+.brand p{margin:1px 0 0;color:var(--ink-2);font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.top-actions{display:flex;gap:6px;flex:none}
+.icon-btn{width:40px;height:40px;border-radius:50%;border:1px solid var(--rule);background:var(--sheet);color:var(--ink);display:grid;place-items:center;cursor:pointer;padding:0;transition:transform .15s}
+.icon-btn:active{transform:scale(.92)}
+.icon-btn svg{width:19px;height:19px}
 .icon-btn[aria-pressed="false"]{color:var(--ink-3)}
 
-.banner{margin-top:10px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
-  padding:10px 14px;border-radius:14px;background:var(--sheet);border:1px dashed var(--rule-strong);font-size:13.5px;color:var(--ink-2)}
+.banner{margin-top:8px;display:flex;align-items:center;gap:10px;padding:8px 8px 8px 14px;border-radius:14px;background:var(--sheet);border:1px dashed var(--rule-strong);font-size:13px;line-height:1.45;color:var(--ink-2);animation:rise .5s var(--ease-out) both}
+.banner>span{flex:1;min-width:0}
 .banner b{color:var(--ink)}
-.banner button{flex:none}
+.banner .btn-ghost{flex:none;min-height:34px;padding:5px 12px;font-size:13px;border-radius:999px}
+.banner.install{border-style:solid;border-color:color-mix(in srgb,var(--board) 40%,transparent);background:color-mix(in srgb,var(--board) 7%,var(--sheet))}
+.x-btn{flex:none;width:32px;height:32px;border-radius:50%;border:0;background:transparent;color:var(--ink-3);display:grid;place-items:center;cursor:pointer}
+.x-btn svg{width:16px;height:16px}
 
-/* hero */
-.hero{display:grid;grid-template-areas:"nums" "jar" "meter";gap:6px;margin-top:10px}
-.hero-nums{grid-area:nums;display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
-.jar-col{grid-area:jar;display:flex;flex-direction:column;align-items:center}
-.hero-meter{grid-area:meter;display:flex;flex-direction:column;gap:10px}
-@media (min-width:820px){
-  .hero{grid-template-columns:minmax(320px,410px) minmax(0,1fr);grid-template-areas:"jar nums" "jar meter";column-gap:40px;row-gap:14px;align-items:end;margin-top:18px}
-  .hero-meter{align-self:start}
-}
-.eyebrow{margin:0;font-size:12.5px;letter-spacing:.06em;color:var(--ink-3)}
-.big{margin:2px 0 0;font-family:var(--font-display);font-weight:700;line-height:1;font-size:clamp(46px,13vw,68px);letter-spacing:-.02em;font-variant-numeric:tabular-nums;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
-.big .of{font-family:var(--font-ui);font-weight:500;font-size:16px;letter-spacing:0;color:var(--ink-2)}
-.pct{flex:none;text-align:right}
-.pct b{display:block;font-family:var(--font-display);font-size:30px;line-height:1;font-variant-numeric:tabular-nums}
-.pct span{font-size:12.5px;color:var(--ink-3)}
-.jar-frame{position:relative;width:100%;max-width:340px;aspect-ratio:10/11}
-@media (min-width:820px){.jar-frame{max-width:410px}}
-#jar{display:block;width:100%;height:100%;touch-action:manipulation}
-.jar-cap{margin:2px 0 0;font-size:12.5px;color:var(--ink-3);text-align:center}
-.meter{position:relative;height:14px;border-radius:999px;background:var(--meter-track);overflow:hidden}
-.meter>i{position:absolute;inset:0 auto 0 0;width:0;border-radius:999px;background:var(--board);transition:width .9s cubic-bezier(.2,.8,.2,1)}
-.meter>b{position:absolute;top:3px;bottom:3px;width:2px;border-radius:2px;background:var(--paper);opacity:.75}
-.meter-row{display:flex;justify-content:space-between;gap:10px;font-size:13.5px;color:var(--ink-2)}
-.next-stage{margin:0;padding:12px 14px;border-radius:14px;background:var(--sheet);border:1px solid var(--rule);font-size:14px;color:var(--ink-2)}
-.next-stage b{color:var(--ink)}
-.cat-bars{display:grid;gap:10px}
-.cat-bar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;align-items:center;font-size:13.5px}
-.cat-bar .meter{grid-column:1/-1;height:8px}
+/* ---- hero ---- */
+.hero{position:relative;display:grid;gap:6px;margin-top:8px}
+.hero-nums{display:flex;align-items:center;justify-content:space-between;gap:12px;animation:rise .55s var(--ease-out) .05s both}
+.eyebrow{margin:0;font-size:12.5px;letter-spacing:.04em;color:var(--ink-3)}
+.big{margin:0;font-family:var(--font-display);font-weight:700;line-height:1;font-size:clamp(44px,13vw,58px);letter-spacing:-.02em;font-variant-numeric:tabular-nums;display:flex;align-items:baseline;gap:7px;flex-wrap:wrap}
+.big .of{font-family:var(--font-ui);font-weight:500;font-size:15px;letter-spacing:0;color:var(--ink-2)}
+.ring{position:relative;flex:none;width:66px;height:66px}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:6.5}
+.ring .trk{stroke:var(--meter-track)}
+.ring .val{stroke:url(#ringGrad);stroke-linecap:round;stroke-dasharray:169.65;stroke-dashoffset:169.65}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--font-display);font-size:16px;font-variant-numeric:tabular-nums}
+.ring small{position:absolute;left:0;right:0;bottom:-18px;text-align:center;font-size:11.5px;color:var(--ink-3);white-space:nowrap}
+
+.jar-col{position:relative;display:flex;flex-direction:column;align-items:center;isolation:isolate;animation:pop-in .6s var(--spring) .12s both}
+.jar-col::before{content:"";position:absolute;z-index:-1;left:50%;top:48%;width:min(94%,380px);aspect-ratio:1;border-radius:50%;pointer-events:none;
+  background:radial-gradient(closest-side at 32% 40%,var(--glow-1),transparent),radial-gradient(closest-side at 70% 34%,var(--glow-2),transparent),
+             radial-gradient(closest-side at 64% 72%,var(--glow-3),transparent),radial-gradient(closest-side at 36% 70%,var(--glow-4),transparent);
+  transform:translate(-50%,-50%);animation:breathe 7s ease-in-out infinite alternate,hue 14s ease-in-out infinite alternate}
+.jar-frame{position:relative;width:min(100%,330px,calc(44vh * .909));aspect-ratio:10/11}
+@supports (height:1svh){.jar-frame{width:min(100%,330px,calc(44svh * .909))}}
+#jar{display:block;width:100%;height:100%;touch-action:manipulation;cursor:pointer}
+.jar-cap{margin:0;font-size:12px;color:var(--ink-3);text-align:center}
+
+.hero-meter{display:flex;flex-direction:column;gap:10px;animation:rise .55s var(--ease-out) .2s both}
+.meter{position:relative;height:12px;border-radius:999px;background:var(--meter-track);overflow:hidden}
+.meter>i{position:absolute;inset:0 auto 0 0;width:0;border-radius:999px;background:linear-gradient(90deg,var(--board),var(--board-2));transition:width .9s var(--ease-out);overflow:hidden}
+.meter>i::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.45) 50%,transparent 70%);background-size:220% 100%;animation:shimmer 2.8s ease-in-out infinite}
+.meter>b{position:absolute;top:3px;bottom:3px;width:2px;border-radius:2px;background:var(--paper);opacity:.8}
+.meter-row{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:var(--ink-2)}
+.next-card{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:16px;background:var(--sheet);border:1px solid var(--rule);box-shadow:var(--shadow)}
+.next-card .bubble{flex:none;font-size:19px;padding:5px 10px 6px}
+.next-info{flex:1;min-width:0;display:grid;gap:6px}
+.next-info p{margin:0;font-size:13px;color:var(--ink-2);line-height:1.4}
+.next-info p b{color:var(--ink)}
+.meter.thin{height:6px}
+.cat-bars{display:grid;gap:9px}
+.cat-bar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;align-items:center;font-size:13px}
+.cat-bar .meter{grid-column:1/-1;height:7px}
 .cat-bar .meter>i{background:var(--ink-2)}
+.cat-bar .meter>i::after{display:none}
 .cat-bar span:last-of-type{color:var(--ink-2)}
 
-/* setup card */
-.setup{grid-area:meter;background:var(--sheet);border:1px solid var(--rule);border-radius:var(--r-card);padding:18px;box-shadow:var(--shadow);display:grid;gap:14px}
-.setup h2{margin:0;font-family:var(--font-display);font-size:22px}
+/* ---- setup ---- */
+.setup{background:var(--sheet);border:1px solid var(--rule);border-radius:20px;padding:18px;box-shadow:var(--shadow);display:grid;gap:14px;animation:rise .55s var(--ease-out) .15s both}
+.setup h2{margin:0;font-family:var(--font-display);font-size:21px}
 .setup p{margin:0;color:var(--ink-2);font-size:14px}
-.loading-note{grid-area:meter;text-align:center;color:var(--ink-3);font-size:14px;margin:6px 0 0}
+.loading-note{text-align:center;color:var(--ink-3);font-size:14px;margin:6px 0 0}
 
-/* forms */
+/* ---- forms ---- */
 .field{display:grid;gap:6px}
 .field>.lbl,label.field>span:first-child{font-size:13px;font-weight:600;color:var(--ink-2)}
 input,select,textarea{font:inherit;font-size:16px;color:var(--ink);background:var(--field);border:1px solid var(--rule-strong);border-radius:12px;padding:11px 12px;width:100%;min-width:0}
@@ -147,130 +173,125 @@ input[type="date"]{min-height:46px}
 .dur{display:grid;grid-template-columns:1fr auto 1fr auto;gap:8px;align-items:center}
 .dur span{color:var(--ink-2);font-size:14px}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{border:1px solid var(--rule-strong);background:var(--sheet);border-radius:999px;padding:8px 13px;font-size:14px;cursor:pointer;line-height:1.2;min-height:38px}
+.chip{border:1px solid var(--rule-strong);background:var(--sheet);border-radius:999px;padding:8px 13px;font-size:14px;cursor:pointer;line-height:1.2;min-height:38px;transition:transform .15s,background .15s}
+.chip:active{transform:scale(.95)}
 .chip[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
-.cat-row{display:grid;grid-template-columns:minmax(0,1fr) 92px 42px;gap:8px;align-items:center}
+.cat-row{display:grid;grid-template-columns:minmax(0,1fr) 88px 40px;gap:8px;align-items:center}
 .switch{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border:1px solid var(--rule);border-radius:12px;background:var(--field);font-size:15px}
 .switch input{width:22px;height:22px;flex:none;accent-color:var(--board)}
 
-/* buttons */
-.btn-primary{appearance:none;border:0;background:var(--board);color:var(--board-ink);font-weight:600;font-size:16px;line-height:1.2;padding:15px 22px;border-radius:16px;cursor:pointer;
-  box-shadow:0 12px 24px -14px var(--board-shadow);display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:54px}
-.btn-primary:active{transform:translateY(1px)}
+/* ---- buttons ---- */
+.btn-primary{position:relative;overflow:hidden;appearance:none;border:0;background:linear-gradient(160deg,var(--board-2),var(--board) 55%);color:var(--board-ink);font-weight:600;font-size:16px;line-height:1.2;padding:15px 22px;border-radius:18px;cursor:pointer;
+  box-shadow:0 14px 26px -14px var(--board-shadow),inset 0 1px 0 rgba(255,255,255,.18);display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:54px;transition:transform .15s}
+.btn-primary:active{transform:scale(.97)}
 .btn-primary[disabled]{opacity:.55;cursor:default}
-.btn-ghost{appearance:none;background:transparent;border:1px solid var(--rule-strong);color:var(--ink);padding:11px 16px;border-radius:14px;font-size:15px;cursor:pointer;min-height:46px}
+.btn-ghost{appearance:none;background:transparent;border:1px solid var(--rule-strong);color:var(--ink);padding:11px 16px;border-radius:14px;font-size:15px;cursor:pointer;min-height:46px;transition:transform .15s}
+.btn-ghost:active{transform:scale(.97)}
 .btn-ghost.danger{color:var(--stamp);border-color:var(--stamp)}
 .link-btn{appearance:none;background:none;border:0;padding:6px 2px;color:var(--board-text);font-size:14px;font-weight:600;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 
-/* sections */
-.block{margin-top:40px}
-.block-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding-bottom:9px;margin-bottom:14px;border-bottom:1px solid var(--rule)}
-.block-h h2{margin:0;font-family:var(--font-display);font-size:20px;font-weight:700}
-.block-h p{margin:0;font-size:13px;color:var(--ink-3);text-align:right}
-.empty{padding:18px;border:1px dashed var(--rule-strong);border-radius:16px;color:var(--ink-3);font-size:14px;text-align:center;background:color-mix(in srgb,var(--sheet) 60%,transparent)}
+/* ---- sections ---- */
+.block{margin-top:30px;animation:rise .6s var(--ease-out) .28s both}
+.block-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding-bottom:8px;margin-bottom:12px;border-bottom:1px solid var(--rule)}
+.block-h h2{margin:0;font-family:var(--font-display);font-size:19px;font-weight:700}
+.block-h p{margin:0;font-size:12.5px;color:var(--ink-3);text-align:right}
+.empty{padding:16px;border:1px dashed var(--rule-strong);border-radius:16px;color:var(--ink-3);font-size:14px;text-align:center}
 
-/* pace */
-.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-@media (min-width:640px){.kpis{grid-template-columns:repeat(4,minmax(0,1fr))}}
-.kpi{background:var(--sheet);border:1px solid var(--rule);border-radius:16px;padding:12px 14px}
-.kpi span{display:block;font-size:12.5px;color:var(--ink-3)}
-.kpi b{display:block;margin-top:2px;font-family:var(--font-display);font-size:24px;line-height:1.2;font-variant-numeric:tabular-nums}
-.kpi b small{font-family:var(--font-ui);font-size:13px;font-weight:500;color:var(--ink-2);margin-left:2px}
-.chart-card{position:relative;margin-top:12px;background:var(--sheet);border:1px solid var(--rule);border-radius:16px;padding:14px 14px 10px}
-.chart-card h3{margin:0 0 10px;font-size:13.5px;font-weight:600;color:var(--ink-2)}
-.weeks{position:relative;display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:2px;height:132px;align-items:end;border-bottom:1px solid var(--rule-strong)}
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.kpi{position:relative;background:var(--sheet);border:1px solid var(--rule);border-radius:16px;padding:11px 13px 10px;overflow:hidden}
+.kpi::before{content:"";position:absolute;right:-10px;top:-10px;width:38px;height:38px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff8,transparent 45%),var(--k);opacity:.9}
+.kpi span{display:block;font-size:12px;color:var(--ink-3)}
+.kpi b{display:block;margin-top:2px;font-family:var(--font-display);font-size:23px;line-height:1.2;font-variant-numeric:tabular-nums}
+.kpi b small{font-family:var(--font-ui);font-size:12.5px;font-weight:500;color:var(--ink-2);margin-left:2px}
+.chart-card{position:relative;margin-top:10px;background:var(--sheet);border:1px solid var(--rule);border-radius:16px;padding:13px 13px 9px}
+.chart-card h3{margin:0 0 10px;font-size:13px;font-weight:600;color:var(--ink-2)}
+.weeks{position:relative;display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:2px;height:118px;align-items:end;border-bottom:1px solid var(--rule-strong)}
 .wk{position:relative;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;cursor:default;outline:none}
-.wk .bar{display:block;width:min(30px,72%);min-height:0;border-radius:4px 4px 0 0;background:var(--meter-track);transition:height .6s cubic-bezier(.2,.8,.2,1)}
-.wk.has .bar{background:color-mix(in srgb,var(--board) 62%,var(--sheet))}
-.wk.now .bar{background:var(--board)}
-.wk .val{display:block;font-size:11.5px;color:var(--ink-2);margin-bottom:3px;font-variant-numeric:tabular-nums;min-height:16px}
+.wk .bar{display:block;width:min(26px,70%);border-radius:4px 4px 0 0;background:var(--meter-track);transform-origin:bottom}
+.weeks.intro .wk .bar{animation:grow .7s var(--ease-out) both;animation-delay:calc(var(--i,0) * 50ms + .35s)}
+.wk.has .bar{background:color-mix(in srgb,var(--board) 55%,var(--sheet))}
+.wk.now .bar{background:linear-gradient(180deg,var(--board-2),var(--board))}
+.wk .val{display:block;font-size:11px;color:var(--ink-2);margin-bottom:3px;font-variant-numeric:tabular-nums;min-height:16px}
 .wk-labels{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:2px;margin-top:5px}
-.wk-labels span{text-align:center;font-size:11px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.wk-labels span{text-align:center;font-size:10.5px;color:var(--ink-3);font-variant-numeric:tabular-nums;white-space:nowrap}
 .wk-labels span.now{color:var(--ink);font-weight:600}
 .tip{position:absolute;z-index:3;pointer-events:none;transform:translate(-50%,-100%);background:var(--ink);color:var(--paper);font-size:12px;padding:6px 9px;border-radius:9px;white-space:nowrap}
-.pace-line{margin:12px 2px 0;font-size:14.5px;color:var(--ink-2)}
+.pace-line{margin:10px 2px 0;font-size:14px;color:var(--ink-2)}
 .pace-line b{color:var(--ink)}
 
-/* badges */
-.badges{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-@media (min-width:900px){.badges{grid-template-columns:repeat(7,minmax(0,1fr))}}
-.badge{--c:var(--board);appearance:none;border:1px solid var(--rule);background:var(--sheet);border-radius:16px;padding:14px 8px 12px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;cursor:pointer;min-width:0}
-.badge .art{min-height:58px;display:grid;place-items:center;width:100%}
-.bubble{position:relative;max-width:100%;padding:7px 11px 8px;border-radius:16px;background:color-mix(in srgb,var(--c) 24%,var(--sheet));font-family:var(--font-hand);font-size:22px;line-height:1.05;color:var(--ink);word-break:keep-all;overflow-wrap:anywhere}
-@media (max-width:420px){.badge .bubble{font-size:20px;padding:6px 9px 7px}}
-.bubble::after{content:"";position:absolute;left:16px;bottom:-7px;border:7px solid transparent;border-bottom:0;border-top-color:color-mix(in srgb,var(--c) 24%,var(--sheet))}
-.coin{width:52px;height:52px;border-radius:50%;border:3px solid var(--c);display:grid;place-items:center;font-family:var(--font-display);font-weight:700;font-size:19px;color:var(--ink);font-variant-numeric:tabular-nums}
-.badge .t{font-size:13.5px;font-weight:600;line-height:1.3}
-.badge .m{font-size:11.5px;color:var(--ink-3);line-height:1.3}
-.badge.locked .bubble{background:transparent;outline:1.5px dashed var(--rule-strong);outline-offset:-1.5px;color:var(--ink-3)}
-.badge.locked .bubble::after{border-top-color:var(--rule-strong)}
-.badge.locked .coin{border-style:dashed;border-color:var(--rule-strong);color:var(--ink-3)}
+/* ---- badges ---- */
+.badges{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.badge{--c:var(--board);position:relative;appearance:none;border:1px solid var(--rule);background:var(--sheet);border-radius:16px;padding:12px 6px 10px;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;cursor:pointer;min-width:0;transition:transform .15s}
+.badges.intro .badge{animation:pop-in .5s var(--spring) both;animation-delay:calc(var(--i,0) * 35ms + .35s)}
+.badge:active{transform:scale(.95)}
+.badge .art{min-height:52px;display:grid;place-items:center;width:100%}
+.bubble{position:relative;display:inline-grid;max-width:100%;padding:6px 10px 7px;border-radius:16px;background:color-mix(in srgb,var(--c) 26%,var(--sheet));font-family:var(--font-hand);font-size:21px;line-height:1.05;color:var(--ink);word-break:keep-all;overflow-wrap:anywhere}
+.bubble::after{content:"";position:absolute;left:14px;bottom:-7px;border:7px solid transparent;border-bottom:0;border-top-color:color-mix(in srgb,var(--c) 26%,var(--sheet))}
+.bubble>.tw-full,.bubble>.tw-live{grid-area:1/1}
+.bubble>.tw-full{visibility:hidden}
+.badge .t{font-size:13px;font-weight:600;line-height:1.3}
+.badge .m{font-size:11px;color:var(--ink-3);line-height:1.3}
+.badge.locked .bubble,.bubble.ghost{background:transparent;outline:1.5px dashed var(--rule-strong);outline-offset:-1.5px;color:var(--ink-3)}
+.badge.locked .bubble::after,.bubble.ghost::after{border-top-color:var(--rule-strong)}
 .badge.locked .t{color:var(--ink-2)}
+.badge.newest{border-color:color-mix(in srgb,var(--c) 60%,var(--rule));box-shadow:0 10px 22px -16px var(--c)}
+.badge.newest .bubble{animation:float 3.2s ease-in-out infinite}
+.badge.newest::after{content:"최근";position:absolute;top:6px;right:6px;font-size:10px;font-weight:700;padding:1px 6px;border-radius:999px;background:var(--stamp);color:var(--sheet)}
 
-/* notes */
-.sealed{display:flex;gap:14px;align-items:center;padding:14px 16px;background:var(--sheet);border:1px solid var(--rule);border-radius:16px}
-.sealed svg{flex:none;width:44px;height:36px}
-.sealed p{margin:0;font-size:14px;color:var(--ink-2)}
-.sealed p b{color:var(--ink);font-size:15px}
-.note-list{display:grid;gap:10px;margin-top:10px}
-.note-card{appearance:none;text-align:left;border:1px solid var(--rule);background:var(--sheet);border-radius:16px;padding:12px 14px;display:grid;gap:4px;cursor:pointer;width:100%}
+/* ---- notes ---- */
+.note-list{display:grid;gap:8px}
+.note-card{appearance:none;text-align:left;border:1px solid var(--rule);background:var(--sheet);border-radius:16px;padding:11px 14px;display:grid;gap:4px;cursor:pointer;width:100%}
 .note-card .pv{font-family:var(--font-hand);font-size:22px;line-height:1.2;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .note-card .meta{font-size:12px;color:var(--ink-3);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .pill{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:999px;font-size:11.5px;border:1px solid var(--rule-strong);color:var(--ink-2)}
 .pill.open{border-color:var(--board);color:var(--board-text)}
-.owner-tools{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
-.owner-tools p{margin:0;font-size:13px;color:var(--ink-3)}
 
-/* calendar + list */
-.cal{background:var(--sheet);border:1px solid var(--rule);border-radius:16px;padding:12px}
-.cal-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
-.cal-head b{font-family:var(--font-display);font-size:17px}
-.cal-head .sum{font-size:12.5px;color:var(--ink-3);font-weight:400;margin-left:6px;font-family:var(--font-ui)}
+/* ---- calendar + list ---- */
+.cal{background:var(--sheet);border:1px solid var(--rule);border-radius:16px;padding:10px}
+.cal-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+.cal-head b{font-family:var(--font-display);font-size:16px}
+.cal-head .sum{font-size:12px;color:var(--ink-3);font-weight:400;margin-left:6px;font-family:var(--font-ui)}
 .cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px}
-.cal-dow{text-align:center;font-size:11.5px;color:var(--ink-3);padding:2px 0 6px}
+.cal-dow{text-align:center;font-size:11px;color:var(--ink-3);padding:2px 0 6px}
 .cal-dow:first-child{color:var(--stamp)}
-.cal-day{appearance:none;border:0;background:transparent;position:relative;aspect-ratio:1/1.05;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:4px;font-size:12.5px;color:var(--ink-2);font-variant-numeric:tabular-nums;cursor:default;min-width:0}
+.cal-day{appearance:none;border:0;background:transparent;position:relative;aspect-ratio:1/1.05;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:4px;font-size:12px;color:var(--ink-2);font-variant-numeric:tabular-nums;cursor:default;min-width:0}
 .cal-day.out{visibility:hidden}
 .cal-day.today{background:color-mix(in srgb,var(--board) 12%,transparent);color:var(--ink);font-weight:700}
 .cal-day.has{cursor:pointer}
-.mini-stamp{margin-top:2px;width:min(30px,80%);aspect-ratio:1;border-radius:50%;border:2px solid var(--stamp);color:var(--stamp);display:grid;place-items:center;font-size:10.5px;font-weight:700;transform:rotate(-12deg);line-height:1;font-family:var(--font-ui)}
-.month-h{display:flex;justify-content:space-between;align-items:baseline;margin:18px 2px 6px;font-size:13px;color:var(--ink-3)}
-.month-h b{font-size:14px;color:var(--ink-2)}
+.mini-stamp{margin-top:2px;width:min(28px,80%);aspect-ratio:1;border-radius:50%;border:2px solid var(--stamp);color:var(--stamp);display:grid;place-items:center;font-size:10px;font-weight:700;transform:rotate(-12deg);line-height:1;font-family:var(--font-ui)}
+.month-h{display:flex;justify-content:space-between;align-items:baseline;margin:16px 2px 6px;font-size:12.5px;color:var(--ink-3)}
+.month-h b{font-size:13.5px;color:var(--ink-2)}
 .recs{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-.rec{appearance:none;width:100%;text-align:left;border:1px solid var(--rule);background:var(--sheet);border-radius:14px;padding:11px 12px;display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:10px;align-items:center;cursor:pointer}
+.rec{appearance:none;width:100%;text-align:left;border:1px solid var(--rule);background:var(--sheet);border-radius:14px;padding:10px 12px;display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:10px;align-items:center;cursor:pointer}
 .rec.flash{animation:flash 1.4s ease}
 @keyframes flash{0%,40%{box-shadow:0 0 0 3px var(--stamp)}100%{box-shadow:0 0 0 0 transparent}}
-.rec-dot{width:12px;height:12px;border-radius:50%;display:inline-block;margin-right:6px;vertical-align:-1px}
+.rec-dot{width:11px;height:11px;border-radius:50%;display:inline-block;margin-right:6px;vertical-align:-1px}
 .rec-date{text-align:center;line-height:1.1}
-.rec-date b{display:block;font-family:var(--font-display);font-size:20px;font-variant-numeric:tabular-nums}
-.rec-date span{font-size:11.5px;color:var(--ink-3)}
+.rec-date b{display:block;font-family:var(--font-display);font-size:19px;font-variant-numeric:tabular-nums}
+.rec-date span{font-size:11px;color:var(--ink-3)}
 .rec-main{min-width:0}
 .rec-title,.rec-memo{display:block}
-.rec-title{font-size:14.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rec-title{font-size:14px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rec-title span{font-weight:400;color:var(--ink-3)}
-.rec-memo{font-size:13px;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rec-memo{font-size:12.5px;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rec-hours{font-size:14px;font-weight:600;white-space:nowrap;font-variant-numeric:tabular-nums}
 .more-row{display:flex;justify-content:center;margin-top:10px}
+.foot{margin-top:34px;font-size:12px;color:var(--ink-3);line-height:1.6;display:grid;gap:6px}
 
-.foot{margin-top:40px;font-size:12.5px;color:var(--ink-3);line-height:1.6;display:grid;gap:6px}
-
-/* dock */
+/* ---- dock ---- */
 .dock{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;justify-content:center;pointer-events:none;
-  padding:22px 16px calc(14px + env(safe-area-inset-bottom,0px));background:linear-gradient(to top,var(--paper) 58%,transparent)}
-.dock .btn-primary{pointer-events:auto;width:min(440px,100%);font-size:17px}
-.dock .btn-primary svg{width:20px;height:20px}
+  padding:20px 16px calc(12px + env(safe-area-inset-bottom,0px));background:linear-gradient(to top,var(--paper) 55%,transparent)}
+.dock .btn-primary{pointer-events:auto;width:min(488px,100%);font-size:16.5px}
+.dock .btn-primary::after{content:"";position:absolute;top:0;bottom:0;left:-40%;width:30%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.28),transparent);transform:skewX(-20deg);animation:sweep 5.5s ease-in-out 2s infinite}
+.dot-marble{width:20px;height:20px;border-radius:50%;flex:none;background:radial-gradient(circle at 34% 30%,#fff 0 12%,transparent 40%),radial-gradient(circle at 50% 50%,#F2B33D,#C9831A);box-shadow:inset 0 -2px 3px rgba(0,0,0,.18);animation:bob 2.4s ease-in-out infinite}
 
-/* layers */
-.scrim{position:fixed;inset:0;z-index:40;background:var(--scrim);animation:fade .2s ease}
-.sheet{position:fixed;left:0;right:0;bottom:0;z-index:50;max-height:92vh;max-height:92dvh;overflow:auto;overscroll-behavior:contain;
-  background:var(--sheet);border-radius:22px 22px 0 0;padding:8px 18px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -10px 40px -10px rgba(0,0,0,.3);animation:up .28s cubic-bezier(.2,.8,.2,1)}
+/* ---- layers ---- */
+.scrim{position:fixed;inset:0;z-index:40;background:var(--scrim);animation:fade .2s ease;-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:50;max-width:560px;margin-inline:auto;max-height:90vh;max-height:90dvh;overflow:auto;overscroll-behavior:contain;
+  background:var(--sheet);border-radius:24px 24px 0 0;padding:8px 18px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -10px 40px -10px rgba(0,0,0,.3);animation:sheet-up .42s var(--spring)}
 .sheet::before{content:"";display:block;width:40px;height:5px;border-radius:9px;background:var(--rule-strong);margin:2px auto 10px}
-@media (min-width:720px){
-  .sheet{inset:0;margin:auto;width:min(560px,calc(100% - 32px));height:fit-content;max-height:88vh;border-radius:22px;padding:18px 22px 22px}
-  .sheet::before{display:none}
-}
 .sheet-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
-.sheet-head h2{margin:0;font-family:var(--font-display);font-size:21px}
+.sheet-head h2{margin:0;font-family:var(--font-display);font-size:20px}
 .sheet form,.sheet .stack{display:grid;gap:16px}
 .sheet-actions{display:flex;gap:10px;justify-content:space-between;align-items:center;margin-top:4px}
 .sheet-actions .btn-primary{flex:1}
@@ -278,85 +299,165 @@ fieldset{border:0;padding:0;margin:0;display:grid;gap:8px}
 legend{font-size:13px;font-weight:600;color:var(--ink-2);padding:0;margin-bottom:6px}
 .storage{padding:12px 14px;border-radius:12px;background:var(--paper);border:1px solid var(--rule);font-size:13px;color:var(--ink-2);display:grid;gap:8px}
 .storage b{color:var(--ink)}
-
-.modal{position:fixed;inset:0;margin:auto;z-index:60;width:min(420px,calc(100% - 28px));height:fit-content;max-height:90vh;max-height:90dvh;overflow:auto;
-  background:var(--sheet);border-radius:24px;padding:22px;box-shadow:0 30px 60px -20px rgba(0,0,0,.45);animation:pop .32s cubic-bezier(.2,.9,.25,1.2)}
+.modal{position:fixed;inset:0;margin:auto;z-index:60;width:min(400px,calc(100% - 28px));height:fit-content;max-height:88vh;max-height:88dvh;overflow:auto;
+  background:var(--sheet);border-radius:26px;padding:22px 20px 20px;box-shadow:0 30px 60px -20px rgba(0,0,0,.45);animation:modal-in .5s var(--spring)}
 .modal .btn-primary{width:100%;margin-top:16px}
 .modal h2{margin:0;font-family:var(--font-display)}
 
-/* stamp card */
-.stamp-card{position:relative;padding-top:6px}
-.stamp-card .when{margin:0;font-size:13px;color:var(--ink-3);padding-right:96px}
-.gain{margin:6px 0 0;font-family:var(--font-display);font-weight:700;font-size:46px;line-height:1.05;font-variant-numeric:tabular-nums}
-.gain small{font-family:var(--font-ui);font-size:17px;font-weight:500;color:var(--ink-2);margin-left:4px}
-.gain-sub{margin:6px 0 0;font-size:14px;color:var(--ink-2);padding-right:70px}
-.stamp-mark{position:absolute;right:0;top:-6px;width:96px;height:96px;border-radius:50%;border:3.5px solid var(--stamp);color:var(--stamp);display:grid;place-content:center;text-align:center;
+/* ---- stamp card ---- */
+.stamp-card{position:relative;padding-top:4px}
+.stamp-card .when{margin:0;font-size:12.5px;color:var(--ink-3);padding-right:96px}
+.gain{margin:6px 0 0;font-family:var(--font-display);font-weight:700;font-size:44px;line-height:1.05;font-variant-numeric:tabular-nums}
+.gain small{font-family:var(--font-ui);font-size:16px;font-weight:500;color:var(--ink-2);margin-left:3px}
+.gain-sub{margin:6px 0 0;font-size:13.5px;color:var(--ink-2);padding-right:64px}
+.stamp-mark{position:absolute;right:0;top:-6px;width:94px;height:94px;border-radius:50%;border:3.5px solid var(--stamp);color:var(--stamp);display:grid;place-content:center;text-align:center;
   font-family:var(--font-stamp);transform:rotate(-14deg);box-shadow:inset 0 0 0 3px var(--sheet),inset 0 0 0 5px var(--stamp);line-height:1.05;opacity:.93}
 .stamp-mark span{display:block}
-.stamp-mark span:first-child{font-size:33px}
-.stamp-mark span:last-child{font-size:16px;margin-top:2px}
+.stamp-mark span:first-child{font-size:32px}
+.stamp-mark span:last-child{font-size:15px;margin-top:2px}
 .stamp-mark.slam{animation:slam .55s cubic-bezier(.3,1.4,.4,1) both}
-@keyframes slam{0%{transform:rotate(-14deg) scale(2.6);opacity:0}55%{transform:rotate(-14deg) scale(.9);opacity:1}100%{transform:rotate(-14deg) scale(1);opacity:.93}}
+.splat{position:absolute;right:0;top:-6px;width:94px;height:94px;pointer-events:none}
+.splat i{position:absolute;left:50%;top:50%;width:var(--s);height:var(--s);margin:calc(var(--s) / -2);border-radius:50%;background:var(--stamp);opacity:0;animation:splat .6s var(--ease-out) .3s both}
 .shake{animation:shake .35s ease .3s}
-@keyframes shake{0%,100%{transform:none}30%{transform:translate(1px,2px) rotate(.4deg)}60%{transform:translate(-1px,-1px)}}
-.stamp-prog{margin-top:16px;display:grid;gap:6px;font-size:13.5px;color:var(--ink-2)}
+.stamp-prog{margin-top:14px;display:grid;gap:6px;font-size:13px;color:var(--ink-2)}
 .stamp-extra{margin-top:12px;display:grid;gap:6px}
-.stamp-extra p{margin:0;font-size:13.5px;padding:9px 12px;border-radius:12px;background:var(--paper)}
-.cheer{margin:16px 0 0;font-family:var(--font-hand);font-size:25px;line-height:1.25;color:var(--ink)}
-.envelope{appearance:none;margin-top:16px;width:100%;border:1px solid var(--rule-strong);background:var(--tag);color:var(--tag-ink);border-radius:16px;padding:14px;display:flex;gap:14px;align-items:center;text-align:left;cursor:pointer}
-.envelope svg{flex:none;width:46px;height:36px}
-.envelope b{display:block;font-size:15px}
-.envelope span{font-size:13px;opacity:.85}
-.envelope.wiggle svg{animation:wiggle 1.6s ease-in-out .4s 2}
-@keyframes wiggle{0%,100%{transform:none}20%{transform:rotate(-7deg)}40%{transform:rotate(6deg)}60%{transform:rotate(-3deg)}}
-
-/* 원고지 note */
-.genko{--cols:12;display:grid;grid-template-columns:repeat(var(--cols),minmax(0,1fr));row-gap:6px;margin-top:14px;padding:10px 8px;border:1px solid var(--grid);border-radius:6px;background:var(--field)}
-.genko span{aspect-ratio:1;display:grid;place-items:center;border:1px solid var(--grid);border-left-width:0;font-family:var(--font-hand);font-size:clamp(18px,5.4vw,24px);line-height:1;color:var(--ink)}
-.genko span.rs{border-left-width:1px}
-.genko.unfold{animation:unfold .5s cubic-bezier(.2,.8,.2,1) both;transform-origin:top center}
-@keyframes unfold{from{transform:scaleY(.2);opacity:0}to{transform:none;opacity:1}}
-.sign{margin:10px 2px 0;text-align:right;font-family:var(--font-hand);font-size:22px;color:var(--ink-2)}
-
-/* milestone */
-.ms{text-align:center}
-.ms .bubble{display:inline-block;font-size:34px;padding:12px 18px 14px;margin:6px auto 4px}
-.ms .bubble::after{left:50%;margin-left:-7px}
-.ms h2{font-size:26px;margin-top:14px}
-.ms p{margin:8px 0 0;color:var(--ink-2);font-size:14.5px}
-.ms .stage-desc{font-size:13px;color:var(--ink-3)}
-
-.toast{position:fixed;left:0;right:0;margin-inline:auto;bottom:calc(96px + env(safe-area-inset-bottom,0px));z-index:70;max-width:calc(100% - 32px);width:max-content;
-  background:var(--ink);color:var(--paper);padding:11px 16px;border-radius:14px;font-size:14px;box-shadow:0 14px 30px -12px rgba(0,0,0,.4);animation:up .25s ease}
-.fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:65}
-
-[hidden]{display:none!important}
+.cheer{margin:14px 0 0;font-family:var(--font-hand);font-size:24px;line-height:1.25;color:var(--ink);animation:rise .6s var(--ease-out) .55s both}
 .got{display:grid;gap:8px}
-.got-row{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:center;padding:10px 12px;border-radius:14px;background:var(--paper);font-size:13.5px;line-height:1.4}
+.got-row{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:center;padding:10px 12px;border-radius:14px;background:var(--paper);font-size:13.5px;line-height:1.4;animation:pop-in .55s var(--spring) both;animation-delay:calc(var(--i,0) * 140ms + .45s)}
 .got-row .bubble{font-size:19px;padding:5px 10px 6px}
 .got-row .bubble::after{left:12px}
 .got-row small{display:block;margin-top:2px;color:var(--ink-3);font-size:12px}
 .also{font-size:13px!important;color:var(--ink-3)!important}
+
+/* ---- envelope (hidden mission) ---- */
+.mission{text-align:center;border:2px solid var(--stamp);overflow:hidden}
+.mis-tag{display:inline-block;margin:0;padding:5px 13px;border-radius:999px;background:var(--stamp);color:var(--sheet);font-size:12px;font-weight:700;letter-spacing:.14em;animation:pop-in .5s var(--spring) .15s both}
+.mission h2{margin-top:12px;font-size:23px;animation:rise .5s var(--ease-out) .25s both}
+.mis-sub{margin:6px 0 0;color:var(--ink-3);font-size:13px}
+.env{position:relative;width:min(230px,76%);aspect-ratio:1.55;margin:22px auto 8px;perspective:800px;cursor:pointer;animation:fly-in .8s var(--spring) .1s both;transition:margin-top .5s var(--ease-out)}
+.env.open{margin-top:118px}
+.env.idle{animation:fly-in .8s var(--spring) .1s both,nudge 2.2s ease-in-out 1.2s infinite}
+.env>div{position:absolute;border-radius:10px}
+.env-back{inset:0;background:var(--env-back)}
+.env-letter{left:8%;right:8%;top:8%;height:84%;background:var(--field);box-shadow:0 2px 6px rgba(0,0,0,.12);padding:16% 12%;display:grid;align-content:start;gap:9px;transition:transform .6s var(--spring) .32s;z-index:1}
+.env-letter span{display:block;height:5px;border-radius:3px;background:var(--grid);opacity:.7}
+.env-letter span:nth-child(2){width:80%}
+.env-letter span:nth-child(3){width:60%}
+.env-pocket{inset:0;background:var(--env-pocket);clip-path:polygon(0 30%,50% 64%,100% 30%,100% 100%,0 100%);z-index:2}
+.env-pocket::after{content:"";position:absolute;inset:0;background:linear-gradient(to top right,transparent 49.4%,var(--env-line) 49.6%,transparent 50.4%),linear-gradient(to top left,transparent 49.4%,var(--env-line) 49.6%,transparent 50.4%)}
+.env-flap{left:0;right:0;top:0;height:66%;background:var(--env-flap);clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top center;transition:transform .5s cubic-bezier(.4,0,.2,1);z-index:3;border-radius:10px 10px 0 0}
+.env-seal{left:50%;top:66%;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%!important;background:radial-gradient(circle at 35% 30%,color-mix(in srgb,var(--stamp) 60%,#fff),var(--stamp) 60%);color:#fff;display:grid;place-items:center;font-family:var(--font-stamp);font-size:20px;z-index:4;
+  box-shadow:0 4px 10px -3px rgba(0,0,0,.35);transition:transform .35s var(--spring),opacity .3s}
+.env.open .env-seal{transform:scale(0) rotate(-120deg);opacity:0}
+.env.open .env-flap{transform:rotateX(180deg)}
+.env.flipped .env-flap{z-index:0}
+.env.open .env-letter{transform:translateY(-62%)}
+.env-hint{margin:2px 0 0;font-size:12.5px;color:var(--ink-3)}
+
+/* ---- 원고지 note ---- */
+.genko{--cols:12;display:grid;grid-template-columns:repeat(var(--cols),minmax(0,1fr));row-gap:6px;margin-top:14px;padding:10px 8px;border:1px solid var(--grid);border-radius:6px;background:var(--field);text-align:left}
+.genko span{aspect-ratio:1;display:grid;place-items:center;border:1px solid var(--grid);border-left-width:0;font-family:var(--font-hand);font-size:clamp(18px,5.4vw,24px);line-height:1;color:var(--ink)}
+.genko span.rs{border-left-width:1px}
+.genko.unfold{animation:unfold .5s var(--ease-out) both;transform-origin:top center}
+.genko span.w{animation:write .4s var(--ease-out) both;animation-delay:var(--d,0ms)}
+.sign{margin:10px 2px 0;text-align:right;font-family:var(--font-hand);font-size:22px;color:var(--ink-2);animation:rise .5s var(--ease-out) both;animation-delay:var(--d,0ms)}
+
+/* ---- milestone ---- */
+.ms{text-align:center}
+.ms .bubble{font-size:34px;padding:12px 18px 14px;margin:6px auto 4px;animation:pop-in .7s var(--spring) .1s both}
+.ms .bubble::after{left:50%;margin-left:-7px}
+.ms h2{font-size:24px;margin-top:14px}
+.ms p{margin:8px 0 0;color:var(--ink-2);font-size:14px}
+.ms .stage-desc{font-size:13px;color:var(--ink-3)}
 .ms.locked .bubble{background:transparent;outline:1.5px dashed var(--rule-strong);outline-offset:-1.5px;color:var(--ink-3)}
 .ms.locked .bubble::after{border-top-color:var(--rule-strong)}
-.ms .coin{border-color:var(--c)}
-.ms.locked .coin{border-style:dashed;border-color:var(--rule-strong);color:var(--ink-3)}
-:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-.brand{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation}
-.banner.install{border-style:solid;border-color:var(--board);background:color-mix(in srgb,var(--board) 8%,var(--sheet))}
-.banner.install b{color:var(--ink)}
-.mission{text-align:center;border:2px solid var(--stamp)}
-.mis-tag{display:inline-block;margin:0;padding:5px 13px;border-radius:999px;background:var(--stamp);color:var(--sheet);font-size:12.5px;font-weight:700;letter-spacing:.14em}
-.mission h2{margin-top:12px;font-size:24px}
-.mis-sub{margin:6px 0 0;color:var(--ink-3);font-size:13.5px}
-.mission .envelope{text-align:left}
+
+.toast{position:fixed;left:0;right:0;margin-inline:auto;bottom:calc(94px + env(safe-area-inset-bottom,0px));z-index:70;max-width:calc(100% - 32px);width:max-content;
+  background:var(--ink);color:var(--paper);padding:11px 16px;border-radius:14px;font-size:14px;box-shadow:0 14px 30px -12px rgba(0,0,0,.4);animation:toast-in .35s var(--spring)}
+.fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:65}
 #pinInput,#pinInput2{font-size:22px;letter-spacing:.4em;text-align:center}
+
+/* ---- travel map ---- */
+.km-hero{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:10px}
+.km-big{margin:2px 0 0;font-family:var(--font-display);font-weight:700;font-size:40px;line-height:1;font-variant-numeric:tabular-nums}
+.km-big small{font-family:var(--font-ui);font-size:15px;font-weight:500;color:var(--ink-2);margin-left:4px}
+.km-side{text-align:right}
+.km-side b{display:block;font-family:var(--font-display);font-size:19px;line-height:1.2}
+.km-side span{font-size:11px;color:var(--ink-3)}
+.map-card{position:relative;isolation:isolate;border-radius:18px;overflow:hidden;border:1px solid var(--rule);background:var(--sheet-2);box-shadow:var(--shadow)}
+.map{position:relative;z-index:0;height:clamp(220px,34vh,300px);width:100%;background:var(--sheet-2)}
+.map-tools{position:absolute;left:10px;right:10px;bottom:10px;z-index:2;display:flex;justify-content:space-between;align-items:flex-end;gap:8px;pointer-events:none}
+.map-btn{pointer-events:auto;display:inline-flex;align-items:center;gap:6px;border:0;border-radius:999px;padding:9px 14px;background:var(--sheet);color:var(--ink);font-size:13px;font-weight:600;box-shadow:0 6px 16px -8px rgba(0,0,0,.4);cursor:pointer;transition:transform .15s}
+.map-btn:active{transform:scale(.95)}
+.map-btn.on{background:var(--stamp);color:#fff}
+.map-btn svg{width:15px;height:15px}
+.map-btn.icon{padding:9px}
+.map-overlay{position:absolute;left:10px;right:10px;top:10px;z-index:2;padding:8px 12px;border-radius:12px;background:color-mix(in srgb,var(--sheet) 90%,transparent);font-size:13px;display:flex;gap:6px 8px;align-items:baseline;flex-wrap:wrap;box-shadow:0 6px 16px -10px rgba(0,0,0,.4);animation:rise .3s var(--ease-out)}
+.map-overlay span{margin-left:auto;font-weight:700;color:var(--stamp);font-variant-numeric:tabular-nums}
+.map-note{margin:8px 2px 0;font-size:12px;color:var(--ink-3)}
+.map-note:empty{display:none}
+.leaflet-container{font-family:var(--font-ui)!important;background:var(--sheet-2)!important}
+.leaflet-control-attribution{font-size:9.5px!important;background:color-mix(in srgb,var(--sheet) 75%,transparent)!important;color:var(--ink-3)!important}
+.leaflet-control-attribution a{color:var(--ink-2)!important}
+.leaflet-tooltip{font-family:var(--font-ui);font-size:12px;border-radius:8px}
+.mk{background:none!important;border:0!important}
+.mk-m{display:grid;place-items:center;border-radius:50%;background:radial-gradient(circle at 34% 30%,rgba(255,255,255,.95) 0 9%,transparent 40%),var(--c);border:2px solid #fff;box-shadow:0 3px 8px rgba(0,0,0,.32);color:#fff;font-size:11px;font-weight:700;animation:pop-in .45s var(--spring) both}
+.mk-m b{text-shadow:0 1px 2px rgba(0,0,0,.45)}
+.mk-o{position:relative;display:block;width:0;height:0}
+.mk-o i{position:absolute;left:-8px;top:-8px;width:16px;height:16px;border-radius:50%;background:var(--board);border:3px solid #fff;animation:beacon 2s ease-out infinite}
+.mk-o em{position:absolute;left:12px;top:-12px;white-space:nowrap;font-style:normal;font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px;background:var(--board);color:var(--board-ink);box-shadow:0 3px 8px rgba(0,0,0,.25)}
+.mk-pin{display:block;width:26px;height:26px;margin:-26px 0 0 -13px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:var(--stamp);border:3px solid #fff;box-shadow:0 4px 10px rgba(0,0,0,.35);animation:drop-pin .45s var(--spring) both}
+@keyframes beacon{0%{box-shadow:0 0 0 0 rgba(35,80,62,.5)}100%{box-shadow:0 0 0 16px rgba(35,80,62,0)}}
+@keyframes drop-pin{from{transform:translateY(-24px) rotate(-45deg);opacity:0}to{transform:rotate(-45deg);opacity:1}}
+.places{display:grid;gap:8px;margin-top:12px}
+.place-card{appearance:none;width:100%;text-align:left;border:1px solid var(--rule);background:var(--sheet);border-radius:14px;padding:10px 12px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;cursor:pointer}
+.place-card .dot{width:16px;height:16px;border-radius:50%;background:radial-gradient(circle at 34% 30%,rgba(255,255,255,.9) 0 10%,transparent 42%),var(--c)}
+.place-card b{display:block;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.place-card small{display:block;font-size:12px;color:var(--ink-3)}
+.place-card .kmv{font-size:13.5px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.trips{list-style:none;margin:14px 0 0;padding:0;display:grid}
+.trip{position:relative;display:grid;grid-template-columns:20px minmax(0,1fr) auto;gap:10px;align-items:center;padding:7px 0;font-size:13px}
+.trip::before{content:"";position:absolute;left:9px;top:0;bottom:0;width:2px;background:var(--rule)}
+.trip:first-child::before{top:50%}
+.trip:last-child::before{bottom:50%}
+.trip i{position:relative;width:12px;height:12px;margin-left:4px;border-radius:50%;background:var(--c);box-shadow:0 0 0 3px var(--paper)}
+.trip p{margin:0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink-2)}
+.trip p b{color:var(--ink);font-weight:600}
+.trip em{font-style:normal;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;font-size:12.5px;color:var(--ink-3)}
+.trip em b{display:block;color:var(--ink);font-size:13px}
+.search-row{display:flex;gap:8px}
+.search-row input{flex:1}
+.search-row .btn-ghost{flex:none}
+.pl-results{display:grid;gap:6px;max-height:190px;overflow:auto}
+.pl-results:empty{display:none}
+.pl-res{appearance:none;text-align:left;border:1px solid var(--rule);background:var(--field);border-radius:12px;padding:8px 11px;font-size:12px;color:var(--ink-3);cursor:pointer;line-height:1.4}
+.pl-res b{display:block;font-size:14px;color:var(--ink)}
+.pick-map{position:relative;z-index:0;height:clamp(220px,38vh,330px);border-radius:14px;overflow:hidden;border:1px solid var(--rule);background:var(--sheet-2)}
+.chip.add{border-style:dashed;color:var(--board-text)}
+
+/* ---- motion ---- */
 @keyframes fade{from{opacity:0}to{opacity:1}}
-@keyframes up{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
-@keyframes pop{from{transform:scale(.92);opacity:0}to{transform:none;opacity:1}}
-@media (min-width:720px){.toast{animation:fade .25s ease}}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes pop-in{0%{opacity:0;transform:scale(.86)}100%{opacity:1;transform:none}}
+@keyframes sheet-up{from{transform:translateY(40px);opacity:.4}to{transform:none;opacity:1}}
+@keyframes modal-in{from{transform:translateY(18px) scale(.94);opacity:0}to{transform:none;opacity:1}}
+@keyframes toast-in{from{transform:translateY(14px) scale(.96);opacity:0}to{transform:none;opacity:1}}
+@keyframes breathe{0%{transform:translate(-50%,-50%) scale(.92);opacity:.75}100%{transform:translate(-50%,-50%) scale(1.04);opacity:1}}
+@keyframes hue{0%{filter:hue-rotate(0deg)}100%{filter:hue-rotate(40deg)}}
+@keyframes shimmer{0%{background-position:120% 0}60%,100%{background-position:-120% 0}}
+@keyframes sweep{0%{left:-40%}35%,100%{left:130%}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-3px) rotate(1deg)}}
+@keyframes grow{from{transform:scaleY(0)}to{transform:none}}
+@keyframes slam{0%{transform:rotate(-14deg) scale(2.6);opacity:0}55%{transform:rotate(-14deg) scale(.9);opacity:1}100%{transform:rotate(-14deg) scale(1);opacity:.93}}
+@keyframes splat{0%{opacity:.9;transform:rotate(var(--a)) translateX(10px) scale(.4)}100%{opacity:0;transform:rotate(var(--a)) translateX(var(--r)) scale(1)}}
+@keyframes shake{0%,100%{transform:none}30%{transform:translate(1px,2px) rotate(.4deg)}60%{transform:translate(-1px,-1px)}}
+@keyframes fly-in{0%{opacity:0;transform:translate(70%,-90%) rotate(28deg) scale(.5)}70%{opacity:1}100%{opacity:1;transform:none}}
+@keyframes nudge{0%,100%{transform:none}10%{transform:rotate(-4deg)}20%{transform:rotate(3.5deg)}30%{transform:rotate(-2deg)}40%{transform:none}}
+@keyframes unfold{from{transform:scaleY(.2);opacity:0}to{transform:none;opacity:1}}
+@keyframes write{0%{opacity:0;transform:scale(1.5) rotate(-8deg)}100%{opacity:1;transform:none}}
 @media (prefers-reduced-motion: reduce){
-  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;animation-delay:0ms!important;transition-duration:.01ms!important}
 }
 </style>
 </head>
@@ -365,8 +466,8 @@ legend{font-size:13px;font-weight:600;color:var(--ink-2);padding:0;margin-bottom
 <div class="app" id="app">
   <header class="top">
     <div class="brand" id="brand">
-      <h1>칭찬 구슬병</h1>
-      <p id="subtitle">언어재활 실습 시간</p>
+      <span class="mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8.6 4.6h6.8v1.6c2.3.4 3.8 1.9 3.8 4.3v7.6a2.6 2.6 0 0 1-2.6 2.6H7.4a2.6 2.6 0 0 1-2.6-2.6v-7.6c0-2.4 1.5-3.9 3.8-4.3z" fill="rgba(255,255,255,.16)" stroke="#E6F1EA" stroke-width="1.5" stroke-linejoin="round"/><rect x="7.6" y="2.4" width="8.8" height="2.6" rx=".9" fill="#E6F1EA"/><circle cx="9.3" cy="17.3" r="1.6" fill="#EF6A5B"/><circle cx="12.6" cy="17.4" r="1.6" fill="#F2B33D"/><circle cx="15.6" cy="17.2" r="1.6" fill="#6CBF72"/><circle cx="11" cy="14.6" r="1.6" fill="#4AA2DC"/><circle cx="14.2" cy="14.6" r="1.6" fill="#EB7FB0"/></svg></span>
+      <span class="brand-t"><h1>칭찬 구슬병</h1><p id="subtitle">언어재활 실습 시간</p></span>
     </div>
     <div class="top-actions">
       <button class="icon-btn" id="btnSound" type="button" aria-pressed="true" aria-label="구슬 소리 끄기">
@@ -380,7 +481,7 @@ legend{font-size:13px;font-weight:600;color:var(--ink-2);padding:0;margin-bottom
 
   <div class="banner install" id="installBanner" hidden>
     <span id="installText"></span>
-    <button class="btn-ghost" id="btnInstallClose" type="button">닫기</button>
+    <button class="x-btn" id="btnInstallClose" type="button" aria-label="안내 닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
   </div>
   <div class="banner" id="demoBanner" hidden>
     <span><b>예시 화면</b>이에요. 여기서 넣은 구슬은 저장되지 않아요.</span>
@@ -394,7 +495,7 @@ legend{font-size:13px;font-weight:600;color:var(--ink-2);padding:0;margin-bottom
         <p class="eyebrow">지금까지 채운 실습 시간</p>
         <p class="big"><span id="bigNum" class="num">0</span><span class="of">/ <span id="targetNum" class="num">120</span>시간</span></p>
       </div>
-      <div class="pct"><b id="pctNum" class="num">0%</b><span id="sessCount">0회 실습</span></div>
+      <div class="ring" aria-hidden="true"><svg viewBox="0 0 64 64"><defs><linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--board-2)"/><stop offset="1" stop-color="var(--board)"/></linearGradient></defs><circle class="trk" cx="32" cy="32" r="27"/><circle class="val" id="ringVal" cx="32" cy="32" r="27"/></svg><b id="pctNum" class="num">0%</b><small id="sessCount">0회 실습</small></div>
     </div>
 
     <div class="jar-col">
@@ -405,7 +506,7 @@ legend{font-size:13px;font-weight:600;color:var(--ink-2);padding:0;margin-bottom
     <div class="hero-meter" id="heroMeter">
       <div class="meter" id="mainMeter" aria-hidden="true"><i></i><b style="left:25%"></b><b style="left:50%"></b><b style="left:75%"></b></div>
       <div class="meter-row"><span id="remainText">남은 시간 120시간</span><span id="todayText"></span></div>
-      <p class="next-stage" id="nextStage"></p>
+      <div class="next-card" id="nextCard"><span class="bubble ghost" id="nextBubble"></span><div class="next-info"><p id="nextStage"></p><div class="meter thin" aria-hidden="true"><i id="nextBar"></i></div></div></div>
       <div class="cat-bars" id="catBars"></div>
     </div>
 
@@ -442,6 +543,26 @@ legend{font-size:13px;font-weight:600;color:var(--ink-2);padding:0;margin-bottom
     <p class="pace-line" id="paceLine"></p>
   </section>
 
+  <section class="block" id="mapBlock" aria-labelledby="mapH">
+    <div class="block-h"><h2 id="mapH">이동 지도</h2><p id="mapSub"></p></div>
+    <div class="km-hero">
+      <div><p class="eyebrow" id="kmEyebrow">양재역 ↔ 실습 장소 · 왕복</p><p class="km-big"><span id="kmNum" class="num">0</span><small>km</small></p></div>
+      <div class="km-side"><b id="kmMarathon" class="num">-</b><span>마라톤 42.195km 기준</span></div>
+    </div>
+    <div class="map-card">
+      <div class="map" id="map" aria-label="실습 장소와 이동 경로 지도"></div>
+      <div class="map-overlay" id="mapOverlay" hidden></div>
+      <div class="map-tools">
+        <button type="button" class="map-btn" id="btnPlay"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.4-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg><span>타임라인 재생</span></button>
+        <button type="button" class="map-btn icon" id="btnMapFit" aria-label="전체 보기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+      </div>
+    </div>
+    <p class="map-note" id="mapNote"></p>
+    <div class="places" id="placesWrap"></div>
+    <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:10px"><button class="btn-ghost" id="btnAddPlace" type="button">+ 실습 장소 추가</button><button class="link-btn" id="btnOrigin" type="button"></button></div>
+    <ol class="trips" id="tripList"></ol>
+  </section>
+
   <section class="block" id="badgeBlock" aria-labelledby="badgeH">
     <div class="block-h"><h2 id="badgeH">언어발달 배지</h2><p id="badgeSub"></p></div>
     <div class="badges" id="badges"></div>
@@ -470,7 +591,7 @@ legend{font-size:13px;font-weight:600;color:var(--ink-2);padding:0;margin-bottom
 
 <div class="dock">
   <button class="btn-primary" type="button" id="btnAdd">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+    <span class="dot-marble" aria-hidden="true"></span>
     오늘 실습 기록하기
   </button>
 </div>
@@ -490,7 +611,7 @@ legend{font-size:13px;font-weight:600;color:var(--ink-2);padding:0;margin-bottom
       <div class="chips" id="durChips"></div>
     </div>
     <div class="field" id="catField"><span class="lbl">구분</span><div class="chips" id="catChips"></div></div>
-    <label class="field"><span>기관</span><input id="fPlace" list="placeList" maxlength="40" placeholder="예: 다온언어치료센터"><datalist id="placeList"></datalist></label>
+    <div class="field"><span class="lbl">기관</span><div class="chips" id="placeChips"></div><input id="fPlace" list="placeList" maxlength="40" placeholder="지도에 없는 곳은 이름만 적어도 돼요" aria-label="기관 이름"><datalist id="placeList"></datalist></div>
     <label class="field"><span>오늘의 한 줄 (선택)</span><textarea id="fMemo" rows="2" maxlength="300" placeholder="기억하고 싶은 장면이나 배운 점"></textarea></label>
     <p class="hint" id="sessErr" role="alert"></p>
     <div class="sheet-actions">
@@ -512,6 +633,10 @@ legend{font-size:13px;font-weight:600;color:var(--ink-2);padding:0;margin-bottom
       <div class="row" style="justify-content:space-between"><button class="link-btn" type="button" id="btnAddCat">+ 구분 추가</button><span class="hint" id="catSum"></span></div>
     </fieldset>
     <label class="field"><span>졸업 목표일 (선택)</span><input type="date" id="sGrad"></label>
+    <div class="field"><span class="lbl">이동 거리</span>
+      <div class="row" style="justify-content:space-between"><span class="hint" id="sOriginName"></span><button type="button" class="link-btn" id="btnSetOrigin">출발지 바꾸기</button></div>
+      <label class="switch"><span>왕복으로 계산하기</span><input type="checkbox" id="sRound"></label>
+    </div>
     <label class="switch"><span>구슬 떨어지는 소리</span><input type="checkbox" id="sSound"></label>
     <div class="storage">
       <b>기록 보관</b>
@@ -570,11 +695,26 @@ legend{font-size:13px;font-weight:600;color:var(--ink-2);padding:0;margin-bottom
   </form>
 </div>
 
+<div class="sheet" id="sheetPlace" role="dialog" aria-modal="true" aria-labelledby="placeTitle" hidden>
+  <div class="sheet-head"><h2 id="placeTitle">실습 장소 찾기</h2><button class="icon-btn" type="button" data-close aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <form id="placeForm" autocomplete="off">
+    <div class="search-row"><input id="plQuery" type="search" enterkeyhint="search" placeholder="도로명 주소나 장소 이름" aria-label="장소 검색"><button type="button" class="btn-ghost" id="btnPlSearch">찾기</button></div>
+    <div class="pl-results" id="plResults"></div>
+    <div class="pick-map" id="pickMap"></div>
+    <div class="row" style="justify-content:space-between;gap:8px;flex-wrap:wrap"><button type="button" class="link-btn" id="btnHere">지금 있는 곳으로</button><span class="hint" id="plCoord">지도를 눌러 위치를 찍어 주세요</span></div>
+    <p class="hint">이름으로 안 나오면 도로명 주소(예: 강남대로 213)로 찾거나, 지도를 눌러 위치를 찍어 주세요.</p>
+    <label class="field"><span id="plNameLbl">장소 이름</span><input id="plName" maxlength="30" placeholder="예: 다온언어치료센터"></label>
+    <p class="hint" id="plErr" role="alert"></p>
+    <div class="sheet-actions"><button class="btn-ghost danger" type="button" id="btnDelPlace" hidden>삭제</button><button class="btn-primary" type="submit" id="btnSavePlace">이 위치로 저장</button></div>
+  </form>
+</div>
+
 <div class="modal" id="modalStamp" role="dialog" aria-modal="true" aria-labelledby="stampGain" hidden>
   <div class="stamp-card" id="stampCard">
     <p class="when" id="stampWhen"></p>
     <p class="gain" id="stampGain"></p>
     <p class="gain-sub" id="stampSub"></p>
+    <div class="splat" id="splat" aria-hidden="true"></div>
     <div class="stamp-mark" id="stampMark" aria-hidden="true"><span>참</span><span>잘했어요</span></div>
     <div class="stamp-prog"><div class="meter" id="stampMeter"><i></i></div><span id="stampProg"></span></div>
     <div class="stamp-extra" id="stampExtra"></div>
@@ -705,10 +845,19 @@ const LS = {
   set(k, v){ try { localStorage.setItem(k, v); return true; } catch (e) { return false; } },
   del(k){ try { localStorage.removeItem(k); } catch (e) {} },
 };
+const DEFAULT_ORIGIN = { name:'양재역', lat:37.4840, lng:127.0347 };
 function defaultSettings(){
   return { name:'', target:120, gradDate:'', sender:'', createdAt:new Date().toISOString(),
-    categories:[{id:'obs', name:'관찰', target:30}, {id:'clin', name:'진단·재활 실습', target:90}] };
+    categories:[{id:'obs', name:'관찰', target:30}, {id:'clin', name:'진단·재활 실습', target:90}],
+    origin:Object.assign({}, DEFAULT_ORIGIN), roundTrip:true };
 }
+function haversine(a, b){
+  const R = 6371000, k = Math.PI / 180, dLat = (b.lat - a.lat) * k, dLng = (b.lng - a.lng) * k;
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(a.lat * k) * Math.cos(b.lat * k) * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+const originKey = o => `${Number(o.lat).toFixed(5)},${Number(o.lng).toFixed(5)}`;
+const fmtKm = km => (km >= 100 ? Math.round(km).toLocaleString('ko-KR') : (Math.round(km * 10) / 10).toFixed(1));
 
 /* ================= derived numbers ================= */
 function derive(st){
@@ -768,13 +917,30 @@ function derive(st){
   const catTotals = new Map();
   for (const x of sessions){ const k = catMap.has(x.cat) ? x.cat : ''; catTotals.set(k, (catTotals.get(k) || 0) + Number(x.hours)); }
 
+  const origin = s && s.origin && isFinite(s.origin.lat) && isFinite(s.origin.lng) ? s.origin : DEFAULT_ORIGIN;
+  const roundTrip = !s || s.roundTrip !== false, oKey = originKey(origin);
+  const places = (st.places || []).filter(p => p && p.id && isFinite(p.lat) && isFinite(p.lng));
+  const placeMap = new Map(places.map(p => [p.id, p])), placeByName = new Map(places.map(p => [String(p.name || '').trim(), p]));
+  const routed = p => p.originKey === oKey && p.dist > 0;
+  const placeDist = p => (routed(p) ? p.dist : haversine(origin, p) * 1.3);
+  const resolvePlace = x => (x.placeId && placeMap.get(x.placeId)) || (x.place && placeByName.get(String(x.place).trim())) || null;
+  const trips = []; let totalKm = 0;
+  for (const x of byDate){
+    if (x.kind === 'carry') continue;
+    const p = resolvePlace(x); if (!p) continue;
+    const k = placeDist(p) / 1000 * (roundTrip ? 2 : 1); totalKm += k;
+    trips.push({ s:x, p, km:k, cum:totalKm });
+  }
+  const visits = new Map(); for (const t of trips) visits.set(t.p.id, (visits.get(t.p.id) || 0) + 1);
+  const unmapped = byDate.filter(x => x.kind !== 'carry' && !resolvePlace(x)).length;
   const opened = st.opened || {};
   const noteInfo = (st.notes || []).filter(n => n && n.text).map(n => Object.assign({}, n, { kind: n.kind || 'next', opened: !!opened[n.id], openedDate: opened[n.id] || null }));
   const nextStage = STAGES.find(b => b.pct != null && !reached[b.id]) || null;
 
   return { settings:s, target, unit, total, remaining, pct: total / target * 100, count, realHours, marbles, targetMarbles,
     reached, reachedBy, byDate, byCreated, sessions, thisWeek, thisMonth, weeks, perWeek, projected, needPerWeek, daysLeft,
-    cats, catMap, catTotals, noteInfo, nextStage, today };
+    cats, catMap, catTotals, noteInfo, nextStage, today,
+    origin, roundTrip, oKey, places, placeMap, placeDist, routed, resolvePlace, trips, totalKm, visits, unmapped };
 }
 
 /* ================= storage (this phone only) ================= */
@@ -806,31 +972,32 @@ async function hashPin(pin){
 
 const Store = (() => {
   let mode = 'boot', prevMode = 'local', localOk = true, demo = null, remote = [];
-  const data = { settings:null, sessions:new Map(), notes:new Map(), opened:{}, secret:null };
+  const data = { settings:null, sessions:new Map(), notes:new Map(), places:new Map(), opened:{}, secret:null };
   const listeners = []; let notifier = () => {};
   const emit = () => listeners.forEach(f => { try { f(); } catch (e) { console.error(e); } });
   function fill(o){
     data.settings = o.settings || null;
     data.sessions = new Map((o.sessions || []).filter(x => x && x.id).map(x => [x.id, x]));
     data.notes = new Map((o.notes || []).filter(x => x && x.id).map(x => [x.id, x]));
+    data.places = new Map((o.places || []).filter(x => x && x.id).map(x => [x.id, x]));
     data.opened = o.opened && typeof o.opened === 'object' ? o.opened : {};
     data.secret = o.secret || null;
   }
   function load(){ const raw = LS.get(DATA_KEY); if (!raw) return; try { fill(JSON.parse(raw)); } catch (e) {} }
-  function snapshot(){ return { v:2, settings:data.settings, sessions:[...data.sessions.values()], notes:[...data.notes.values()], opened:data.opened, secret:data.secret }; }
+  function snapshot(){ return { v:3, settings:data.settings, sessions:[...data.sessions.values()], notes:[...data.notes.values()], places:[...data.places.values()], opened:data.opened, secret:data.secret }; }
   function save(){ localOk = LS.set(DATA_KEY, JSON.stringify(snapshot())); return localOk; }
   function view(){
-    if (mode === 'demo') return { settings:demo.settings, sessions:[...demo.sessions.values()], notes:[...demo.notes.values()], opened:demo.opened };
+    if (mode === 'demo') return { settings:demo.settings, sessions:[...demo.sessions.values()], notes:[...demo.notes.values()], places:[...demo.places.values()], opened:demo.opened };
     const notes = [...data.notes.values()];
     for (const r of remote) if (!data.notes.has(r.id)) notes.push(r);
-    return { settings:data.settings, sessions:[...data.sessions.values()], notes, opened:data.opened };
+    return { settings:data.settings, sessions:[...data.sessions.values()], notes, places:[...data.places.values()], opened:data.opened };
   }
   function applyTo(t, op){
     if (op.t === 'settings'){ t.settings = clone(op.data); return; }
     if (op.t === 'secret'){ t.secret = clone(op.data); return; }
     if (op.t === 'open'){ if (!t.opened[op.id]) t.opened[op.id] = op.date; return; }
-    const m = (op.t === 'session' || op.t === 'delSession') ? t.sessions : t.notes;
-    if (op.t === 'session' || op.t === 'note') m.set(op.id, Object.assign(clone(op.data), {id:op.id})); else m.delete(op.id);
+    const m = (op.t === 'session' || op.t === 'delSession') ? t.sessions : (op.t === 'place' || op.t === 'delPlace') ? t.places : t.notes;
+    if (op.t === 'session' || op.t === 'note' || op.t === 'place') m.set(op.id, Object.assign(clone(op.data), {id:op.id})); else m.delete(op.id);
   }
   async function exec(op){
     if (mode === 'demo'){ applyTo(demo, op); emit(); return true; }
@@ -882,24 +1049,32 @@ function makeDemo(){
     ['dn4', { id:'dn4', kind:'stage', stage:'p50', order:4, title:'', text:'절반 돌파! 이건 50%에 튀어나오는 예시 편지예요.' }],
   ]);
   const settings = Object.assign(defaultSettings(), { name:'예시', sender:'보내는 사람', gradDate:addDays(t, 200) });
-  return { settings, sessions, notes, opened:{ dn1:addDays(t, -5), dn2:addDays(t, -2) } };
+  const places = new Map([
+    ['dp1', { id:'dp1', name:'다온언어치료센터', lat:37.5012, lng:127.0396 }],
+    ['dp2', { id:'dp2', name:'한빛아동발달센터', lat:37.5113, lng:127.0983 }],
+    ['dp3', { id:'dp3', name:'학교 부설 언어치료실', lat:37.5449, lng:127.0557 }],
+  ]);
+  const byName = { '다온언어치료센터':'dp1', '한빛아동발달센터':'dp2', '학교 부설 언어치료실':'dp3' };
+  for (const x of sessions.values()) x.placeId = byName[x.place] || '';
+  return { settings, sessions, notes, places, opened:{ dn1:addDays(t, -5), dn2:addDays(t, -2) } };
 }
 
 /* ================= the jar (canvas) ================= */
-function hexToRgb(h){ const n = parseInt(h.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; }
+function hexToRgb(h){ const n = parseInt(String(h).replace('#', '').slice(0, 6), 16) || 0; return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; }
 function mix(a, b, t){ const A = hexToRgb(a), B = hexToRgb(b); return '#' + A.map((v, i) => Math.round(v + (B[i] - v) * t).toString(16).padStart(2, '0')).join(''); }
 function rgba(h, al){ const [r, g, b] = hexToRgb(h); return `rgba(${r},${g},${b},${al})`; }
 const easeInOut = p => 0.5 - Math.cos(Math.PI * p) / 2;
+const easeOutBack = p => { const c = 1.7; return 1 + (c + 1) * Math.pow(p - 1, 3) + c * Math.pow(p - 1, 2); };
 function rr(ctx, x, y, w, h, r){ r = Math.max(0, Math.min(r, w / 2, h / 2)); ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
 const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 
 class Jar {
   constructor(canvas){
     this.cv = canvas; this.ctx = canvas.getContext('2d');
-    this.staticCv = document.createElement('canvas');
+    this.backCv = document.createElement('canvas'); this.marbCv = document.createElement('canvas');
     this.marbles = []; this.shown = 0; this.cap = 240; this.targetHours = 120;
     this.slots = []; this.r = 6; this.sprites = new Map(); this.spriteSize = 0;
-    this.anim = null; this.pending = null; this.lid = 0; this.sparkles = []; this.jiggle = 0;
+    this.anim = null; this.pending = null; this.lid = 0; this.sparkles = []; this.jostleT0 = 0; this.glintT0 = 0;
     this.raf = 0; this.W = 0; this.H = 0; this.dpr = 1; this.colors = {};
     this.readColors();
     if (window.ResizeObserver){ this.ro = new ResizeObserver(() => this.resize()); this.ro.observe(canvas); }
@@ -912,19 +1087,20 @@ class Jar {
     this.colors = { glass:g('--glass'), edge:g('--glass-edge'), hi:g('--glass-hi'), shadow:g('--table-shadow'), lid:g('--lid'), lidHi:g('--lid-hi'),
       tag:g('--tag'), tagInk:g('--tag-ink'), string:g('--string'), ink3:g('--ink-3'), stamp:g('--stamp'), hand:g('--font-hand'), ui:g('--font-ui') };
   }
-  retheme(){ this.readColors(); this.renderStatic(); this.draw(); }
+  retheme(){ this.readColors(); this.renderBack(); this.draw(); }
   resize(){
     const r = this.cv.getBoundingClientRect(); if (!r.width || !r.height) return;
     if (Math.abs(r.width - this.W) < 0.5 && Math.abs(r.height - this.H) < 0.5) return;
     this.dpr = Math.min(window.devicePixelRatio || 1, 2.5); this.W = r.width; this.H = r.height;
-    this.cv.width = Math.round(this.W * this.dpr); this.cv.height = Math.round(this.H * this.dpr);
-    this.staticCv.width = this.cv.width; this.staticCv.height = this.cv.height;
-    this.layout(); if (!this.anim) this.shown = Math.min(this.marbles.length, this.slots.length); this.renderStatic(); this.draw();
+    for (const c of [this.cv, this.backCv, this.marbCv]){ c.width = Math.round(this.W * this.dpr); c.height = Math.round(this.H * this.dpr); }
+    this.layout(); if (!this.anim) this.shown = Math.min(this.marbles.length, this.slots.length);
+    this.renderBack(); this.renderMarbles(); this.draw();
+    if (this.onResize) this.onResize();
   }
   setCapacity(n, hours){
     const changed = n !== this.cap || hours !== this.targetHours;
     this.cap = n; this.targetHours = hours;
-    if (changed && this.W){ if (this.anim) this.finishAnim(); this.layout(); this.shown = Math.min(this.marbles.length, this.slots.length); this.renderStatic(); this.draw(); }
+    if (changed && this.W){ if (this.anim) this.finishAnim(); this.layout(); this.shown = Math.min(this.marbles.length, this.slots.length); this.renderBack(); this.renderMarbles(); this.draw(); }
   }
   geom(){
     const W = this.W, H = this.H;
@@ -977,7 +1153,7 @@ class Jar {
     const r = lo, rows = gen(r, top), rng = seeded(7919 + N), slots = [];
     for (const row of rows){
       for (let i = row.length - 1; i > 0; i--){ const j = Math.floor(rng() * (i + 1)); const tmp = row[i]; row[i] = row[j]; row[j] = tmp; }
-      for (const s of row){ s.x += (rng() - 0.5) * r * 0.12; s.y += (rng() - 0.5) * r * 0.08; slots.push(s); }
+      for (const s of row){ s.x += (rng() - 0.5) * r * 0.12; s.y += (rng() - 0.5) * r * 0.08; s.ph = rng() * Math.PI * 2; s.amp = 0.55 + rng() * 0.6; s.dl = rng() * 180; slots.push(s); }
     }
     this.r = r; this.slots = slots;
     this.buildSprites();
@@ -989,49 +1165,62 @@ class Jar {
       const c = document.createElement('canvas'); c.width = c.height = size;
       const g = c.getContext('2d'), cx = size / 2, cy = size / 2;
       const grad = g.createRadialGradient(cx - R * 0.35, cy - R * 0.42, R * 0.06, cx, cy, R * 1.02);
-      grad.addColorStop(0, mix(col, '#ffffff', 0.6)); grad.addColorStop(0.5, col); grad.addColorStop(1, mix(col, '#000000', 0.3));
+      grad.addColorStop(0, mix(col, '#ffffff', 0.62)); grad.addColorStop(0.5, col); grad.addColorStop(1, mix(col, '#000000', 0.28));
       g.beginPath(); g.arc(cx, cy, R, 0, Math.PI * 2); g.fillStyle = grad; g.fill();
-      g.lineWidth = Math.max(0.8, R * 0.07); g.strokeStyle = rgba(mix(col, '#000000', 0.45), 0.35); g.stroke();
-      g.beginPath(); g.ellipse(cx - R * 0.32, cy - R * 0.38, R * 0.3, R * 0.17, -0.65, 0, Math.PI * 2); g.fillStyle = 'rgba(255,255,255,0.78)'; g.fill();
+      g.lineWidth = Math.max(0.8, R * 0.07); g.strokeStyle = rgba(mix(col, '#000000', 0.45), 0.32); g.stroke();
+      g.beginPath(); g.ellipse(cx - R * 0.32, cy - R * 0.38, R * 0.3, R * 0.17, -0.65, 0, Math.PI * 2); g.fillStyle = 'rgba(255,255,255,0.8)'; g.fill();
       g.beginPath(); g.arc(cx + R * 0.34, cy + R * 0.36, R * 0.09, 0, Math.PI * 2); g.fillStyle = 'rgba(255,255,255,0.35)'; g.fill();
       this.sprites.set(col, c);
     }
     this.spriteSize = size;
   }
-  drawMarble(ctx, col, x, y, sc = 1){
+  drawMarble(ctx, col, x, y, sx = 1, sy = sx){
     const sp = this.sprites.get(col) || this.sprites.get(MARBLES[0]); if (!sp) return;
-    const s = this.spriteSize / this.dpr * sc; ctx.drawImage(sp, x - s / 2, y - s / 2, s, s);
+    const s = this.spriteSize / this.dpr; ctx.drawImage(sp, x - s * sx / 2, y - s * sy / 2, s * sx, s * sy);
   }
   levelY(f){
     if (!this.slots.length) return this.g.yBot;
     const k = clamp(Math.ceil(f * this.cap) - 1, 0, this.slots.length - 1);
     return this.slots[k].by - this.r;
   }
-  renderStatic(){
+  prep(c){ const ctx = c.getContext('2d'); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, c.width, c.height); ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0); return ctx; }
+  renderBack(){
     if (!this.W || !this.g) return;
-    const ctx = this.staticCv.getContext('2d'), g = this.g, c = this.colors;
-    ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, this.staticCv.width, this.staticCv.height);
-    ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
+    const ctx = this.prep(this.backCv), g = this.g, c = this.colors;
     ctx.save(); ctx.translate((g.x0 + g.x1) / 2, g.yBot + g.H * 0.012); ctx.scale(1, 0.1);
     const rg = ctx.createRadialGradient(0, 0, 0, 0, 0, g.bw * 0.58); rg.addColorStop(0, c.shadow); rg.addColorStop(1, 'rgba(0,0,0,0)');
     ctx.fillStyle = rg; ctx.beginPath(); ctx.arc(0, 0, g.bw * 0.58, 0, Math.PI * 2); ctx.fill(); ctx.restore();
     this.jarPath(ctx, g); ctx.closePath(); ctx.fillStyle = c.glass; ctx.fill();
-    const n = Math.min(this.shown, this.slots.length);
+  }
+  renderMarbles(){
+    if (!this.W || !this.g) return;
+    const ctx = this.prep(this.marbCv), n = Math.min(this.shown, this.slots.length);
     for (let i = 0; i < n; i++){ const s = this.slots[i]; this.drawMarble(ctx, this.marbles[i], s.x, s.y); }
   }
   draw(now = performance.now()){
     if (!this.W || !this.g) return;
     const ctx = this.ctx, g = this.g, c = this.colors;
     ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, this.cv.width, this.cv.height);
-    let jx = 0;
-    if (this.jiggle){ const u = (now - this.jiggle) / 520; if (u >= 1) this.jiggle = 0; else jx = Math.sin(u * Math.PI * 7) * 3 * (1 - u); }
-    ctx.drawImage(this.staticCv, jx * this.dpr, 0);
-    ctx.setTransform(this.dpr, 0, 0, this.dpr, jx * this.dpr, 0);
+    ctx.drawImage(this.backCv, 0, 0);
+    ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
+    // marbles: static layer, or each one hopping while the jar is jostled
+    const jt = this.jostleT0 ? now - this.jostleT0 : -1;
+    if (jt >= 0 && jt < 900){
+      const n = Math.min(this.shown, this.slots.length);
+      for (let i = 0; i < n; i++){
+        const s = this.slots[i], u = clamp((jt - s.dl) / 420, 0, 1), hop = Math.sin(u * Math.PI) * this.r * 0.9 * s.amp * (1 - jt / 1100);
+        const sq = u > 0.85 ? 1 - (1 - u) * 0.5 : 1;
+        this.drawMarble(ctx, this.marbles[i], s.x + Math.sin(s.ph + jt / 60) * this.r * 0.12 * (1 - u), s.y - hop, 1 / sq, sq);
+      }
+    } else {
+      if (this.jostleT0) this.jostleT0 = 0;
+      ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.drawImage(this.marbCv, 0, 0); ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
+    }
     if (this.anim) this.drawAnim(ctx, now);
     // measuring lines across the glass
     ctx.save(); ctx.setLineDash([3, 4]);
     for (const f of [0.25, 0.5, 0.75, 1]){
-      const y = this.levelY(f); ctx.strokeStyle = f === 1 ? c.stamp : c.ink3; ctx.globalAlpha = f === 1 ? 0.55 : 0.28; ctx.lineWidth = 1;
+      const y = this.levelY(f); ctx.strokeStyle = f === 1 ? c.stamp : c.ink3; ctx.globalAlpha = f === 1 ? 0.55 : 0.26; ctx.lineWidth = 1;
       ctx.beginPath(); ctx.moveTo(g.x0 + g.t * 2, y); ctx.lineTo(g.x1 - g.t * 2, y); ctx.stroke();
     }
     ctx.restore();
@@ -1042,6 +1231,17 @@ class Jar {
     ctx.globalAlpha = 0.3; rr(ctx, hx + hw * 1.7, hy0 + 14, hw * 0.35, (hy1 - hy0) * 0.5, hw * 0.2); ctx.fill();
     ctx.globalAlpha = 0.28; rr(ctx, g.x1 - g.bw * 0.085, g.yBot - g.cr - (g.yBot - g.yBody) * 0.24, hw * 0.4, (g.yBot - g.yBody) * 0.18, hw * 0.2); ctx.fill();
     ctx.restore();
+    // a glint of light sweeping across the glass
+    const gt = this.glintT0 ? (now - this.glintT0) / 1300 : -1;
+    if (gt >= 0 && gt <= 1){
+      ctx.save(); this.jarPath(ctx, g); ctx.closePath(); ctx.clip();
+      const span = g.bw * 1.9, x = g.x0 - g.bw * 0.6 + span * easeInOut(gt), w = g.bw * 0.22;
+      const lg = ctx.createLinearGradient(x - w, 0, x + w, 0);
+      lg.addColorStop(0, 'rgba(255,255,255,0)'); lg.addColorStop(0.5, 'rgba(255,255,255,0.42)'); lg.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.translate(x, (g.yNeckTop + g.yBot) / 2); ctx.transform(1, 0, -0.45, 1, 0, 0); ctx.translate(-x, -(g.yNeckTop + g.yBot) / 2);
+      ctx.fillStyle = lg; ctx.globalAlpha = Math.sin(gt * Math.PI); ctx.fillRect(x - w, g.yNeckTop - 20, w * 2, g.yBot - g.yNeckTop + 40);
+      ctx.restore();
+    } else if (gt > 1) this.glintT0 = 0;
     this.jarPath(ctx, g); ctx.lineWidth = g.t; ctx.lineJoin = 'round'; ctx.strokeStyle = c.edge; ctx.stroke();
     this.drawLid(ctx, g, c);
     this.drawTag(ctx, g, c);
@@ -1090,7 +1290,7 @@ class Jar {
     ctx.restore();
   }
   drawTicks(ctx, g, c){
-    const fs = clamp(g.W * 0.033, 10, 12.5);
+    const fs = clamp(g.W * 0.034, 10, 12.5);
     ctx.save(); ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
     for (const f of [0.25, 0.5, 0.75, 1]){
       const y = this.levelY(f), main = f === 1;
@@ -1106,47 +1306,50 @@ class Jar {
   update(marbles){
     if (this.anim){ this.pending = marbles.slice(); return; }
     this.marbles = marbles.slice(); this.shown = Math.min(this.marbles.length, this.slots.length);
-    this.renderStatic(); this.draw();
+    this.renderMarbles(); this.draw();
   }
   get count(){ return this.anim ? this.anim.to : this.shown; }
-  animateTo(marbles, from, onLand){
+  animateTo(marbles, from, onLand, opts = {}){
     return new Promise(resolve => {
       if (this.anim) this.finishAnim();
       this.marbles = marbles.slice();
       const to = Math.min(this.marbles.length, this.slots.length); from = Math.min(Math.max(0, from), to);
       const n = to - from;
       if (n <= 0 || RM || !this.W){
-        this.shown = to; this.renderStatic(); this.draw();
+        this.shown = to; this.renderMarbles(); this.draw();
         if (n > 0 && onLand) onLand(n, n);
         resolve(); return;
       }
-      const g = this.g, stagger = clamp(1300 / n, 40, 130), cx = (g.nx0 + g.nx1) / 2, nw = g.nx1 - g.nx0;
-      const t = performance.now(), base = t + 320, items = [];
+      const g = this.g, intro = !!opts.intro, cx = (g.nx0 + g.nx1) / 2, nw = g.nx1 - g.nx0;
+      const stagger = intro ? clamp(1150 / n, 3, 45) : clamp(1300 / n, 40, 130);
+      const t = performance.now(), base = t + (intro ? 260 : 320), items = [];
       for (let i = from; i < to; i++){
-        const s = this.slots[i], sx = cx + (Math.random() - 0.5) * nw * 0.5, sy = g.yLidTop - this.r * (1.5 + Math.random() * 3);
-        const dur = clamp(Math.sqrt(2 * Math.max(10, s.y - sy) / 2600) * 1000, 260, 900);
+        const s = this.slots[i], sx = cx + (Math.random() - 0.5) * nw * 0.55, sy = g.yLidTop - this.r * (intro ? 1 + Math.random() * 1.5 : 1.5 + Math.random() * 3);
+        const dur = clamp(Math.sqrt(2 * Math.max(10, s.y - sy) / (intro ? 3600 : 2600)) * 1000, intro ? 200 : 260, intro ? 640 : 900);
         items.push({ i, sx, sy, tx:s.x, ty:s.y, t0: base + (i - from) * stagger, dur, landed:false });
       }
       const last = items[items.length - 1];
-      this.shown = from; this.renderStatic();
-      this.anim = { items, n, to, landed:0, onLand, resolve, start:t, end:last.t0 + last.dur + 340 };
+      this.shown = from; this.renderMarbles();
+      this.anim = { items, n, to, landed:0, onLand, resolve, start:t, end:last.t0 + last.dur + 320, intro };
       this.loop();
     });
   }
   finishAnim(){
     const a = this.anim; if (!a) return;
     for (const it of a.items) if (!it.landed){ it.landed = true; a.landed++; if (a.onLand) a.onLand(a.landed, a.n); }
-    this.anim = null; this.shown = Math.min(this.marbles.length, this.slots.length); this.renderStatic();
+    this.anim = null; this.shown = Math.min(this.marbles.length, this.slots.length); this.renderMarbles();
     if (this.pending){ const p = this.pending; this.pending = null; this.update(p); }
     this.loop(); a.resolve();
   }
   drawAnim(ctx, now){
     for (const it of this.anim.items){
       if (now < it.t0) continue;
-      const p = (now - it.t0) / it.dur; let x, y, sc = 1;
-      if (p < 1){ x = it.sx + (it.tx - it.sx) * easeInOut(p); y = it.sy + (it.ty - it.sy) * p * p; }
-      else { const u = Math.min(1, (now - it.t0 - it.dur) / 300); x = it.tx; y = it.ty - this.r * 0.7 * Math.abs(Math.sin(u * Math.PI * 1.6)) * (1 - u); sc = 1 + 0.07 * (1 - u) * Math.sin(u * Math.PI * 3); }
-      this.drawMarble(ctx, this.marbles[it.i], x, y, sc);
+      const p = (now - it.t0) / it.dur;
+      if (p < 1){ this.drawMarble(ctx, this.marbles[it.i], it.sx + (it.tx - it.sx) * easeInOut(p), it.sy + (it.ty - it.sy) * p * p, 0.94, 1.08); }
+      else {
+        const u = Math.min(1, (now - it.t0 - it.dur) / 280), sq = 1 - 0.16 * Math.sin(u * Math.PI) * (1 - u);
+        this.drawMarble(ctx, this.marbles[it.i], it.tx, it.ty - this.r * 0.55 * Math.abs(Math.sin(u * Math.PI * 1.6)) * (1 - u) + this.r * (1 - sq) * 0.5, 2 - sq, sq);
+      }
     }
   }
   loop(){
@@ -1155,17 +1358,25 @@ class Jar {
       this.raf = 0;
       const a = this.anim;
       if (a){
-        this.lid = Math.min(1, (now - a.start) / 280);
-        for (const it of a.items) if (!it.landed && now >= it.t0 + it.dur){ it.landed = true; a.landed++; if (a.onLand) a.onLand(a.landed, a.n); }
+        this.lid = Math.min(1, (now - a.start) / 260);
+        for (const it of a.items) if (!it.landed && now >= it.t0 + it.dur){
+          it.landed = true; a.landed++;
+          // landed marbles move to the static layer so long pours stay smooth
+          const s = this.slots[it.i]; this.drawMarble(this.marbCv.getContext('2d'), this.marbles[it.i], s.x, s.y);
+          if (a.onLand) a.onLand(a.landed, a.n);
+        }
+        a.items = a.items.filter(it => !it.landed || now < it.t0 + it.dur + 300);
         if (now >= a.end){ this.finishAnim(); }
       } else if (this.lid > 0) this.lid = Math.max(0, this.lid - 0.07);
       this.sparkles = this.sparkles.filter(s => now - s.t0 < s.dur);
       this.draw(now);
-      if ((this.anim || this.lid > 0 || this.sparkles.length || this.jiggle) && !this.raf) this.raf = requestAnimationFrame(step);
+      const busy = this.anim || this.lid > 0 || this.sparkles.length || this.jostleT0 || this.glintT0;
+      if (busy && !this.raf) this.raf = requestAnimationFrame(step);
     };
     this.raf = requestAnimationFrame(step);
   }
-  shake(){ if (RM || !this.shown) return; this.jiggle = performance.now(); this.loop(); }
+  jostle(){ if (RM || !this.shown) return; this.jostleT0 = performance.now(); this.loop(); }
+  glint(){ if (RM || !this.W) return; this.glintT0 = performance.now(); this.loop(); }
   sparkle(k = 1){
     if (RM || !this.shown || !this.slots.length) return;
     for (let j = 0; j < k; j++){
@@ -1176,7 +1387,13 @@ class Jar {
   }
   startIdle(){
     if (RM) return;
-    setInterval(() => { if (document.hidden || this.anim) return; this.sparkle(this.shown >= this.cap ? 3 : 1); }, 2800);
+    let tick = 0;
+    setInterval(() => {
+      if (document.hidden || this.anim) return;
+      tick++;
+      if (tick % 3 === 0) this.glint();
+      this.sparkle(this.shown >= this.cap ? 3 : 1);
+    }, 2600);
   }
 }
 
@@ -1199,7 +1416,7 @@ function render(){
   if (Store.mode !== 'boot') S = Store.view();
   D = derive(S);
   const ready = Store.ready();
-  renderTop(); renderHero(ready); renderPace(); renderBadges(); renderNotes(); renderHistory(); renderFoot();
+  renderTop(); renderHero(ready); renderPace(); renderMap(); renderBadges(); renderNotes(); renderHistory(); renderFoot();
   $('#demoBanner').hidden = Store.mode !== 'demo';
   const mb = $('#modeBanner');
   mb.hidden = Store.localOk || Store.mode === 'demo';
@@ -1214,19 +1431,33 @@ function renderTop(){
 }
 
 function setHeroNumbers(total, d){
-  $('#bigNum').textContent = fmtNum(total);
+  const f = Math.min(1, total / d.target);
+  $('#bigNum').textContent = fmtNum(Math.round(total * 10) / 10);
   $('#pctNum').textContent = (total >= d.target ? 100 : Math.floor(total / d.target * 100)) + '%';
-  $('#mainMeter > i').style.width = Math.min(100, total / d.target * 100) + '%';
+  $('#mainMeter > i').style.width = f * 100 + '%';
+  $('#ringVal').style.strokeDashoffset = String(169.65 * (1 - f));
 }
 
+let introRan = false;
+function introPour(){
+  animating = true;
+  const d = D;
+  setHeroNumbers(0, d);
+  jar.animateTo(d.marbles, 0, (landed, n) => setHeroNumbers(d.total * landed / n, d), { intro:true }).then(() => {
+    animating = false; setHeroNumbers(d.total, d); scheduleRender();
+    setTimeout(() => runMissions(false), 500);
+  });
+}
 function syncJar(){
   if (!jar) return;
   jar.setCapacity(D.targetMarbles, D.target);
   if (animating) return;
+  const ready = Store.ready();
   const modeChanged = Store.mode !== lastMode; lastMode = Store.mode;
+  if (ready && modeChanged && D.settings && D.marbles.length && !RM && jar.W){ loadedOnce = true; introRan = true; introPour(); return; }
   if (!loadedOnce || modeChanged || D.marbles.length <= jar.count) jar.update(D.marbles);
   else jar.animateTo(D.marbles, jar.count);
-  if (Store.ready()) loadedOnce = true;
+  if (ready) loadedOnce = true;
 }
 
 function renderHero(ready){
@@ -1247,11 +1478,15 @@ function renderHero(ready){
   $('#remainText').textContent = D.remaining > 0 ? `남은 시간 ${fmtDur(D.remaining)}` : (D.total > D.target ? `목표보다 ${fmtDur(D.total - D.target)} 더 채웠어요` : '목표를 다 채웠어요');
   const todayH = D.sessions.reduce((t, x) => (x.date === D.today && x.kind !== 'carry' ? t + Number(x.hours) : t), 0);
   $('#todayText').textContent = todayH ? `오늘 +${fmtDur(todayH)}` : '';
-  const ns = $('#nextStage');
+  const ns = $('#nextStage'), nb = $('#nextBubble'), nbar = $('#nextBar');
   if (D.nextStage){
-    const need = D.target * D.nextStage.pct / 100 - D.total;
-    ns.innerHTML = `다음 배지 <b>${esc(D.nextStage.title)}</b>(${D.nextStage.pct}%)까지 <b>${esc(fmtDur(Math.max(0, need)))}</b> 남았어요.`;
-  } else ns.innerHTML = '<b>모든 단계를 채웠어요.</b> 졸업 실습 시간 완료를 축하해요.';
+    const at = D.target * D.nextStage.pct / 100, need = at - D.total;
+    const idx = STAGES.indexOf(D.nextStage), prev = STAGES.slice(0, idx).reverse().find(b => b.pct != null);
+    const from = prev ? D.target * prev.pct / 100 : 0;
+    nb.hidden = false; nb.textContent = D.nextStage.say; nb.style.setProperty('--c', MARBLES[D.nextStage.ci]);
+    ns.innerHTML = `다음 배지 <b>${esc(D.nextStage.title)}</b>까지 <b>${esc(fmtDur(Math.max(0, need)))}</b>`;
+    nbar.style.width = clamp((D.total - from) / Math.max(0.01, at - from), 0, 1) * 100 + '%';
+  } else { nb.hidden = true; ns.innerHTML = '<b>모든 단계를 채웠어요.</b> 졸업 실습 시간 완료를 축하해요.'; nbar.style.width = '100%'; }
   const bars = D.cats.filter(c => Number(c.target) > 0).map(c => {
     const h = D.catTotals.get(c.id) || 0, p = Math.min(100, h / Number(c.target) * 100);
     return `<div class="cat-bar"><span>${esc(c.name)}</span><span class="num">${esc(fmtNum(h))} / ${esc(fmtNum(Number(c.target)))}시간</span><div class="meter" aria-hidden="true"><i style="width:${p}%"></i></div></div>`;
@@ -1263,6 +1498,7 @@ function renderHero(ready){
 
 function renderPace(){
   const unitB = (v, u) => `${esc(v)}<small>${u}</small>`;
+  [['#kWeek', 0], ['#kMonth', 1], ['#kCount', 3], ['#kAvg', 5]].forEach(([id, c]) => $(id).parentElement.style.setProperty('--k', MARBLES[c]));
   $('#kWeek').innerHTML = unitB(fmtNum(D.thisWeek), '시간');
   $('#kMonth').innerHTML = unitB(fmtNum(D.thisMonth), '시간');
   $('#kCount').innerHTML = unitB(String(D.count), '회');
@@ -1273,7 +1509,7 @@ function renderPace(){
   $('#weeks').innerHTML = D.weeks.map((w, i) => {
     const label = w.hours > 0 && (w.now || i === maxIdx) ? esc(fmtNum(w.hours)) : '';
     const h = w.hours > 0 ? Math.max(3, w.hours / max * 100) : 0;
-    return `<div class="wk${w.hours > 0 ? ' has' : ''}${w.now ? ' now' : ''}" tabindex="0" data-i="${i}" aria-label="${esc(korDateShort(w.start))}부터 한 주, ${esc(fmtDur(w.hours))}"><span class="val">${label}</span><span class="bar" style="height:calc((100% - 20px) * ${h / 100})"></span></div>`;
+    return `<div class="wk${w.hours > 0 ? ' has' : ''}${w.now ? ' now' : ''}" style="--i:${i}" tabindex="0" data-i="${i}" aria-label="${esc(korDateShort(w.start))}부터 한 주, ${esc(fmtDur(w.hours))}"><span class="val">${label}</span><span class="bar" style="height:calc((100% - 20px) * ${h / 100})"></span></div>`;
   }).join('');
   $('#weekLabels').innerHTML = D.weeks.map(w => { const d = parseD(w.start); return `<span class="${w.now ? 'now' : ''}">${w.now ? '이번 주' : `${d.getMonth() + 1}/${d.getDate()}`}</span>`; }).join('');
   let line = '';
@@ -1294,14 +1530,20 @@ function badgeMeta(b){
   if (b.pct != null) return `${b.pct}% · ${fmtNum(D.target * b.pct / 100)}시간`;
   return `실습 ${b.n}회`;
 }
+let introUI = true;
 function renderBadges(){
-  $('#badges').innerHTML = ALL_BADGES.map(b => {
-    const got = !!D.reached[b.id];
-    const art = `<span class="bubble">${esc(b.say)}</span>`;
-    return `<button type="button" class="badge${got ? '' : ' locked'}" style="--c:${MARBLES[b.ci]}" data-badge="${b.id}" aria-label="${esc(b.title)}, ${got ? '받음' : '아직'}"><span class="art">${art}</span><span class="t">${esc(b.title)}</span><span class="m">${esc(badgeMeta(b))}</span></button>`;
+  const got = STAGES.filter(b => D.reached[b.id]), newest = got.length ? got[got.length - 1].id : '';
+  const el = $('#badges');
+  el.innerHTML = STAGES.map((b, i) => {
+    const has = !!D.reached[b.id];
+    return `<button type="button" class="badge${has ? '' : ' locked'}${b.id === newest ? ' newest' : ''}" style="--c:${MARBLES[b.ci]};--i:${i}" data-badge="${b.id}" aria-label="${esc(b.title)}, ${has ? '받음' : '아직'}"><span class="art"><span class="bubble">${esc(b.say)}</span></span><span class="t">${esc(b.title)}</span><span class="m">${esc(badgeMeta(b))}</span></button>`;
   }).join('');
-  const n = ALL_BADGES.filter(b => D.reached[b.id]).length;
-  $('#badgeSub').textContent = `${n} / ${ALL_BADGES.length}개`;
+  $('#badgeSub').textContent = `${got.length} / ${STAGES.length}개`;
+  if (introUI && Store.ready()){
+    introUI = false;
+    for (const id of ['#badges', '#weeks']) $(id).classList.add('intro');
+    setTimeout(() => { for (const id of ['#badges', '#weeks']) $(id).classList.remove('intro'); }, 2200);
+  }
 }
 
 const ENV_SVG = '<svg viewBox="0 0 46 36" aria-hidden="true"><rect x="1.5" y="4" width="43" height="30" rx="4" fill="var(--sheet)" stroke="currentColor" stroke-width="1.6"/><path d="M2.5 6l20.5 15L43.5 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="23" cy="21" r="4.2" fill="var(--stamp)"/></svg>';
@@ -1443,16 +1685,34 @@ function fxStep(){
 }
 
 /* ================= 원고지 ================= */
-function genko(text, width){
+function genko(text, width, write = true){
   const cols = clamp(Math.floor((width || 300) / 27), 9, 16), cells = [];
   for (const line of String(text).replace(/\r/g, '').split('\n')){
     const ch = Array.from(line);
     if (!ch.length){ for (let k = 0; k < cols; k++) cells.push(''); continue; }
     cells.push(...ch); const rem = ch.length % cols; if (rem) for (let k = rem; k < cols; k++) cells.push('');
   }
-  return `<div class="genko unfold" style="--cols:${cols}" role="img" aria-label="${esc(text)}">${cells.map((c, i) => `<span${i % cols === 0 ? ' class="rs"' : ''} aria-hidden="true">${c === ' ' ? '' : esc(c)}</span>`).join('')}</div>`;
+  const filled = cells.filter(c => c && c !== ' ').length, step = filled ? Math.min(55, 2600 / filled) : 0;
+  let k = 0;
+  const html = cells.map((c, i) => {
+    const ch = c === ' ' ? '' : c, cls = [i % cols === 0 ? 'rs' : '', ch && write ? 'w' : ''].filter(Boolean).join(' ');
+    const d = ch && write ? ` style="--d:${Math.round(350 + (k++) * step)}ms"` : '';
+    return `<span${cls ? ` class="${cls}"` : ''}${d} aria-hidden="true">${esc(ch)}</span>`;
+  }).join('');
+  genko.lastEnd = write ? 350 + k * step : 0;
+  return `<div class="genko unfold" style="--cols:${cols}" role="img" aria-label="${esc(text)}">${html}</div>`;
 }
-const signLine = () => (D.settings && D.settings.sender ? `<p class="sign">— ${esc(D.settings.sender)}</p>` : '');
+const signLine = () => (D.settings && D.settings.sender ? `<p class="sign" style="--d:${Math.round((genko.lastEnd || 0) + 150)}ms">— ${esc(D.settings.sender)}</p>` : '');
+function typeInto(el, text, delay = 200, step = 120){
+  const ch = Array.from(String(text));
+  el.innerHTML = `<span class="tw-full" aria-hidden="true">${esc(text)}</span><span class="tw-live"></span>`;
+  el.setAttribute('aria-label', text);
+  const live = el.lastElementChild;
+  if (RM){ live.textContent = text; return; }
+  let i = 0;
+  const tick = () => { i++; live.textContent = ch.slice(0, i).join(''); if (i < ch.length) el._tw = setTimeout(tick, ch[i - 1] === ' ' ? step * 0.6 : step); };
+  clearTimeout(el._tw); el._tw = setTimeout(tick, delay);
+}
 function envelopeHTML(id, label, sub = '눌러서 열어 보기'){
   return `<button class="envelope wiggle" type="button" id="${id}">${ENV_SVG}<span><b>${esc(label)}</b><span>${esc(sub)}</span></span></button>`;
 }
@@ -1486,6 +1746,9 @@ function openSession(id){
   const places = [...new Set(D.byDate.slice().reverse().map(s => s.place).filter(Boolean))].slice(0, 12);
   $('#placeList').innerHTML = places.map(p => `<option value="${esc(p)}"></option>`).join('');
   $('#fPlace').value = x ? (x.place || '') : (last ? last.place || '' : '');
+  const rp = x ? D.resolvePlace(x) : last ? D.resolvePlace(last) : null;
+  pickedPlace = rp ? rp.id : ''; if (rp) $('#fPlace').value = rp.name;
+  renderPlaceChips();
   $('#fMemo').value = x ? (x.memo || '') : '';
   $('#sessErr').textContent = '';
   $('#btnDelSession').hidden = !x;
@@ -1499,7 +1762,8 @@ async function submitSession(e){
   if (!/^\d{4}-\d\d-\d\d$/.test(date)){ err.textContent = '날짜를 골라 주세요.'; return; }
   if (!(hours > 0)){ err.textContent = '채운 시간을 입력해 주세요.'; return; }
   if (hours > 24){ err.textContent = '하루에 24시간까지 기록할 수 있어요.'; return; }
-  const base = { date, hours:Math.round(hours * 10000) / 10000, cat:pickedCat || '', place:$('#fPlace').value.trim().slice(0, 40), memo:$('#fMemo').value.trim().slice(0, 300) };
+  const dd = derive(Store.view()), pname = $('#fPlace').value.trim().slice(0, 40), pm = (pickedPlace && dd.placeMap.get(pickedPlace)) || dd.places.find(p => p.name === pname);
+  const base = { date, hours:Math.round(hours * 10000) / 10000, cat:pickedCat || '', place:pname, placeId: pm ? pm.id : '', memo:$('#fMemo').value.trim().slice(0, 300) };
   if (editingId){
     const x = S.sessions.find(s => s.id === editingId); if (!x){ closeLayer($('#sheetSession')); return; }
     const data = Object.assign({}, x, base); delete data.id;
@@ -1522,7 +1786,7 @@ async function dropIn(id, data, before){
   if (fr.top < 0 || fr.bottom > innerHeight){ window.scrollTo({ top:Math.max(0, scrollY + fr.top - 70), behavior: RM ? 'auto' : 'smooth' }); await sleep(RM ? 0 : 450); }
   jar.setCapacity(after.targetMarbles, after.target);
   const t0 = before.total, t1 = after.total;
-  await jar.animateTo(after.marbles, from, (landed, n) => { clink(); setHeroNumbers(t0 + (t1 - t0) * landed / n, after); });
+  await jar.animateTo(after.marbles, from, (landed, n) => { if (data.kind !== 'carry' || landed % 6 === 0) clink(); setHeroNumbers(t0 + (t1 - t0) * landed / n, after); }, data.kind === 'carry' ? { intro:true } : {});
   setHeroNumbers(t1, after);
   const ok = await pending;
   animating = false; scheduleRender();
@@ -1557,8 +1821,10 @@ function showStamp(data, before, after){
     $('#stampMeter > i').style.width = Math.min(100, after.pct) + '%';
     $('#stampProg').textContent = `${fmtNum(after.total)} / ${fmtNum(after.target)}시간 · ${pctInt(after)}%` + (after.remaining > 0 ? ` · 남은 ${fmtDur(after.remaining)}` : '');
     const gotNow = STAGES.filter(b => !before.reached[b.id] && after.reached[b.id]), shown = gotNow.slice(-3);
-    $('#stampExtra').innerHTML = gotNow.length ? `<div class="got">${shown.map(b => `<div class="got-row"><span class="bubble" style="--c:${MARBLES[b.ci]}">${esc(b.say)}</span><span><b>${esc(b.title)}</b> 배지를 받았어요<small>${esc(b.stage)}</small></span></div>`).join('')}`
+    $('#stampExtra').innerHTML = gotNow.length ? `<div class="got">${shown.map((b, i) => `<div class="got-row" style="--i:${i}"><span class="bubble" style="--c:${MARBLES[b.ci]}" data-say="${esc(b.say)}"></span><span><b>${esc(b.title)}</b> 배지를 받았어요<small>${esc(b.stage)}</small></span></div>`).join('')}`
       + (gotNow.length > shown.length ? `<p class="hint">이번에 받은 배지 ${gotNow.length}개 중 마지막 3개예요.</p>` : '') + '</div>' : '';
+    $$('#stampExtra .bubble[data-say]').forEach((el, i) => typeInto(el, el.dataset.say, 600 + i * 140));
+    $('#splat').innerHTML = RM ? '' : Array.from({ length:12 }, (_, i) => `<i style="--a:${Math.round(i * 30 + Math.random() * 20)}deg;--r:${Math.round(44 + Math.random() * 26)}px;--s:${(4 + Math.random() * 6).toFixed(1)}px"></i>`).join('');
     if (gotNow.length && !gotNow.some(b => MAJOR.has(b.pct))) setTimeout(() => confetti(0.45), RM ? 0 : 420);
     $('#stampCheer').textContent = pickCheer(data.hours);
     shareText = `오늘 실습 ${fmtDur(data.hours)} 채웠어요. 지금까지 ${fmtNum(after.total)} / ${fmtNum(after.target)}시간 (${pctInt(after)}%)` + (gotNow.length ? ` · '${gotNow[gotNow.length - 1].title}' 배지 획득` : '');
@@ -1578,10 +1844,11 @@ async function shareProgress(){
 function showMilestone(b, after, others){
   return new Promise(resolve => {
     const done = b.id === 'p100';
-    $('#msBody').innerHTML = `<span class="bubble" style="--c:${MARBLES[b.ci]}">${esc(b.say)}</span>`
+    $('#msBody').innerHTML = `<span class="bubble" id="msBubble" style="--c:${MARBLES[b.ci]}"></span>`
       + `<h2 id="msTitle">${done ? '구슬병이 가득 찼어요' : `${esc(b.title)} 단계에 왔어요`}</h2>`
       + `<p>${esc(msText(b))}</p><p class="stage-desc">언어발달 '${esc(b.title)}': ${esc(b.stage)}</p>`
       + (others && others.length ? `<p class="also">함께 받은 배지: ${others.map(o => esc(o.title)).join(' · ')}</p>` : '');
+    typeInto($('#msBubble'), b.say, 420, 150);
     openLayer($('#modalMilestone'), resolve);
     confetti(done ? 1.6 : 1); fanfare();
     if (done) setTimeout(() => confetti(1.2), 900);
@@ -1617,7 +1884,7 @@ function dueNotes(d, afterAdd){
 }
 let missionBusy = false, suppressMissions = false;
 async function runMissions(afterAdd){
-  if (missionBusy || (suppressMissions && !afterAdd) || secretOpen || Store.mode === 'boot' || !D.settings) return;
+  if (missionBusy || (suppressMissions && !afterAdd) || secretOpen || (animating && !afterAdd) || Store.mode === 'boot' || !D.settings) return;
   const list = dueNotes(derive(Store.view()), afterAdd);
   if (!list.length) return;
   missionBusy = true;
@@ -1629,12 +1896,22 @@ function showMission(n, i, total){
     Store.exec({ t:'open', id:n.id, date:todayStr() });
     $('#misTitle').textContent = missionTitle(n);
     $('#misSub').textContent = total > 1 ? `숨겨진 쪽지 ${i + 1} / ${total}` : '숨겨진 쪽지가 튀어나왔어요';
-    const who = D.settings && D.settings.sender ? `${D.settings.sender}의 쪽지` : '누군가 숨겨 둔 쪽지';
-    const body = $('#misBody'); body.innerHTML = envelopeHTML('envMis', who);
+    const who = D.settings && D.settings.sender ? `${D.settings.sender}의 쪽지가 숨어 있었어요` : '누군가 숨겨 둔 쪽지가 있었어요';
+    const body = $('#misBody');
+    body.innerHTML = `<div class="env idle" id="envMis" role="button" tabindex="0" aria-label="봉투 열기"><div class="env-back"></div><div class="env-letter"><span></span><span></span><span></span></div><div class="env-pocket"></div><div class="env-flap"></div><div class="env-seal">칭</div></div><p class="env-hint">${esc(who)} · 봉투를 눌러 열어 보세요</p>`;
     $('#btnMisNext').textContent = i < total - 1 ? '다음 쪽지' : '닫기';
     openLayer($('#modalMission'), resolve);
-    $('#envMis').addEventListener('click', () => { clink(); body.innerHTML = genko(n.text, body.clientWidth) + signLine(); });
-    chime(); confetti(0.5);
+    const env = $('#envMis'); let opened = false;
+    const open = async () => {
+      if (opened) return; opened = true; ensureAudio(); clink();
+      env.classList.remove('idle'); env.classList.add('open');
+      await sleep(RM ? 0 : 260); env.classList.add('flipped');
+      await sleep(RM ? 0 : 820);
+      body.innerHTML = genko(n.text, body.clientWidth) + signLine();
+    };
+    env.addEventListener('click', open);
+    env.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); open(); } });
+    chime(); setTimeout(() => confetti(0.5), RM ? 0 : 450);
   });
 }
 
@@ -1739,8 +2016,9 @@ function viewBadge(id){
   if (got) line = `${korDateY(got)}에 받았어요.`;
   else if (b.pct != null) line = `목표의 ${b.pct}%(${fmtNum(D.target * b.pct / 100)}시간)를 채우면 열려요. 앞으로 ${fmtDur(Math.max(0, D.target * b.pct / 100 - D.total))}.`;
   else line = '첫 실습을 기록하면 열려요.';
-  $('#viewBody').innerHTML = `<div class="ms${got ? '' : ' locked'}"><span class="bubble" style="--c:${MARBLES[b.ci]}">${esc(b.say)}</span><h2 style="font-size:24px;margin-top:14px">${esc(b.title)}</h2>`
+  $('#viewBody').innerHTML = `<div class="ms${got ? '' : ' locked'}"><span class="bubble" id="viewBubble" style="--c:${MARBLES[b.ci]}"></span><h2 style="font-size:24px;margin-top:14px">${esc(b.title)}</h2>`
     + `<p class="stage-desc">${esc(b.stage)}</p><p>${esc(line)}</p><p class="also">${STAGES.indexOf(b) + 1}번째 단계 / 전체 ${STAGES.length}단계</p></div>`;
+  typeInto($('#viewBubble'), b.say, 300, 140);
   openLayer($('#modalView'));
 }
 
@@ -1757,6 +2035,8 @@ function openSettings(){
   const s = D.settings || defaultSettings();
   $('#sName').value = s.name || ''; $('#sTarget').value = s.target || 120; $('#sGrad').value = s.gradDate || '';
   $('#sSound').checked = !!prefs.sound;
+  $('#sRound').checked = s.roundTrip !== false;
+  $('#sOriginName').textContent = `출발지: ${(s.origin && s.origin.name) || DEFAULT_ORIGIN.name}`;
   catDraft = clone(s.categories || []).map(c => ({ id:c.id, name:c.name, target:c.target }));
   $('#catRows').innerHTML = catRowsHTML(); updateCatSum(); $('#setErr').textContent = '';
   openLayer($('#sheetSettings'));
@@ -1766,7 +2046,7 @@ async function submitSettings(e){
   const target = parseFloat($('#sTarget').value);
   if (!(target > 0)){ $('#setErr').textContent = '졸업까지 채울 시간을 입력해 주세요.'; return; }
   const cats = catDraft.filter(c => String(c.name).trim()).map(c => ({ id:c.id || uid('k'), name:String(c.name).trim().slice(0, 20), target: Number(c.target) > 0 ? Math.round(Number(c.target) * 10) / 10 : 0 }));
-  const data = Object.assign(D.settings ? clone(D.settings) : defaultSettings(), { name:$('#sName').value.trim().slice(0, 20), target:Math.round(target * 10) / 10, gradDate:$('#sGrad').value || '', categories:cats });
+  const data = Object.assign(D.settings ? clone(D.settings) : defaultSettings(), { name:$('#sName').value.trim().slice(0, 20), target:Math.round(target * 10) / 10, gradDate:$('#sGrad').value || '', categories:cats, roundTrip:$('#sRound').checked });
   prefs.sound = $('#sSound').checked; savePrefs();
   closeLayer($('#sheetSettings'));
   if (await Store.exec({ t:'settings', data })) toast('설정을 저장했어요');
@@ -1909,8 +2189,8 @@ function wire(){
   $('#weeks').addEventListener('pointerleave', hideTip);
   $('#weeks').addEventListener('focusin', e => { const w = e.target.closest('.wk'); if (w) showTip(w); });
   $('#weeks').addEventListener('focusout', hideTip);
-  $('#jar').addEventListener('click', () => { if (!jar.shown) return; ensureAudio(); jar.shake(); for (let i = 0; i < 4; i++) setTimeout(clink, 40 + i * 85); });
-  const retheme = () => jar && jar.retheme();
+  $('#jar').addEventListener('click', () => { if (!jar.shown || animating) return; ensureAudio(); jar.jostle(); for (let i = 0; i < 5; i++) setTimeout(clink, 30 + i * 70 + Math.random() * 40); });
+  const retheme = () => { if (jar) jar.retheme(); MapView.retheme(); if (Picker.map && MapView.L){ Picker.map.removeLayer(Picker.tiles); Picker.tiles = tileLayer(MapView.L).addTo(Picker.map); } };
   const mq = window.matchMedia && matchMedia('(prefers-color-scheme: dark)');
   if (mq){ if (mq.addEventListener) mq.addEventListener('change', retheme); else if (mq.addListener) mq.addListener(retheme); }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
@@ -1921,13 +2201,344 @@ function wire(){
   Store.setNotifier(kind => { if (kind === 'localfail') toast('이 폰에서 저장이 막혀 있어요. 개인정보 보호 모드가 아닌지 확인해 주세요.', 4600); });
 }
 
+
+/* ================= travel map ================= */
+const LEAFLET_CSS = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css';
+const LEAFLET_JS = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';
+const MARATHON_KM = 42.195;
+let leafletP = null;
+function loadLeaflet(){
+  if (window.L) return Promise.resolve(window.L);
+  if (leafletP) return leafletP;
+  leafletP = new Promise((res, rej) => {
+    const css = document.createElement('link'); css.rel = 'stylesheet'; css.href = LEAFLET_CSS; document.head.appendChild(css);
+    const js = document.createElement('script'); js.src = LEAFLET_JS; js.async = true;
+    js.onload = () => (window.L ? res(window.L) : rej(new Error('leaflet missing')));
+    js.onerror = () => { leafletP = null; rej(new Error('leaflet load failed')); };
+    document.head.appendChild(js);
+  });
+  return leafletP;
+}
+const isDark = () => { const t = document.documentElement.getAttribute('data-theme'); if (t) return t === 'dark'; return !!(window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches); };
+function tileLayer(L){
+  const url = isDark() ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png' : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
+  return L.tileLayer(url, { subdomains:'abcd', maxZoom:19, crossOrigin:true,
+    attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> © <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>' });
+}
+const placeColor = (p, d = D) => MARBLES[Math.max(0, d.places.findIndex(x => x.id === p.id)) % MARBLES.length];
+function marbleIcon(L, color, label, size = 24){
+  return L.divIcon({ className:'mk', iconSize:[size, size], iconAnchor:[size / 2, size / 2],
+    html:`<span class="mk-m" style="--c:${color};width:${size}px;height:${size}px">${label ? `<b>${esc(label)}</b>` : ''}</span>` });
+}
+const originIcon = (L, name) => L.divIcon({ className:'mk', iconSize:[0, 0], iconAnchor:[0, 0], html:`<span class="mk-o"><i></i><em>${esc(name)}</em></span>` });
+const pinIcon = L => L.divIcon({ className:'mk', iconSize:[0, 0], iconAnchor:[0, 0], html:'<span class="mk-pin"></span>' });
+
+function setKm(km){
+  $('#kmNum').textContent = fmtKm(km);
+  const m = km / MARATHON_KM;
+  $('#kmMarathon').textContent = km > 0 ? `마라톤 ${m >= 10 ? Math.round(m) : (Math.round(m * 10) / 10).toFixed(1)}번` : '-';
+}
+
+const MapView = {
+  map:null, L:null, layers:null, tiles:null, dark:null, playing:false, stop:false, failed:false, sig:'',
+  async ensure(){
+    if (this.map) return this.map;
+    if (this.failed) return null;
+    const el = $('#map'); if (!el) return null;
+    try { this.L = await loadLeaflet(); }
+    catch (e) { this.failed = true; $('#mapNote').textContent = '지도를 불러오지 못했어요. 인터넷에 연결된 상태에서 다시 열어 주세요. 거리 기록은 그대로 쌓여요.'; return null; }
+    const L = this.L, mobile = L.Browser.mobile;
+    this.map = L.map(el, { zoomControl:false, scrollWheelZoom:false, dragging:!mobile, tap:false, touchZoom:true, zoomSnap:0.25, attributionControl:true });
+    this.map.attributionControl.setPrefix(false);
+    this.dark = isDark(); this.tiles = tileLayer(L).addTo(this.map);
+    this.layers = L.layerGroup().addTo(this.map);
+    this.draw(true);
+    return this.map;
+  },
+  retheme(){ if (!this.map) return; const d = isDark(); if (d === this.dark) return; this.dark = d; this.map.removeLayer(this.tiles); this.tiles = tileLayer(this.L).addTo(this.map); },
+  fit(animate){
+    if (!this.map) return;
+    const pts = [[D.origin.lat, D.origin.lng], ...D.places.map(p => [p.lat, p.lng])];
+    if (pts.length > 1) this.map.fitBounds(this.L.latLngBounds(pts), { padding:[34, 34], maxZoom:14, animate:!!animate });
+    else this.map.setView(pts[0], 13, { animate:!!animate });
+  },
+  pathOf(p){ return D.routed(p) && Array.isArray(p.route) && p.route.length > 1 ? p.route : [[D.origin.lat, D.origin.lng], [p.lat, p.lng]]; },
+  draw(fit){
+    if (!this.map || this.playing) return;
+    const L = this.L; this.layers.clearLayers();
+    const maxV = Math.max(1, ...D.places.map(p => D.visits.get(p.id) || 0));
+    for (const p of D.places){
+      const v = D.visits.get(p.id) || 0, col = placeColor(p), path = this.pathOf(p), w = 2.5 + 4 * (v / maxV);
+      L.polyline(path, { color:'#ffffff', weight:w + 4, opacity:0.8, interactive:false }).addTo(this.layers);
+      L.polyline(path, { color:col, weight:w, opacity:v ? 0.95 : 0.5, dashArray: D.routed(p) ? null : '6 8', interactive:false }).addTo(this.layers);
+    }
+    for (const p of D.places){
+      const v = D.visits.get(p.id) || 0;
+      L.marker([p.lat, p.lng], { icon:marbleIcon(L, placeColor(p), v ? String(v) : '', 26), keyboard:false })
+        .bindTooltip(`${p.name} · ${v}회`, { direction:'top', offset:[0, -12] })
+        .on('click', () => openPicker('place', p.id)).addTo(this.layers);
+    }
+    L.marker([D.origin.lat, D.origin.lng], { icon:originIcon(L, D.origin.name || '출발'), keyboard:false, interactive:false }).addTo(this.layers);
+    const sig = D.oKey + '|' + D.places.map(p => `${p.id}:${p.lat},${p.lng}`).join(';');
+    if (fit || sig !== this.sig) this.fit(false);
+    this.sig = sig;
+  },
+  async play(){
+    if (this.playing){ this.stop = true; return; }
+    const map = await this.ensure(); if (!map) return;
+    const all = D.trips; if (!all.length){ toast('장소가 지정된 실습 기록이 아직 없어요'); return; }
+    const trips = all.slice(-80), skipped = all.length - trips.length;
+    this.playing = true; this.stop = false;
+    const btn = $('#btnPlay'); btn.classList.add('on'); $('span', btn).textContent = '멈추기'; $('svg', btn).innerHTML = '<rect x="6.5" y="6.5" width="11" height="11" rx="2"/>';
+    const L = this.L, ov = $('#mapOverlay'); this.layers.clearLayers(); this.fit(true);
+    L.marker([D.origin.lat, D.origin.lng], { icon:originIcon(L, D.origin.name || '출발'), interactive:false }).addTo(this.layers);
+    const seen = new Set(), per = RM ? 0 : clamp(9000 / trips.length, 260, 760);
+    ensureAudio(); ov.hidden = false;
+    setKm(skipped ? all[skipped - 1].cum : 0);
+    for (let i = 0; i < trips.length && !this.stop; i++){
+      const t = trips[i], col = placeColor(t.p), path = this.pathOf(t.p);
+      ov.innerHTML = `<b>${esc(korDateShort(t.s.date))}</b>${esc(t.p.name)}<span>+${esc(fmtKm(t.km))}km</span>`;
+      const line = L.polyline([path[0]], { color:col, weight:5, opacity:0.95, interactive:false }).addTo(this.layers);
+      const head = L.marker(path[0], { icon:marbleIcon(L, col, '', 16), interactive:false }).addTo(this.layers);
+      await this.trace(line, head, path, per * 0.75);
+      head.remove(); line.setStyle({ weight:3, opacity:0.45 });
+      if (!seen.has(t.p.id)){ seen.add(t.p.id); L.marker([t.p.lat, t.p.lng], { icon:marbleIcon(L, col, '', 22), interactive:false }).addTo(this.layers); }
+      setKm(t.cum); clink();
+      $('span', ov).textContent = `누적 ${fmtKm(t.cum)}km`;
+      if (per) await sleep(per * 0.25);
+    }
+    this.playing = false; ov.hidden = true; btn.classList.remove('on'); $('span', btn).textContent = '타임라인 재생'; $('svg', btn).innerHTML = '<path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.4-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/>';
+    setKm(D.totalKm); this.draw(false);
+  },
+  trace(line, head, path, ms){
+    return new Promise(resolve => {
+      if (ms <= 0 || path.length < 2){ line.setLatLngs(path); head.setLatLng(path[path.length - 1]); resolve(); return; }
+      const seg = []; let total = 0;
+      for (let i = 1; i < path.length; i++){ const d = Math.hypot(path[i][0] - path[i - 1][0], path[i][1] - path[i - 1][1]); seg.push(d); total += d; }
+      const t0 = performance.now();
+      const step = now => {
+        if (this.stop){ line.setLatLngs(path); resolve(); return; }
+        const u = Math.min(1, (now - t0) / ms), target = total * easeInOut(u);
+        const pts = [path[0]]; let acc = 0, pos = path[0];
+        for (let i = 0; i < seg.length; i++){
+          if (acc + seg[i] >= target){ const f = seg[i] ? (target - acc) / seg[i] : 0; pos = [path[i][0] + (path[i + 1][0] - path[i][0]) * f, path[i][1] + (path[i + 1][1] - path[i][1]) * f]; pts.push(pos); break; }
+          acc += seg[i]; pos = path[i + 1]; pts.push(pos);
+        }
+        line.setLatLngs(pts); head.setLatLng(pos);
+        if (u < 1) requestAnimationFrame(step); else resolve();
+      };
+      requestAnimationFrame(step);
+    });
+  },
+};
+
+/* road distance from the origin, fetched once per place and kept on the phone */
+async function fetchRoute(o, p){
+  const q = `${o.lng},${o.lat};${p.lng},${p.lat}?overview=simplified&geometries=geojson`;
+  for (const base of ['https://router.project-osrm.org/route/v1/driving/', 'https://routing.openstreetmap.de/routed-car/route/v1/driving/']){
+    try {
+      const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 9000);
+      const r = await fetch(base + q, { signal:ctl.signal }); clearTimeout(tm);
+      if (!r.ok) continue;
+      const j = await r.json(), rt = j && j.routes && j.routes[0]; if (!rt || !rt.geometry) continue;
+      let pts = rt.geometry.coordinates.map(c => [Math.round(c[1] * 1e5) / 1e5, Math.round(c[0] * 1e5) / 1e5]);
+      if (pts.length > 240){ const k = Math.ceil(pts.length / 240); pts = pts.filter((_, i) => i % k === 0 || i === pts.length - 1); }
+      return { dist:Math.round(rt.distance), route:pts };
+    } catch (e) {}
+  }
+  return null;
+}
+const Router = {
+  busy:false,
+  async fill(){
+    if (this.busy || !Store.ready() || !navigator.onLine) return;
+    const d = derive(Store.view());
+    const todo = d.places.filter(p => !d.routed(p) && !(p.failKey === d.oKey && Date.now() - (p.failAt || 0) < 10 * 60000));
+    if (!todo.length) return;
+    this.busy = true;
+    try {
+      for (const p of todo){
+        const r = await fetchRoute(d.origin, p);
+        const cur = derive(Store.view()).placeMap.get(p.id); if (!cur) continue;
+        const data = Object.assign(clone(cur), r ? { dist:r.dist, route:r.route, originKey:d.oKey, failAt:0, failKey:'' } : { failAt:Date.now(), failKey:d.oKey });
+        delete data.id;
+        await Store.exec({ t:'place', id:p.id, data });
+        await sleep(1100);
+      }
+    } finally { this.busy = false; }
+  },
+};
+
+/* ---- section ---- */
+let tripLimit = 6;
+function renderMap(){
+  const has = !!D.settings;
+  $('#mapBlock').hidden = !has;
+  if (!has) return;
+  const o = D.origin.name || '출발지';
+  $('#kmEyebrow').textContent = `${o} ↔ 실습 장소 · ${D.roundTrip ? '왕복' : '편도'}`;
+  if (!MapView.playing) setKm(D.totalKm);
+  $('#mapSub').textContent = D.places.length ? `장소 ${D.places.length}곳 · 이동 ${D.trips.length}번` : '';
+  $('#btnOrigin').textContent = `출발지: ${o}`;
+  const est = D.places.filter(p => !D.routed(p)).length;
+  const notes = [];
+  if (!D.places.length) notes.push(`실습 장소를 지도에 추가하면 ${o}에서 움직인 거리가 실습할 때마다 쌓여요.`);
+  if (est) notes.push(`${est}곳은 도로 경로를 계산하는 중이라 직선거리로 어림했어요(점선).`);
+  if (D.unmapped && D.places.length) notes.push(`장소가 지정되지 않은 기록 ${D.unmapped}개는 거리에서 빠져 있어요. 기록을 눌러 기관을 골라 주세요.`);
+  if (!MapView.failed) $('#mapNote').textContent = notes.join(' ');
+  $('#placesWrap').innerHTML = D.places.map(p => {
+    const v = D.visits.get(p.id) || 0, one = D.placeDist(p) / 1000, sum = D.trips.filter(t => t.p.id === p.id).reduce((a, t) => a + t.km, 0);
+    return `<button type="button" class="place-card" data-place="${esc(p.id)}" style="--c:${placeColor(p)}"><span class="dot" aria-hidden="true"></span><span style="min-width:0"><b>${esc(p.name)}</b><small>편도 ${D.routed(p) ? '' : '약 '}${esc(fmtKm(one))}km · ${v}회</small></span><span class="kmv">${esc(fmtKm(sum))}km</span></button>`;
+  }).join('');
+  const list = D.trips.slice().reverse();
+  $('#tripList').innerHTML = list.slice(0, tripLimit).map(t => `<li class="trip" style="--c:${placeColor(t.p)}"><i aria-hidden="true"></i><p><b>${esc(korDateShort(t.s.date))}</b> ${esc(t.p.name)}</p><em><b>+${esc(fmtKm(t.km))}km</b>누적 ${esc(fmtKm(t.cum))}km</em></li>`).join('')
+    + (list.length > tripLimit ? `<li class="more-row"><button type="button" class="btn-ghost" id="btnMoreTrips">이동 기록 더 보기 (${list.length - tripLimit}개)</button></li>` : '');
+  if (MapView.map) MapView.draw(false);
+}
+
+/* ---- place picker (also sets the starting point) ---- */
+const Picker = { map:null, pin:null, mode:'place', id:null, lat:null, lng:null, afterSave:null };
+function setPin(lat, lng, pan){
+  Picker.lat = lat; Picker.lng = lng;
+  $('#plCoord').textContent = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+  if (!Picker.map) return;
+  const L = MapView.L;
+  if (Picker.pin) Picker.pin.remove();
+  Picker.pin = L.marker([lat, lng], { icon:pinIcon(L), keyboard:false, interactive:false }).addTo(Picker.map);
+  if (pan) Picker.map.setView([lat, lng], Math.max(Picker.map.getZoom(), 16));
+}
+async function openPicker(mode, id, afterSave){
+  if (MapView.playing) return;
+  Picker.mode = mode; Picker.id = id || null; Picker.afterSave = afterSave || null; Picker.lat = Picker.lng = null;
+  const p = mode === 'place' && id ? D.placeMap.get(id) : null;
+  $('#placeTitle').textContent = mode === 'origin' ? '출발지 정하기' : p ? '실습 장소 고치기' : '실습 장소 찾기';
+  $('#plNameLbl').textContent = mode === 'origin' ? '출발지 이름' : '장소 이름';
+  $('#plName').value = mode === 'origin' ? (D.origin.name || '') : p ? p.name : ($('#fPlace') && !$('#sheetSession').hidden ? $('#fPlace').value.trim() : '');
+  $('#plQuery').value = ''; $('#plResults').innerHTML = ''; $('#plErr').textContent = ''; $('#plCoord').textContent = '지도를 눌러 위치를 찍어 주세요';
+  $('#btnDelPlace').hidden = !p;
+  $('#btnSavePlace').textContent = mode === 'origin' ? '출발지로 저장' : '이 위치로 저장';
+  openLayer($('#sheetPlace'));
+  let L;
+  try { L = MapView.L || await loadLeaflet(); MapView.L = L; }
+  catch (e) { $('#plErr').textContent = '지도를 불러오지 못했어요. 인터넷 연결을 확인해 주세요.'; return; }
+  if (!Picker.map){
+    Picker.map = L.map($('#pickMap'), { zoomControl:true, scrollWheelZoom:true, tap:false });
+    Picker.map.attributionControl.setPrefix(false);
+    Picker.tiles = tileLayer(L).addTo(Picker.map);
+    Picker.map.on('click', e => setPin(e.latlng.lat, e.latlng.lng, false));
+  }
+  const start = mode === 'origin' ? D.origin : p || D.origin;
+  Picker.map.setView([start.lat, start.lng], p || mode === 'origin' ? 16 : 13);
+  if (Picker.pin){ Picker.pin.remove(); Picker.pin = null; }
+  if (p || mode === 'origin') setPin(start.lat, start.lng, false);
+  setTimeout(() => Picker.map && Picker.map.invalidateSize(), 380);
+}
+async function searchPlaces(){
+  const q = $('#plQuery').value.trim(), box = $('#plResults');
+  if (!q){ $('#plQuery').focus(); return; }
+  box.innerHTML = '<p class="hint">찾는 중…</p>';
+  try {
+    const url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=kr&accept-language=ko&limit=6&viewbox=126.70,37.75,127.25,37.40&q=' + encodeURIComponent(q);
+    const r = await fetch(url, { headers:{ 'Accept':'application/json' } });
+    const list = r.ok ? await r.json() : [];
+    if (!list.length){ box.innerHTML = '<p class="hint">찾지 못했어요. 도로명 주소로 찾거나 지도를 눌러 위치를 찍어 주세요.</p>'; return; }
+    box.innerHTML = list.map((x, i) => {
+      const parts = String(x.display_name || '').split(',').map(t => t.trim()).filter(t => t && t !== '대한민국' && !/^\d{5}$/.test(t));
+      const title = x.name || parts[0] || q;
+      return `<button type="button" class="pl-res" data-i="${i}"><b>${esc(title)}</b>${esc(parts.slice(1, 5).reverse().join(' '))}</button>`;
+    }).join('');
+    box.onclick = e => {
+      const b = e.target.closest('.pl-res'); if (!b) return;
+      const x = list[Number(b.dataset.i)], lat = Number(x.lat), lng = Number(x.lon);
+      setPin(lat, lng, true);
+      if (!$('#plName').value.trim()) $('#plName').value = x.name || q;
+      box.innerHTML = '';
+    };
+  } catch (e) { box.innerHTML = '<p class="hint">검색하지 못했어요. 인터넷 연결을 확인해 주세요.</p>'; }
+}
+function useHere(){
+  if (!navigator.geolocation){ toast('이 폰에서는 위치를 쓸 수 없어요'); return; }
+  $('#plCoord').textContent = '위치를 찾는 중…';
+  navigator.geolocation.getCurrentPosition(
+    pos => setPin(pos.coords.latitude, pos.coords.longitude, true),
+    () => { $('#plCoord').textContent = '위치를 가져오지 못했어요. 지도를 눌러 찍어 주세요.'; },
+    { enableHighAccuracy:true, timeout:12000, maximumAge:60000 });
+}
+async function savePicker(e){
+  e.preventDefault();
+  const name = $('#plName').value.trim().slice(0, 30), err = $('#plErr');
+  if (Picker.lat == null){ err.textContent = '지도에서 위치를 먼저 찍어 주세요.'; return; }
+  if (!name){ err.textContent = Picker.mode === 'origin' ? '출발지 이름을 적어 주세요.' : '장소 이름을 적어 주세요.'; $('#plName').focus(); return; }
+  if (Picker.mode === 'origin'){
+    const data = Object.assign(D.settings ? clone(D.settings) : defaultSettings(), { origin:{ name, lat:Picker.lat, lng:Picker.lng } });
+    closeLayer($('#sheetPlace'));
+    await Store.exec({ t:'settings', data }); toast(`출발지를 ${name}(으)로 바꿨어요`);
+    if ($('#sOriginName')) $('#sOriginName').textContent = `출발지: ${name}`;
+    Router.fill(); return;
+  }
+  const old = Picker.id ? D.placeMap.get(Picker.id) : null, id = Picker.id || uid('p');
+  const moved = !old || Math.abs(old.lat - Picker.lat) > 1e-6 || Math.abs(old.lng - Picker.lng) > 1e-6;
+  const data = Object.assign(old ? clone(old) : { createdAt:new Date().toISOString() }, { name, lat:Picker.lat, lng:Picker.lng });
+  delete data.id;
+  if (moved){ delete data.route; delete data.dist; delete data.originKey; delete data.failAt; delete data.failKey; }
+  closeLayer($('#sheetPlace'));
+  await Store.exec({ t:'place', id, data });
+  toast(old ? '장소를 고쳤어요' : `${name}을(를) 지도에 추가했어요`);
+  if (Picker.afterSave) Picker.afterSave(id);
+  Router.fill();
+}
+async function deletePicked(){
+  const p = Picker.id && D.placeMap.get(Picker.id); if (!p) return;
+  if (!(await confirmBox('이 장소를 지울까요?', `${p.name} 기록은 남지만, 이동 거리 계산에서는 빠져요.`))) return;
+  closeLayer($('#sheetPlace'));
+  await Store.exec({ t:'delPlace', id:p.id }); toast('장소를 지웠어요');
+}
+
+/* ---- place chips in the record form ---- */
+let pickedPlace = '';
+function renderPlaceChips(){
+  const name = $('#fPlace').value.trim(), d = derive(Store.view());
+  $('#placeChips').innerHTML = d.places.map(p => `<button type="button" class="chip" data-pid="${esc(p.id)}" aria-pressed="${p.id === pickedPlace}">${esc(p.name)}</button>`).join('')
+    + '<button type="button" class="chip add" data-pid="+">+ 지도에서 추가</button>';
+  if (!pickedPlace && name){ const m = d.places.find(p => p.name === name); if (m){ pickedPlace = m.id; renderPlaceChips(); } }
+}
+function wireMap(){
+  $('#btnPlay').addEventListener('click', () => MapView.play());
+  $('#btnMapFit').addEventListener('click', async () => { if (await MapView.ensure()) MapView.fit(true); });
+  $('#btnAddPlace').addEventListener('click', () => openPicker('place'));
+  $('#btnOrigin').addEventListener('click', () => openPicker('origin'));
+  $('#btnSetOrigin').addEventListener('click', () => openPicker('origin'));
+  $('#placesWrap').addEventListener('click', e => { const b = e.target.closest('[data-place]'); if (b) openPicker('place', b.dataset.place); });
+  $('#tripList').addEventListener('click', e => { if (e.target.closest('#btnMoreTrips')){ tripLimit += 20; renderMap(); } });
+  $('#placeForm').addEventListener('submit', savePicker);
+  $('#btnPlSearch').addEventListener('click', searchPlaces);
+  $('#plQuery').addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); searchPlaces(); } });
+  $('#btnHere').addEventListener('click', useHere);
+  $('#btnDelPlace').addEventListener('click', deletePicked);
+  $('#placeChips').addEventListener('click', e => {
+    const c = e.target.closest('[data-pid]'); if (!c) return;
+    if (c.dataset.pid === '+'){ openPicker('place', null, id => { pickedPlace = id; const p = derive(Store.view()).placeMap.get(id); if (p) $('#fPlace').value = p.name; renderPlaceChips(); }); return; }
+    pickedPlace = pickedPlace === c.dataset.pid ? '' : c.dataset.pid;
+    const p = derive(Store.view()).placeMap.get(pickedPlace); $('#fPlace').value = p ? p.name : '';
+    renderPlaceChips();
+  });
+  $('#fPlace').addEventListener('input', () => { const n = $('#fPlace').value.trim(); const m = D.places.find(p => p.name === n); pickedPlace = m ? m.id : ''; renderPlaceChips(); });
+  const lazy = () => MapView.ensure();
+  if ('IntersectionObserver' in window){
+    const io = new IntersectionObserver(es => { if (es.some(x => x.isIntersecting)){ io.disconnect(); lazy(); } }, { rootMargin:'400px 0px' });
+    io.observe($('#mapBlock'));
+  } else setTimeout(lazy, 1500);
+  window.addEventListener('online', () => Router.fill());
+}
+
 /* ================= boot ================= */
 jar = new Jar($('#jar'));
 wire();
+wireMap();
 Store.onChange(() => { scheduleRender(); if (secretOpen) setTimeout(renderSecretList, 0); });
 render();
 installHint();
-Store.init().then(() => { scheduleRender(); setTimeout(() => runMissions(false), 1200); });
+Store.init().then(() => { scheduleRender(); setTimeout(() => runMissions(false), 1200); setTimeout(() => Router.fill(), 2500); });
 if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
 try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {}); } catch (e) {}
 })();
