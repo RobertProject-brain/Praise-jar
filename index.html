@@ -1438,6 +1438,65 @@ class Jar {
     window.addEventListener('resize', () => this.resize());
     this.resize();
     this.startIdle();
+    this.off = null; this.stirActive = false; this.ptr = null; this.onStir = null;
+    this.initStir();
+  }
+  /* ---- stir the marbles with a finger: they get pushed aside and spring back ---- */
+  initStir(){
+    const cv = this.cv;
+    const pos = e => { const r = cv.getBoundingClientRect(); return { x:e.clientX - r.left, y:e.clientY - r.top }; };
+    const inBody = p => this.g && p.x > this.g.x0 && p.x < this.g.x1 && p.y > this.g.yShoulder && p.y < this.g.yBot + 4;
+    cv.addEventListener('pointerdown', e => {
+      const p = pos(e); if (!inBody(p) || this.anim || !this.shown) return;
+      this.ptr = { x:p.x, y:p.y, vx:0, vy:0, t:performance.now(), id:e.pointerId, moved:0 };
+    });
+    cv.addEventListener('pointermove', e => {
+      if (!this.ptr || e.pointerId !== this.ptr.id) return;
+      const p = pos(e), now = performance.now(), dt = Math.max(8, now - this.ptr.t);
+      this.ptr.vx = (p.x - this.ptr.x) / dt * 16; this.ptr.vy = (p.y - this.ptr.y) / dt * 16;
+      this.ptr.moved += Math.hypot(p.x - this.ptr.x, p.y - this.ptr.y);
+      this.ptr.x = p.x; this.ptr.y = p.y; this.ptr.t = now;
+      if (this.ptr.moved > 6 && !RM){ this.stirActive = true; this.loop(); }
+    });
+    const end = e => { if (this.ptr && (!e || e.pointerId === this.ptr.id)) this.ptr = null; };
+    ['pointerup', 'pointercancel', 'pointerleave'].forEach(t => cv.addEventListener(t, end));
+    // inside the jar a finger stirs instead of scrolling the page
+    cv.addEventListener('touchmove', e => { if (this.ptr) e.preventDefault(); }, { passive:false });
+  }
+  get stirMoved(){ return this.ptr ? this.ptr.moved : 0; }
+  stirStep(){
+    const n = Math.min(this.shown, this.slots.length); if (!n){ this.stirActive = false; return; }
+    if (!this.off || this.off.length < n * 4) this.off = new Float32Array(Math.max(n, this.slots.length) * 4);
+    const o = this.off, r = this.r, R = r * 3.4, p = this.ptr; if (!this.g) return; let moving = false, hits = 0;
+    for (let i = 0; i < n; i++){
+      const s = this.slots[i], j = i * 4;
+      let dx = o[j], dy = o[j + 1], vx = o[j + 2], vy = o[j + 3];
+      if (p){
+        const ex = s.x + dx - p.x, ey = s.y + dy - p.y, d = Math.hypot(ex, ey);
+        if (d < R){
+          const f = (1 - d / R), nx = d > 0.01 ? ex / d : (Math.random() - 0.5), ny = d > 0.01 ? ey / d : -1;
+          vx += nx * f * 2.4 + p.vx * f * 0.35; vy += ny * f * 2.4 + p.vy * f * 0.35 - f * 0.9;
+          if (f > 0.35) hits++;
+        }
+      }
+      vx += -dx * 0.06; vy += -dy * 0.06; vx *= 0.86; vy *= 0.86;
+      dx += vx; dy += vy;
+      const lim = r * 3.2; dx = clamp(dx, -lim, lim); dy = clamp(dy, -lim * 1.4, r * 0.35);
+      const g = this.g, wall = g.t * 1.4 + r, lo = g.x0 + wall - s.x, hi = g.x1 - wall - s.x;   // stay inside the glass
+      if (dx < lo){ dx = lo; vx = Math.abs(vx) * 0.4; } else if (dx > hi){ dx = hi; vx = -Math.abs(vx) * 0.4; }
+      o[j] = dx; o[j + 1] = dy; o[j + 2] = vx; o[j + 3] = vy;
+      if (Math.abs(dx) > 0.05 || Math.abs(dy) > 0.05 || Math.abs(vx) > 0.05 || Math.abs(vy) > 0.05) moving = true;
+    }
+    if (p){ p.vx *= 0.7; p.vy *= 0.7; }
+    if (hits && this.onStir) this.onStir(hits);
+    if (!moving && !p){ this.stirActive = false; o.fill(0); }
+  }
+  drawStirred(ctx){
+    const n = Math.min(this.shown, this.slots.length), o = this.off, r = this.r, ss = this.spriteSize / this.dpr;
+    if (this.shadowSp) for (let i = 0; i < n; i++){ const s = this.slots[i]; ctx.drawImage(this.shadowSp, s.x + o[i * 4] - ss * 0.5 + r * 0.12, s.y + o[i * 4 + 1] * 0.3 - ss * 0.32 + r * 0.38, ss, ss * 0.64); }
+    // lifted marbles are drawn last so they sit on top
+    const order = Array.from({ length:n }, (_, i) => i).sort((a, b) => o[a * 4 + 1] - o[b * 4 + 1]).reverse();
+    for (const i of order){ const s = this.slots[i]; this.drawMarble(ctx, this.marbles[i], s.x + o[i * 4], s.y + o[i * 4 + 1], s.k, s.k, s.v); }
   }
   readColors(){
     const g = cssVar;
@@ -1653,6 +1712,9 @@ class Jar {
         const sq = u > 0.85 ? 1 - (1 - u) * 0.5 : 1;
         this.drawMarble(ctx, this.marbles[i], s.x + Math.sin(s.ph + jt / 60) * this.r * 0.12 * (1 - u), s.y - hop, s.k / sq, s.k * sq, s.v);
       }
+    } else if (this.stirActive && this.off){
+      if (this.jostleT0) this.jostleT0 = 0;
+      this.drawStirred(ctx);
     } else {
       if (this.jostleT0) this.jostleT0 = 0;
       ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.drawImage(this.marbCv, 0, 0); ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
@@ -1804,8 +1866,9 @@ class Jar {
         if (now >= a.end){ this.finishAnim(); }
       } else if (this.lid > 0) this.lid = Math.max(0, this.lid - 0.07);
       this.sparkles = this.sparkles.filter(s => now - s.t0 < s.dur);
+      if (this.stirActive) this.stirStep();
       this.draw(now);
-      const busy = this.anim || this.lid > 0 || this.sparkles.length || this.jostleT0 || this.glintT0;
+      const busy = this.anim || this.lid > 0 || this.sparkles.length || this.jostleT0 || this.glintT0 || this.stirActive;
       if (busy && !this.raf) this.raf = requestAnimationFrame(step);
     };
     this.raf = requestAnimationFrame(step);
@@ -2844,8 +2907,11 @@ function wire(){
   $('#weeks').addEventListener('focusin', e => { const w = e.target.closest('.wk'); if (w) showTip(w); });
   $('#weeks').addEventListener('focusout', hideTip);
   let soundHint = false;
+  let stirClink = 0;
+  jar.onStir = hits => { const t = performance.now(); if (t - stirClink > 70 + Math.random() * 60){ stirClink = t; clink(); if (hits > 3 && Math.random() < 0.5) setTimeout(clink, 25); } };
+  $('#jar').addEventListener('pointerdown', () => { if (prefs.sound) ensureAudio(); });
   $('#jar').addEventListener('click', () => {
-    if (!jar.shown || animating) return;
+    if (!jar.shown || animating || jar.stirMoved > 10 || jar.stirActive) return;
     jar.jostle();
     if (!prefs.sound){ if (!soundHint){ soundHint = true; toast('구슬 소리가 꺼져 있어요. 위의 스피커 버튼으로 켤 수 있어요.'); } return; }
     ensureAudio().then(ok => { if (!ok) return; for (let i = 0; i < 5; i++) setTimeout(clink, 10 + i * 70 + Math.random() * 40); watchAudio(); });
@@ -3626,7 +3692,7 @@ render();
 installHint();
 Store.init().then(() => { scheduleRender(); setTimeout(() => runMissions(false), 1200); setTimeout(() => Router.fill(), 2500); });
 if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js', { updateViaCache:'none' }).catch(() => {});
-const APP_VERSION = '20261007221810';
+const APP_VERSION = '20261007222052';
 let updating = false;
 async function checkUpdate(){
   if (updating || location.protocol !== 'https:') return;
