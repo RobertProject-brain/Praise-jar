@@ -503,6 +503,31 @@ legend{font-size:13px;font-weight:600;color:var(--ink-2);padding:0;margin-bottom
 
 /* ---- classes (수업) ---- */
 .rec-hours{text-align:right;line-height:1.2}
+.wiz{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.wiz li{display:flex;align-items:center;gap:6px;justify-content:center;padding:8px 4px;border-radius:12px;background:var(--sheet-2);border:1px solid var(--rule);font-size:12.5px;color:var(--ink-3);font-weight:600;cursor:pointer;white-space:nowrap}
+.wiz li b{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--meter-track);font-size:11.5px}
+.wiz li.on{background:color-mix(in srgb,var(--board) 12%,var(--sheet));border-color:color-mix(in srgb,var(--board) 45%,transparent);color:var(--board-text)}
+.wiz li.on b,.wiz li.done b{background:var(--board);color:var(--board-ink)}
+.wstep{display:grid;gap:16px;animation:rise .35s var(--ease-out) both}
+.wq{margin:0;font-family:var(--font-display);font-size:19px;font-weight:700}
+.plan-sum.plan-big{font-size:14.5px;padding:12px 14px}
+.review{display:grid;gap:4px;padding:14px;border-radius:16px;background:color-mix(in srgb,var(--board) 8%,var(--sheet));border:1px solid color-mix(in srgb,var(--board) 30%,var(--rule));font-size:14px;color:var(--ink-2);line-height:1.55}
+.review b{color:var(--ink)}
+.review .rv-t{font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--ink)}
+.more{border:1px solid var(--rule);border-radius:14px;padding:0 12px;background:var(--sheet)}
+.more summary{cursor:pointer;padding:12px 0;font-size:14px;font-weight:600;color:var(--ink-2);list-style:none}
+.more summary::-webkit-details-marker{display:none}
+.more summary::after{content:"＋";float:right;color:var(--ink-3)}
+.more[open] summary::after{content:"－"}
+.more[open]{padding-bottom:12px;display:grid;gap:10px}
+.hint.err{color:var(--stamp);font-weight:600}
+.hint.err:empty{display:none}
+.review .ok{color:var(--board-text);font-weight:600}
+.warn-t{color:var(--stamp)}
+.cat-pills{display:flex;flex-wrap:wrap;gap:6px}
+.cat-pills span{font-size:12px;padding:4px 10px;border-radius:999px;background:var(--sheet);border:1px solid var(--rule);color:var(--ink-2)}
+.cat-pills b{color:var(--ink);margin-right:3px}
+.cc-note{font-size:12.5px;color:var(--ink-2);background:var(--sheet-2);border-radius:10px;padding:7px 10px;line-height:1.45}
 .no-class{display:grid;gap:10px;padding:12px 14px;border-radius:14px;border:1px dashed color-mix(in srgb,var(--board) 45%,var(--rule-strong));background:color-mix(in srgb,var(--board) 6%,var(--sheet));font-size:13.5px;color:var(--ink-2);line-height:1.5}
 .no-class .btn-ghost{justify-self:start;min-height:40px;padding:8px 14px}
 .class-info{margin:2px 0 0;font-size:12.5px;color:var(--ink-2);padding:8px 11px;border-radius:12px;background:var(--sheet-2);border:1px solid var(--rule);line-height:1.5}
@@ -687,10 +712,10 @@ legend{font-size:13px;font-weight:600;color:var(--ink-2);padding:0;margin-bottom
   </div>
   <div class="tab-panel" role="tabpanel" id="tab-sched" aria-labelledby="tabbtn-sched" data-tab="sched" hidden>
   <section class="block" id="schedBlock" aria-labelledby="schedH">
-    <div class="block-h"><h2 id="schedH">등록한 실습</h2><p id="schedSub"></p></div>
+    <div class="block-h"><h2 id="schedH">내 실습</h2><p id="schedSub"></p></div>
     <div class="proj-card" id="projCard" hidden></div>
+    <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:8px;margin:0 0 14px"><button class="btn-primary" id="btnAddSched" type="button" style="flex:1">+ 신규 실습 등록</button><button class="link-btn" id="btnCal" type="button">아이폰 캘린더에 알림 넣기</button></div>
     <div class="class-list" id="schedList"></div>
-    <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:12px"><button class="btn-ghost" id="btnAddSched" type="button">+ 신규 실습 등록</button><button class="link-btn" id="btnCal" type="button">아이폰 캘린더에 알림 넣기</button></div>
     <div id="endedWrap"></div>
   </section>
   </div>
@@ -876,37 +901,53 @@ legend{font-size:13px;font-weight:600;color:var(--ink-2);padding:0;margin-bottom
 
 <div class="sheet" id="sheetSched" role="dialog" aria-modal="true" aria-labelledby="schedTitle" hidden>
   <div class="sheet-head"><h2 id="schedTitle">신규 실습 등록</h2><button class="icon-btn" type="button" data-close aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
-  <form id="schedForm" autocomplete="off">
-    <label class="field"><span>실습 이름</span><input id="scName" maxlength="30" placeholder="예: 해솔어린이집 실습 (비우면 장소 이름)"></label>
-    <div class="field"><span class="lbl">기간 (몇 월 며칠부터 며칠까지)</span><div class="dur"><input id="scFrom" type="date" aria-label="첫 실습 날"><span>부터</span><input id="scUntil" type="date" aria-label="마지막 실습 날"><span>까지</span></div></div>
-    <div class="field"><span class="lbl">가는 요일</span><div class="chips days" id="scDays"></div></div>
-    <div class="field"><span class="lbl">회차당 시간 (분)</span>
-      <div class="min-in"><input id="scPer" type="number" inputmode="numeric" min="0" step="1" max="1440" placeholder="50" aria-label="한 번에 인정되는 시간(분)"><span>분</span><em class="hm" aria-hidden="true"></em></div>
-      <p class="hint">한 번 갈 때 인정되는 실습 시간이에요. 예: 50분</p>
-    </div>
-    <div class="field"><span class="lbl">가는 날짜 확인</span>
-      <p class="plan-sum" id="scPlanSum"></p>
-      <div class="dmonths" id="scDates"></div>
-      <div class="cat-add"><input id="scExtra" type="date" aria-label="따로 가는 날짜"><button type="button" class="btn-ghost" id="btnScExtra">날짜 추가</button></div>
-      <p class="hint">날짜를 누르면 쉬는 날로 빠지고, 다시 누르면 돌아와요. 보강처럼 따로 가는 날은 날짜 추가로 넣어요.</p>
-    </div>
-    <div class="field"><span class="lbl">이 실습 목표 (분)</span>
-      <div class="min-in"><input id="scTarget" type="number" inputmode="numeric" min="0" step="1" max="60000" placeholder="예: 1500" aria-label="이 수업 목표(분)"><span>분</span><em class="hm" aria-hidden="true"></em></div>
-    </div>
-    <div class="field" id="scCatField"><span class="lbl">구분</span><div class="chips" id="scCats"></div><div class="chips sub" id="scSubs"></div>
-      <div class="cat-add" id="scCatAddRow" hidden><input id="scCatAddName" maxlength="20" placeholder="예: 복지관, 병원, 특수학교" aria-label="새 세부 구분 이름"><button type="button" class="btn-ghost" id="btnScCatAdd">추가</button></div></div>
-    <div class="field"><span class="lbl">장소</span><div class="chips" id="scPlaceChips"></div></div>
-    <div class="field"><span class="lbl">실습 시각 (알림 시간에 써요)</span><div class="dur"><input id="scStart" type="time" value="14:00" aria-label="시작 시간"><span>부터</span><input id="scEnd" type="time" value="17:00" aria-label="끝나는 시간"><span>까지</span></div><p class="hint" id="scDurHint"></p></div>
-    <div class="field"><span class="lbl">앱에 기록하기 전, 이 실습에서 이미 채운 시간 (분, 선택)</span>
-      <div class="min-in"><input id="scBefore" type="number" inputmode="numeric" min="0" step="1" max="60000" placeholder="0" aria-label="이미 채운 시간(분)"><span>분</span><em class="hm" aria-hidden="true"></em></div>
-      <p class="hint">이 실습 실적에만 더해요. 구슬병에는 더하지 않아요(처음에 넣은 '이미 채운 시간'에 들어 있어요).</p>
-    </div>
-    <label class="field"><span>알림</span>
-      <select id="scRemind"><option value="60">실습 1시간 전</option><option value="30">실습 30분 전</option><option value="120">실습 2시간 전</option><option value="1440">전날 같은 시간</option><option value="0">시작 전 알림 없음</option></select>
-    </label>
-    <label class="switch"><span>끝나고 '기록하기' 알림도 받기</span><input type="checkbox" id="scRecAlarm" checked></label>
-    <p class="hint" id="scErr" role="alert"></p>
-    <div class="sheet-actions"><button class="btn-ghost danger" type="button" id="btnDelSched" hidden>삭제</button><button class="btn-primary" type="submit" id="btnSaveSched">실습 등록</button></div>
+  <form id="schedForm" autocomplete="off" novalidate>
+    <ol class="wiz" id="scWiz"><li data-go="1"><b>1</b>무슨 실습</li><li data-go="2"><b>2</b>언제 가요</li><li data-go="3"><b>3</b>확인</li></ol>
+
+    <section class="wstep" data-step="1">
+      <p class="wq">어떤 실습이에요?</p>
+      <label class="field"><span>실습 이름</span><input id="scName" maxlength="30" placeholder="예: 해솔어린이집 실습"></label>
+      <div class="field" id="scCatField"><span class="lbl">교내 / 교외</span><div class="chips" id="scCats"></div><div class="chips sub" id="scSubs"></div>
+        <div class="cat-add" id="scCatAddRow" hidden><input id="scCatAddName" maxlength="20" placeholder="직접 입력 (예: 복지관)" aria-label="세부 구분 직접 입력"><button type="button" class="btn-ghost" id="btnScCatAdd">추가</button></div></div>
+      <div class="field"><span class="lbl">장소 (선택)</span><div class="chips" id="scPlaceChips"></div></div>
+    </section>
+
+    <section class="wstep" data-step="2" hidden>
+      <p class="wq">언제, 얼마나 가요?</p>
+      <div class="field"><span class="lbl">기간</span><div class="dur"><input id="scFrom" type="date" aria-label="첫 실습 날"><span>부터</span><input id="scUntil" type="date" aria-label="마지막 실습 날"><span>까지</span></div></div>
+      <div class="field"><span class="lbl">매주 가는 요일</span><div class="chips days" id="scDays"></div></div>
+      <div class="field"><span class="lbl">한 번 가면 몇 분이 인정돼요?</span>
+        <div class="min-in"><input id="scPer" type="number" inputmode="numeric" min="0" step="1" max="1440" placeholder="50" aria-label="회차당 인정 시간(분)"><span>분</span><em class="hm" aria-hidden="true"></em></div>
+      </div>
+      <p class="plan-sum plan-big" id="scPlanSum"></p>
+    </section>
+
+    <section class="wstep" data-step="3" hidden>
+      <div class="review" id="scReview"></div>
+      <div class="field"><span class="lbl">이 실습에서 채워야 하는 시간</span>
+        <div class="min-in"><input id="scTarget" type="number" inputmode="numeric" min="0" step="1" max="60000" aria-label="이 실습 목표(분)"><span>분</span><em class="hm" aria-hidden="true"></em></div>
+        <p class="hint" id="scTargetHint">일정대로 다 가면 채우는 시간으로 넣어 두었어요. 학교에서 정한 시간이 다르면 바꿔 주세요.</p>
+      </div>
+      <details class="more"><summary>쉬는 날 · 보강 날짜</summary>
+        <div class="dmonths" id="scDates"></div>
+        <div class="cat-add"><input id="scExtra" type="date" aria-label="따로 가는 날짜"><button type="button" class="btn-ghost" id="btnScExtra">날짜 추가</button></div>
+        <p class="hint">날짜를 누르면 쉬는 날로 빠지고, 다시 누르면 돌아와요.</p>
+      </details>
+      <details class="more"><summary>알림 받기</summary>
+        <div class="field"><span class="lbl">실습 시작 시각</span><input id="scStart" type="time" value="14:00" aria-label="시작 시각"><input id="scEnd" type="hidden"><p class="hint" id="scDurHint"></p></div>
+        <label class="field"><span>미리 알림</span>
+          <select id="scRemind"><option value="60">1시간 전</option><option value="30">30분 전</option><option value="120">2시간 전</option><option value="1440">전날 같은 시각</option><option value="0">안 받기</option></select>
+        </label>
+        <label class="switch"><span>끝나면 '기록하기' 알림</span><input type="checkbox" id="scRecAlarm" checked></label>
+      </details>
+      <details class="more"><summary>이미 다녀온 시간</summary>
+        <div class="min-in"><input id="scBefore" type="number" inputmode="numeric" min="0" step="1" max="60000" placeholder="0" aria-label="이미 채운 시간(분)"><span>분</span><em class="hm" aria-hidden="true"></em></div>
+        <p class="hint">등록하는 날 전에 지나간 날짜는 다녀온 것으로 미리 넣어 두었어요. 이 실습 진행률에만 더해지고, 구슬병에는 더해지지 않아요.</p>
+      </details>
+    </section>
+
+    <p class="hint err" id="scErr" role="alert"></p>
+    <div class="sheet-actions"><button class="btn-ghost danger" type="button" id="btnDelSched" hidden>삭제</button><button class="btn-ghost" type="button" id="btnScBack" hidden>이전</button><button class="btn-primary" type="submit" id="btnSaveSched">다음</button></div>
     <button class="link-btn" type="button" id="btnSchedCal" hidden style="justify-self:center">이 실습 알림만 캘린더에 넣기</button>
   </form>
 </div>
@@ -2444,8 +2485,7 @@ function showStamp(data, before, after, sid){
     $('#stampCheer').textContent = pickCheer(data.hours);
     const cl = after.classes.find(c => c.id === (after.classOf.get(sid) || '')), sc$ = $('#stampClass');
     sc$.hidden = !cl;
-    if (cl) sc$.innerHTML = `<b>${esc(cl.name)}</b> ${dm((cl.done))}${cl.target > 0 ? ` / ${dm((cl.target))}` : ''}`
-      + (cl.target > 0 ? (cl.reached ? ' · 이 실습 목표 달성!' : cl.remain.length ? ` · 남은 실습 ${cl.remain.length}회` + (cl.willReach ? '' : ` · ${dm((cl.short))} 부족 예상`) : '') : '');
+    if (cl) sc$.innerHTML = `<b>${esc(cl.name)}</b> ${dm((cl.done))} 채움${cl.target > 0 ? ` / 목표 ${dm((cl.target))}` : ''}` + (cl.reached ? ' · 이 실습 목표를 다 채웠어요!' : cl.remain.length ? ` · ${cl.remain.length}번 남음` : '');
     shareText = `오늘 실습 ${fmtDur(data.hours)} 채웠어요. 지금까지 ${fmtDur(after.total)} / ${fmtDur(after.target)} (${pctInt(after)}%)` + (gotNow.length ? ` · '${gotNow[gotNow.length - 1].title}' 배지 획득` : '');
     const mark = $('#stampMark'), card = $('#stampCard');
     mark.classList.remove('slam'); card.classList.remove('shake'); void mark.offsetWidth;
@@ -3285,14 +3325,13 @@ const mdw = ds => { const x = parseD(ds); return `${x.getMonth() + 1}/${x.getDat
 const classById = (id, d = D) => d.classes.find(c => c.id === id) || null;
 function classWhen(c){
   const s = c.sc;
-  return (s.days.length ? `${daysLabel(s.days)} ` : '') + `${s.start}–${s.end}`;
+  return (s.days.length ? `매주 ${daysLabel(s.days)}` : '정한 날') + ` · 한 번에 ${c.durMin}분`;
 }
 function classStatus(c){
-  if (c.openEnded) return { t:'기간 미정', k:'idle' };
-  if (!(c.target > 0)) return { t:'목표 미정', k:'idle' };
-  if (c.reached) return { t:'목표 달성', k:'' };
-  if (c.willReach) return { t:c.finish ? `${md(c.finish)} 달성 예상` : '달성 예상', k:'' };
-  return { t:`${fmtHM(c.short)} 부족 예상`, k:'warn' };
+  if (c.reached) return { t:'목표 채움', k:'' };
+  if (c.ended) return { t:'끝남', k:'idle' };
+  const gone = c.count + (c.durMin > 0 ? Math.round(c.before * 60 / c.durMin) : 0);
+  return { t:`${gone}번 감 · ${c.remain.length}번 남음`, k:'idle' };
 }
 // done | planned bar, scaled to whichever is larger: the goal or the plan
 function pbarHTML(done, expected, goal, thin){
@@ -3322,49 +3361,41 @@ function renderSched(){
   if (!has) return;
   const active = D.classes.filter(c => !c.ended), ended = D.classes.filter(c => c.ended);
   $('#schedSub').textContent = D.classes.length ? `진행 중 ${active.length}개` + (ended.length ? ` · 끝남 ${ended.length}개` : '') : '';
-  // projection toward the overall goal
+  // the overall goal in plain words
   const pc = $('#projCard');
-  pc.hidden = !D.classes.length;
-  if (D.classes.length){
-    let st;
-    if (D.remaining <= 0) st = { t:'목표 달성', k:'' };
-    else if (D.projDate) st = { t:`${md(D.projDate)} 달성 예상`, k:'' };
-    else st = { t:`${fmtHM(D.target - D.projTotal)} 부족 예상`, k:'warn' };
-    const rows = D.cats.filter(c => Number(c.target) > 0).map(c => {
-      const done = D.catTotals.get(c.id) || 0, plan = D.planCat.get(c.id) || 0, goal = Number(c.target), exp = done + plan;
-      const gap = goal - exp;
-      return `<div class="prow"><b>${esc(c.name)}</b><span class="st ${gap > 1 / 120 ? 'warn' : ''}">${gap > 1 / 120 ? `${esc(fmtHM(gap))} 부족 예상` : '목표 채움 예상'}</span><small>${dm((done))}${plan > 0 ? ` → 예상 ${dm((exp))}` : ''} · 목표 ${dm((goal))}</small>${pbarHTML(done, exp, goal, true)}</div>`;
-    }).join('');
-    let note;
-    if (D.remaining <= 0) note = `목표 ${dm((D.target))}을 모두 채웠어요.`;
-    else if (D.projDate) note = `남은 실습을 다 가면 <b>${dm((D.projTotal))}</b>. <b>${esc(korDateY(D.projDate))}</b>에 목표 ${dm((D.target))}을 채워요.`;
-    else note = `남은 실습을 다 가도 <b>${dm((D.projTotal))}</b>이에요. 목표까지 <b>${dm((D.target - D.projTotal))}</b>이 모자라요. 신규 실습을 더 등록해야 해요.`;
-    pc.innerHTML = `<div class="proj-top"><p class="eyebrow">졸업 목표 ${esc(fmtHM(D.target))} 실적·예상</p><span class="st ${st.k}">${esc(st.t)}</span></div>`
-      + `<p class="proj-big">${durHTML(D.total)}${D.planHours > 0 ? `<span class="plus">+ 남은 실습 ${dm((D.planHours))}</span>` : ''}</p>`
+  pc.hidden = false;
+  {
+    const left = Math.max(0, D.target - D.total);
+    let say;
+    if (left <= 0) say = `<b>${dm((D.target))}</b>을 모두 채웠어요. 축하해요!`;
+    else if (!D.planHours) say = `아직 <b>${dm((left))}</b> 더 채워야 해요.<br>다닐 실습을 등록하면 언제쯤 다 채우는지 알려 줘요.`;
+    else if (D.projDate) say = `아직 <b>${dm((left))}</b> 남았어요.<br>등록한 실습을 일정대로 다니면 <b>${esc(korDateY(D.projDate))}</b>에 다 채워요.`;
+    else say = `아직 <b>${dm((left))}</b> 남았어요.<br>등록한 실습을 다 다녀도 <b class="warn-t">${dm((D.target - D.projTotal))}</b>이 더 필요해요. 실습을 더 등록해야 해요.`;
+    const cats = D.cats.filter(c => Number(c.target) > 0).map(c => { const h = D.catTotals.get(c.id) || 0; return `<span><b>${esc(String(c.name).replace(/\s*실습$/, ''))}</b> ${dm((h))} / ${dm((Number(c.target)))}</span>`; }).join('');
+    pc.innerHTML = `<div class="proj-top"><p class="eyebrow">졸업까지 ${esc(fmtHM(D.target))}</p><span class="st">${pctInt(D)}% 채움</span></div>`
       + pbarHTML(D.total, D.projTotal, D.target)
-      + `<div class="legend"><span><i></i>채운 시간</span><span><i class="p"></i>남은 실습 예상</span>${D.projTotal > D.target ? '<span><i class="g"></i>목표</span>' : ''}</div>`
-      + `<p class="proj-note">${note}</p>` + (rows ? `<div class="prows">${rows}</div>` : '');
+      + `<div class="legend"><span><i></i>채운 시간</span>${D.planHours > 0 ? '<span><i class="p"></i>등록한 실습을 다 가면</span>' : ''}</div>`
+      + `<p class="proj-note">${say}</p>` + (cats ? `<div class="cat-pills">${cats}</div>` : '');
   }
-  // class cards
+  // practicum cards
   $('#schedList').innerHTML = active.length ? active.map((c, i) => {
-    const st = classStatus(c), col = classColor(c), place = c.place ? c.place.name : (c.sc.placeName || '');
-    const cat = D.catLabel(c.sc.cat);
-    const meta = [`기록 <b>${c.count}회</b>` + (c.before > 0 ? ` + 이전 ${dm((c.before))}` : ''),
-      c.openEnded ? '' : c.remain.length ? `남은 실습 <b>${c.remain.length}회 · ${dm((c.remain.length * c.dur))}</b>` : '남은 실습 없음',
-      c.openEnded ? '<b>마지막 실습 날을 정하면 예상 시간을 계산해요</b>' : `예상 <b>${dm((c.expected))}</b>`];
+    const st = classStatus(c), col = classColor(c), place = c.place ? c.place.name : (c.sc.placeName || ''), cat = D.catLabel(c.sc.cat);
+    const pct = c.target > 0 ? Math.min(100, Math.floor(c.done / c.target * 100)) : 0;
+    const note = c.openEnded ? '끝나는 날을 정해 주세요. 눌러서 고칠 수 있어요.'
+      : c.target > 0 && !c.reached && !c.willReach ? `일정대로 다 가도 목표보다 ${dm((c.short))} 적어요. 날짜를 더 넣거나 목표를 확인해 주세요.` : '';
     const miss = D.missed.filter(m => m.c.id === c.id);
     let foot = '';
-    if (c.todayState === 'due') foot = `<div class="cc-foot due"><span><b>오늘 ${esc(c.sc.end)}</b>에 끝났어요. 기록할까요?</span><button type="button" class="mini-btn" data-quick="${esc(D.today)}|${esc(c.id)}">${esc(fmtHM(c.dur))} 기록</button></div>`;
-    else if (c.todayState === 'now' || c.todayState === 'soon') foot = `<div class="cc-foot"><span><b>오늘 ${esc(c.sc.start)}</b> 가는 날이에요</span><button type="button" class="mini-btn" data-quick="${esc(D.today)}|${esc(c.id)}">기록</button></div>`;
-    else if (miss.length) foot = `<div class="cc-foot due"><span><b>${esc(mdw(miss[0].date))}</b> 기록이 없어요${miss.length > 1 ? ` 외 ${miss.length - 1}번` : ''}</span><button type="button" class="mini-btn" data-quick="${esc(miss[0].date)}|${esc(c.id)}">기록</button></div>`;
-    else if (c.next) foot = `<div class="cc-foot"><span>다음 실습 <b>${esc(mdw(c.next))} ${esc(c.sc.start)}</b></span>${c.todayState === 'done' ? '<span class="st">오늘 기록 완료</span>' : ''}</div>`;
+    if (c.todayState === 'due' || c.todayState === 'now' || c.todayState === 'soon') foot = `<div class="cc-foot due"><span><b>오늘</b> 가는 날이에요</span><button type="button" class="mini-btn" data-quick="${esc(D.today)}|${esc(c.id)}">${c.durMin}분 기록</button></div>`;
+    else if (miss.length) foot = `<div class="cc-foot due"><span><b>${esc(mdw(miss[0].date))}</b> 기록을 안 했어요</span><button type="button" class="mini-btn" data-quick="${esc(miss[0].date)}|${esc(c.id)}">기록</button></div>`;
+    else if (c.next) foot = `<div class="cc-foot"><span>다음에 가는 날 <b>${esc(mdw(c.next))}</b></span>${c.todayState === 'done' ? '<span class="st">오늘 기록 완료</span>' : ''}</div>`;
     return `<article class="class-card" style="--c:${col};--i:${i}"><button type="button" class="cc-main" data-sched="${esc(c.id)}" aria-label="${esc(c.name)} 고치기">`
       + `<span class="cc-head"><span class="dot" aria-hidden="true"></span><b>${esc(c.name)}</b><span class="st ${st.k}">${esc(st.t)}</span></span>`
-      + `<span class="cc-sub">${esc(classWhen(c))}${place ? ` · ${esc(place)}` : ''}${cat ? ` · ${esc(cat)}` : ''}</span>`
-      + `<span class="cc-nums"><span><b>${durHTML(c.done)}</b> / ${c.target > 0 ? dm((c.target)) : '목표 미정'}</span><span>${c.target > 0 ? Math.min(100, Math.floor(c.done / c.target * 100)) + '%' : ''}</span></span>`
-      + pbarHTML(c.done, c.expected, c.target)
-      + `<span class="cc-meta">${meta.filter(Boolean).join(' · ')}</span></button>${foot}</article>`;
-  }).join('') : `<p class="empty">${D.classes.length ? '진행 중인 실습이 없어요.' : '신규 실습을 등록하면 기간·요일·회차당 시간으로 일정이 잡히고<br>실적과 예상 실습 시간을 여기서 보여 줘요.'}</p>`;
+      + `<span class="cc-sub">${[cat, place].filter(Boolean).map(esc).join(' · ')}${cat || place ? ' · ' : ''}${esc(classWhen(c))}</span>`
+      + `<span class="cc-nums"><span><b>${durHTML(c.done)}</b> 채움 / 목표 ${c.target > 0 ? dm((c.target)) : '-'}</span><span>${pct}%</span></span>`
+      + pbarHTML(c.done, c.done, c.target)
+      + (note ? `<span class="cc-note">${note}</span>` : '')
+      + `</button>${foot}</article>`;
+  }).join('') : `<div class="empty"><b>먼저 다닐 실습을 등록해 주세요.</b><br>기간, 요일, 한 번에 몇 분인지만 넣으면<br>갈 때마다 고르기만 하면 기록돼요.</div>`;
   $('#endedWrap').innerHTML = ended.length ? `<details class="ended"><summary>끝난 실습 ${ended.length}개</summary>${ended.map(c => {
     const st = classStatus(c);
     return `<button type="button" class="ended-row" data-sched="${esc(c.id)}"><b>${esc(c.name)}</b><span class="st ${st.k === 'warn' ? 'warn' : ''}">${c.target > 0 ? (c.reached ? '달성' : `${esc(fmtHM(c.target - c.done))} 모자람`) : ''}</span><small>${dm((c.done))}${c.target > 0 ? ` / ${dm((c.target))}` : ''} · 기록 ${c.count}회${c.last ? ` · ${esc(md(c.last))} 끝` : ''}</small></button>`;
@@ -3386,96 +3417,135 @@ function renderTodayBanner(has){
 }
 
 /* ---- class editor ---- */
-let scAddParent = '';
-let scEdit = null, scDays = [], scPlace = '', scCat = '', scSkip = new Set(), scExtra = new Set();
+let scAddParent = '', scStep = 1;
+let scEdit = null, scDays = [], scPlace = '', scCat = '', scSkip = new Set(), scExtra = new Set(), scTargetTouched = false, scBeforeTouched = false;
 const readMin = id => (parseInt($(id).value, 10) || 0) / 60;
 const writeMin = (id, hours) => { const t = Math.round((Number(hours) || 0) * 60); $(id).value = t || ''; };
+const scPerMin = () => parseInt($('#scPer').value, 10) || 0;
+// the end time is simply start + minutes per visit
+function scEndTime(){ const st = $('#scStart').value || '14:00', per = scPerMin() || 50; const t = Math.min(D.toMin(st) + per, 23 * 60 + 59); return `${pad(Math.floor(t / 60))}:${pad(t % 60)}`; }
 function draftClass(){
-  return { days:scDays.slice(), from:$('#scFrom').value, until:$('#scUntil').value, start:$('#scStart').value, end:$('#scEnd').value, perMin:parseInt($('#scPer').value, 10) || 0, skip:[], extra:[...scExtra] };
+  return { days:scDays.slice(), from:$('#scFrom').value, until:$('#scUntil').value, start:$('#scStart').value || '14:00', end:scEndTime(), perMin:scPerMin(), skip:[], extra:[...scExtra] };
+}
+function scPlan(d = derive(Store.view())){
+  const tmp = draftClass(), all = classDatesOf(tmp, d.today), live = all.filter(ds => !scSkip.has(ds) || scExtra.has(ds));
+  const c = scEdit ? classById(scEdit, d) : null, rec = c ? c.recDates : new Set();
+  return { tmp, all, live, c, rec, per:tmp.perMin, n:live.length, total:live.length * tmp.perMin, future:live.filter(ds => ds >= d.today && !rec.has(ds)).length };
 }
 function renderScChips(){
   const d = derive(Store.view());
-  $('#scPlaceChips').innerHTML = d.places.map(p => `<button type="button" class="chip" data-pid="${esc(p.id)}" aria-pressed="${p.id === scPlace}">${esc(p.name)}</button>`).join('') + '<button type="button" class="chip add" data-pid="+">+ 지도에서 추가</button>';
+  $('#scPlaceChips').innerHTML = d.places.map(p => `<button type="button" class="chip" data-pid="${esc(p.id)}" aria-pressed="${p.id === scPlace}">${esc(p.name)}</button>`).join('') + '<button type="button" class="chip add" data-pid="+">+ 지도에서 찾기</button>';
   $('#scDays').innerHTML = DAY_ORDER.map(dd => `<button type="button" class="chip" data-day="${dd}" aria-pressed="${scDays.includes(dd)}">${DAY_KO[dd]}</button>`).join('');
   $('#scCatField').hidden = !d.cats.length;
   const h = catChips(scCat, d, false), top = d.topOf(scCat);
   $('#scCats').innerHTML = h.tops; $('#scSubs').innerHTML = h.subs;
   scAddParent = top ? top.id : ''; $('#scCatAddRow').hidden = !top;
-  if (top) $('#scCatAddName').placeholder = `${String(top.name).replace(/\s*실습$/, '')} 세부 구분 직접 입력 (예: 복지관)`;
-  const s = $('#scStart').value, e = $('#scEnd').value, mins = D.toMin(e) - D.toMin(s);
-  $('#scDurHint').textContent = s && e ? (mins > 0 ? (mins >= 60 ? `${mins}분 (${fmtHM(mins / 60)})` : `${mins}분`) : '끝나는 시간이 시작 시간보다 늦어야 해요') : '';
-  $('#scPer').placeholder = mins > 0 ? String(mins) : '50';
+  if (top) $('#scCatAddName').placeholder = `${String(top.name).replace(/\s*실습$/, '')} 직접 입력 (예: 복지관)`;
+  $('#scDurHint').textContent = `${$('#scStart').value || '14:00'}부터 ${scPerMin() || 50}분 (${scEndTime()}까지)`;
   renderScDates(d);
 }
 function renderScDates(d = derive(Store.view())){
-  const tmp = draftClass(), all = classDatesOf(tmp, d.today);   // pattern + extra, nothing skipped yet
-  const live = all.filter(ds => !scSkip.has(ds) || scExtra.has(ds));
-  const c = scEdit ? classById(scEdit, d) : null, rec = c ? c.recDates : new Set();
+  const P = scPlan(d);
   const byMonth = new Map();
-  for (const ds of all){ const k = ds.slice(0, 7); if (!byMonth.has(k)) byMonth.set(k, []); byMonth.get(k).push(ds); }
+  for (const ds of P.all){ const k = ds.slice(0, 7); if (!byMonth.has(k)) byMonth.set(k, []); byMonth.get(k).push(ds); }
   $('#scDates').innerHTML = [...byMonth].map(([k, list]) => `<div class="dmonth"><b>${Number(k.slice(5))}월</b><div class="dchips">${list.map(ds => {
-    const cls = ['dchip', scExtra.has(ds) ? 'extra' : '', scSkip.has(ds) && !scExtra.has(ds) ? 'skip' : '', ds < d.today ? 'past' : '', rec.has(ds) ? 'rec' : '', ds === d.today ? 'today' : ''].filter(Boolean).join(' ');
-    const lab = `${md(ds)} ${DAY_KO[parseD(ds).getDay()]}요일` + (scExtra.has(ds) ? ', 따로 가는 날' : scSkip.has(ds) ? ', 쉬는 날' : '') + (rec.has(ds) ? ', 기록함' : '');
+    const cls = ['dchip', scExtra.has(ds) ? 'extra' : '', scSkip.has(ds) && !scExtra.has(ds) ? 'skip' : '', ds < d.today ? 'past' : '', P.rec.has(ds) ? 'rec' : '', ds === d.today ? 'today' : ''].filter(Boolean).join(' ');
+    const lab = `${md(ds)} ${DAY_KO[parseD(ds).getDay()]}요일` + (scExtra.has(ds) ? ', 따로 가는 날' : scSkip.has(ds) ? ', 쉬는 날' : '') + (P.rec.has(ds) ? ', 기록함' : '');
     return `<button type="button" class="${cls}" data-ds="${ds}" aria-label="${esc(lab)}">${parseD(ds).getDate()}</button>`;
   }).join('')}</div></div>`).join('');
-  const dur = (tmp.perMin > 0 ? tmp.perMin : Math.max(0, D.toMin(tmp.end) - D.toMin(tmp.start))) / 60, n = live.length, total = n * dur;
-  const target = readMin('#scTarget'), before = readMin('#scBefore');
-  const future = live.filter(ds => ds >= d.today && !rec.has(ds)).length;
+  // step 2: a plain sentence of what was entered
   let line;
-  if (!n) line = tmp.days.length ? '이 기간에 해당하는 날짜가 없어요.' : '가는 요일을 고르거나 날짜를 추가해 주세요.';
-  else {
-    line = `총 <b>${n}회</b> × ${Math.round(dur * 60)}분 = <b>${dm((total))}</b>` + (future < n ? ` · 앞으로 ${future}회` : '');
-    if (target > 0){
-      const exp = (c ? c.logged : 0) + before + future * dur, gap = target - exp;
-      line += gap > 1 / 120 ? ` · <span class="warn">목표 ${dm((target))}보다 ${dm((gap))} 모자라요</span>` : ` · <span class="ok">목표 ${dm((target))} 채울 수 있어요</span>`;
-    }
-  }
+  if (!P.tmp.days.length && !scExtra.size) line = '매주 가는 요일을 골라 주세요.';
+  else if (!P.per) line = '한 번에 몇 분인지 적어 주세요.';
+  else if (!P.n) line = '이 기간에는 해당 요일이 없어요. 기간을 확인해 주세요.';
+  else line = `${P.tmp.from ? esc(md(P.tmp.from)) : ''}부터 ${P.tmp.until ? esc(md(P.tmp.until)) : ''}까지 <b>${esc(daysLabel(P.tmp.days))}요일</b>, 모두 <b>${P.n}번</b> 가요.<br>${P.n}번 × ${P.per}분 = <b>${dm((P.total / 60))}</b>`;
   $('#scPlanSum').innerHTML = line;
+  if (!scTargetTouched && !scEdit && P.total > 0) writeMin('#scTarget', P.total / 60);
+  // days already past when registering count as visited (shown, and changeable, under 'already done')
+  const past = P.live.filter(ds => ds < d.today).length;
+  if (!scBeforeTouched && !scEdit) writeMin('#scBefore', past * P.per / 60);
+  refreshHM($('#sheetSched'));
+  renderReview(d, P);
+}
+function renderReview(d, P = scPlan(d)){
+  const cat = d.catLabel(scCat), p = d.placeMap.get(scPlace), name = $('#scName').value.trim() || (p ? p.name : '') || '실습';
+  const target = readMin('#scTarget') * 60, before = readMin('#scBefore') * 60;
+  const got = (P.c ? Math.round(P.c.logged * 60) : 0) + before, willHave = got + P.future * P.per;
+  let gap = '';
+  if (target > 0 && willHave < target) gap = `<span style="color:var(--stamp)">일정대로 다 가도 <b>${dm(((target - willHave) / 60))}</b>이 모자라요. 날짜를 더 넣거나 목표를 확인해 주세요.</span>`;
+  else if (target > 0) gap = `<span class="ok">일정대로 다니면 이 실습 목표를 채워요.</span>`;
+  $('#scReview').innerHTML = `<span class="rv-t">${esc(name)}</span>`
+    + `<span>${[cat, p ? p.name : ''].filter(Boolean).map(esc).join(' · ') || '구분 미정'}</span>`
+    + `<span>${P.tmp.from ? esc(md(P.tmp.from)) : ''} ~ ${P.tmp.until ? esc(md(P.tmp.until)) : ''} · 매주 ${esc(daysLabel(P.tmp.days)) || '-'} · 한 번에 <b>${P.per}분</b></span>`
+    + `<span>모두 <b>${P.n}번</b> = <b>${dm((P.total / 60))}</b></span>`
+    + (before > 0 && !scEdit ? `<span>오늘 전에 지난 ${Math.round(before / Math.max(1, P.per))}번(${dm((before / 60))})은 이미 다녀온 것으로 칠게요.</span>` : '')
+    + (gap ? `<span>${gap}</span>` : '');
+}
+function showStep(n){
+  scStep = n;
+  $$('#schedForm .wstep').forEach(el => { el.hidden = Number(el.dataset.step) !== n; });
+  $$('#scWiz li').forEach(li => { const k = Number(li.dataset.go); li.classList.toggle('on', k === n); li.classList.toggle('done', k < n); });
+  $('#btnScBack').hidden = n === 1;
+  $('#btnDelSched').hidden = !(scEdit && n === 1);
+  $('#btnSaveSched').textContent = n < 3 ? '다음' : (scEdit ? '저장' : '실습 등록');
+  $('#btnSchedCal').hidden = !(scEdit && n === 3);
+  $('#scErr').textContent = '';
+  if (n === 3) renderScDates();
+  const sh = $('#sheetSched'); if (sh) sh.scrollTop = 0;
+}
+function checkStep(n){
+  const d = derive(Store.view()), err = m => { $('#scErr').textContent = m; return false; };
+  if (n >= 1){
+    if (d.cats.length && !scCat && !$('#scCatAddName').value.trim()) return err('교내인지 교외인지 골라 주세요.');
+  }
+  if (n >= 2){
+    const from = $('#scFrom').value, until = $('#scUntil').value;
+    if (!from || !until) return err('기간(시작 날, 끝 날)을 골라 주세요.');
+    if (until < from) return err('끝 날이 시작 날보다 빨라요.');
+    if (!scDays.length && !scExtra.size) return err('매주 가는 요일을 골라 주세요.');
+    if (!(scPerMin() > 0)) return err('한 번에 몇 분인지 적어 주세요. 예: 50');
+    if (!scPlan(d).n) return err('이 기간에는 해당 요일이 없어요.');
+  }
+  if (n >= 3 && !(readMin('#scTarget') > 0)) return err('채워야 하는 시간을 분으로 적어 주세요.');
+  return true;
 }
 function openSched(id){
   const x = id ? S.schedules.find(v => v.id === id) : null;
   scEdit = x ? x.id : null; scDays = x ? x.days.slice() : []; scPlace = x ? x.placeId || '' : '';
-  scCat = x ? x.cat || '' : '';
+  scCat = x ? x.cat || '' : ''; scTargetTouched = !!x; scBeforeTouched = !!x;
   scSkip = new Set(x && Array.isArray(x.skip) ? x.skip : []); scExtra = new Set(x && Array.isArray(x.extra) ? x.extra : []);
   $('#schedTitle').textContent = x ? '실습 고치기' : '신규 실습 등록';
   $('#scCatAddName').value = '';
   $('#scName').value = x ? x.name || '' : '';
-  writeMin('#scTarget', x ? x.target : 0); writeMin('#scBefore', x ? x.doneBefore : 0); $('#scPer').value = x && Number(x.perMin) > 0 ? x.perMin : (x ? '' : 50);
-  $('#scStart').value = x ? x.start : '14:00'; $('#scEnd').value = x ? x.end : '14:50';
+  writeMin('#scTarget', x ? x.target : 0); writeMin('#scBefore', x ? x.doneBefore : 0);
+  $('#scPer').value = x ? (Number(x.perMin) > 0 ? x.perMin : Math.max(0, D.toMin(x.end) - D.toMin(x.start))) : 50;
+  $('#scStart').value = x ? x.start : '14:00';
   $('#scFrom').value = x ? x.from || D.today : D.today; $('#scUntil').value = x ? x.until || '' : addDays(D.today, 7 * 15 - 1);
   $('#scExtra').value = '';
   $('#scRemind').value = String(x ? x.remind ?? 60 : 60); $('#scRecAlarm').checked = x ? x.recordAlarm !== false : true;
-  $('#btnDelSched').hidden = !x; $('#btnSchedCal').hidden = !x; $('#scErr').textContent = '';
-  $('#btnSaveSched').textContent = x ? '저장' : '실습 등록';
+  $$('#schedForm details.more').forEach(el => { el.open = false; });
   renderScChips(); refreshHM($('#sheetSched'));
+  showStep(1);
   openLayer($('#sheetSched'));
 }
 async function saveSched(e){
   e.preventDefault();
-  const err = $('#scErr'), start = $('#scStart').value, end = $('#scEnd').value, from = $('#scFrom').value, until = $('#scUntil').value;
+  if (scStep < 3){ if (checkStep(scStep)){ if (scStep === 1){ const typed = await takeTypedCat($('#scCatAddName'), scAddParent); if (typed){ scCat = typed; renderScChips(); } } showStep(scStep + 1); } return; }
   const typed = await takeTypedCat($('#scCatAddName'), scAddParent); if (typed) scCat = typed;
-  const target = readMin('#scTarget'), before = readMin('#scBefore'), d = derive(Store.view()), per = parseInt($('#scPer').value, 10) || 0;
-  const fail = (msg, el) => { err.textContent = msg; if (el) el.focus({ preventScroll:false }); };
-  if (!(target > 0)) return fail('이 실습의 목표를 분으로 적어 주세요.', $('#scTarget'));
-  if (d.cats.length && !scCat) return fail('구분(교내·교외)을 골라 주세요.');
-  if (!/^\d\d:\d\d$/.test(start) || !/^\d\d:\d\d$/.test(end) || D.toMin(end) <= D.toMin(start)) return fail('시간을 확인해 주세요. 끝나는 시간이 시작 시간보다 늦어야 해요.');
-  if (scDays.length && !until) return fail('마지막 실습 날을 골라 주세요. 예상 시간을 계산할 때 써요.', $('#scUntil'));
-  if (until && from && until < from) return fail('마지막 실습 날이 첫 실습 날보다 빨라요.');
-  const tmp = draftClass();
-  const all = classDatesOf(tmp, d.today), patt = new Set(classDatesOf(Object.assign({}, tmp, { extra:[] }), d.today));
-  if (!all.filter(ds => !scSkip.has(ds) || scExtra.has(ds)).length) return fail('가는 날짜가 하나도 없어요. 요일이나 날짜를 넣어 주세요.');
+  if (!checkStep(3)) return;
+  const d = derive(Store.view()), start = $('#scStart').value || '14:00', end = scEndTime(), from = $('#scFrom').value, until = $('#scUntil').value;
+  const target = readMin('#scTarget'), before = readMin('#scBefore'), per = scPerMin();
+  const tmp = draftClass(), patt = new Set(classDatesOf(Object.assign({}, tmp, { extra:[] }), d.today));
   const p = d.placeMap.get(scPlace), old = scEdit ? S.schedules.find(v => v.id === scEdit) : null;
-  const data = { name:$('#scName').value.trim().slice(0, 30), target:Math.round(target * 60) / 60, doneBefore:Math.round(before * 60) / 60, perMin:per > 0 ? per : 0,
+  const data = { name:$('#scName').value.trim().slice(0, 30), target:Math.round(target * 60) / 60, doneBefore:Math.round(before * 60) / 60, perMin:per,
     placeId:p ? p.id : '', placeName:p ? p.name : '', days:scDays.slice().sort(), start, end, cat:scCat,
-    from:from || D.today, until:until || '', skip:[...scSkip].filter(ds => patt.has(ds)).sort(), extra:[...scExtra].filter(ds => !patt.has(ds) || scSkip.has(ds)).sort(),
+    from, until, skip:[...scSkip].filter(ds => patt.has(ds) && !scExtra.has(ds)).sort(), extra:[...scExtra].filter(ds => !patt.has(ds)).sort(),
     remind:Number($('#scRemind').value), recordAlarm:$('#scRecAlarm').checked, createdAt:old && old.createdAt ? old.createdAt : new Date().toISOString() };
-  // an extra day that sits on the weekly pattern is simply "not skipped"
-  data.skip = data.skip.filter(ds => !scExtra.has(ds)); data.extra = data.extra.filter(ds => !patt.has(ds));
   const id = scEdit || uid('c'), isNew = !scEdit;
-  const timing = old && (old.start !== start || old.end !== end || old.from !== data.from || old.until !== data.until || String(old.days) !== String(data.days) || String(old.skip || []) !== String(data.skip) || String(old.extra || []) !== String(data.extra) || Number(old.remind) !== data.remind || Number(old.perMin || 0) !== data.perMin || (old.recordAlarm !== false) !== data.recordAlarm);
+  const timing = old && (old.start !== start || old.end !== end || old.from !== data.from || old.until !== data.until || String(old.days) !== String(data.days) || String(old.skip || []) !== String(data.skip) || String(old.extra || []) !== String(data.extra) || Number(old.remind) !== data.remind || (old.recordAlarm !== false) !== data.recordAlarm);
   closeLayer($('#sheetSched'));
   await Store.exec({ t:'sched', id, data });
-  if (isNew){ await sleep(RM ? 0 : 260); openCalSheet([id], true); }
+  if (isNew){ toast('실습을 등록했어요. 이제 갈 때마다 "오늘 실습 기록하기"에서 고르기만 하면 돼요.', 4200); await sleep(RM ? 0 : 400); openCalSheet([id], true); }
   else if (timing){ toast('실습을 고쳤어요. 캘린더 알림도 다시 넣어 주세요.', 3600); }
   else toast('실습을 고쳤어요');
 }
@@ -3639,9 +3709,14 @@ function wireSched(){
   };
   $('#btnScCatAdd').addEventListener('click', doScAdd);
   $('#scCatAddName').addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); doScAdd(); } });
-  ['#scStart', '#scEnd'].forEach(id => $(id).addEventListener('input', renderScChips));
+  $('#scStart').addEventListener('input', renderScChips);
+  $('#scName').addEventListener('input', () => renderReview(derive(Store.view())));
+  $('#scWiz').addEventListener('click', e => { const li = e.target.closest('[data-go]'); if (!li) return; const n = Number(li.dataset.go); if (n <= scStep || checkStep(n - 1)) showStep(n); });
+  $('#btnScBack').addEventListener('click', () => showStep(Math.max(1, scStep - 1)));
   ['#scFrom', '#scUntil'].forEach(id => $(id).addEventListener('change', () => renderScDates()));
-  ['#scTarget', '#scBefore', '#scPer'].forEach(id => $(id).addEventListener('input', () => renderScDates()));
+  $('#scTarget').addEventListener('input', () => { scTargetTouched = true; renderReview(derive(Store.view())); });
+  $('#scBefore').addEventListener('input', () => { scBeforeTouched = true; renderReview(derive(Store.view())); });
+  $('#scPer').addEventListener('input', () => renderScChips());
   $('#scDates').addEventListener('click', e => {
     const b = e.target.closest('[data-ds]'); if (!b) return;
     const ds = b.dataset.ds;
@@ -3692,7 +3767,7 @@ render();
 installHint();
 Store.init().then(() => { scheduleRender(); setTimeout(() => runMissions(false), 1200); setTimeout(() => Router.fill(), 2500); });
 if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js', { updateViaCache:'none' }).catch(() => {});
-const APP_VERSION = '20261007222052';
+const APP_VERSION = '20261007224458';
 let updating = false;
 async function checkUpdate(){
   if (updating || location.protocol !== 'https:') return;
