@@ -484,7 +484,11 @@ legend{font-size:13px;font-weight:600;color:var(--ink-2);padding:0;margin-bottom
 .cat-add .btn-ghost{flex:none;min-height:44px}
 .carry-rows{display:grid;gap:8px}
 .carry-row{display:grid;grid-template-columns:minmax(0,1fr) 40px;gap:8px;align-items:center;padding:10px;border:1px solid var(--rule);border-radius:14px;background:var(--sheet-2)}
-.cr-dur{grid-column:1/-1;display:grid;grid-template-columns:1fr auto 1fr auto;gap:8px;align-items:center}
+.min-in{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,auto);gap:8px;align-items:center}
+.min-in>span{color:var(--ink-2);font-size:14px}
+.min-in .hm{font-style:normal;font-size:13px;color:var(--board-text);font-weight:600;white-space:nowrap;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.min-in .hm:empty{display:none}
+.cr-min{grid-column:1/-1}
 .carry-row span{font-size:14px;color:var(--ink-2)}
 .cat-row.sub{grid-template-columns:18px minmax(0,1fr) 40px;padding-left:6px}
 .cat-row.sub::before{content:"";align-self:stretch;border-left:2px solid var(--rule);border-bottom:2px solid var(--rule);border-radius:0 0 0 8px;height:60%}
@@ -498,6 +502,10 @@ legend{font-size:13px;font-weight:600;color:var(--ink-2);padding:0;margin-bottom
 
 
 /* ---- classes (수업) ---- */
+.mm{display:inline-block;margin-left:5px;font-family:var(--font-ui);font-size:.78em;font-weight:500;letter-spacing:0;color:var(--ink-3);white-space:nowrap}
+.big .num small.mm,.kpi b small.mm{display:block;margin:4px 0 0;font-size:12px;line-height:1.2;color:var(--ink-3);font-weight:500}
+.big .num{display:inline-block}
+.proj-big small.mm,.cc-nums b small.mm{font-size:12px;font-weight:500;color:var(--ink-3);margin-left:6px}
 .kpi b small{font-family:var(--font-ui);font-size:12.5px;font-weight:500;color:var(--ink-2);margin-left:1px}
 .stamp-class{margin:10px 0 0;padding:8px 11px;border-radius:12px;background:var(--paper);font-size:13px;color:var(--ink-2);line-height:1.45}
 .stamp-class b{color:var(--ink)}
@@ -655,11 +663,11 @@ legend{font-size:13px;font-weight:600;color:var(--ink-2);padding:0;margin-bottom
       <h2>구슬병을 준비해요</h2>
       <p>실습을 다녀올 때마다 채운 시간만큼 구슬이 병에 담겨요. 병이 가득 차면 졸업 실습 시간 완료예요.</p>
       <label class="field"><span>받는 사람 이름</span><input id="suName" maxlength="20" placeholder="예: 지은" autocomplete="off"></label>
-      <label class="field"><span>졸업까지 채울 실습 시간</span>
-        <div class="row"><input id="suTarget" type="number" inputmode="decimal" min="1" max="2000" step="0.5" value="90" required><span style="flex:none;color:var(--ink-2)">시간</span></div>
+      <label class="field"><span>졸업까지 채울 실습 시간 (분)</span>
+        <div class="min-in"><input id="suTarget" type="number" inputmode="numeric" min="0" step="1" max="120000" value="5400" required aria-label="졸업까지 채울 실습 시간(분)"><span>분</span><em class="hm" aria-hidden="true"></em></div>
       </label>
       <p class="hint">학과 기준 시간이 다르면 그 숫자로 바꿔 주세요. 교내·교외 목표는 설정에서 고칠 수 있어요.</p>
-      <div class="field"><span class="lbl">이미 채운 시간 (선택)</span>
+      <div class="field"><span class="lbl">이미 채운 시간 (분, 선택)</span>
         <div class="carry-rows" id="suCarryRows"></div>
         <button type="button" class="link-btn" id="btnSuCarryAdd" style="justify-self:start">+ 세부 구분으로 나눠 넣기</button>
       </div>
@@ -762,11 +770,8 @@ legend{font-size:13px;font-weight:600;color:var(--ink-2);padding:0;margin-bottom
     <label class="field"><span>날짜</span><input type="date" id="fDate" required></label>
     <div class="field" id="classField" hidden><span class="lbl">수업</span><div class="chips" id="classChips"></div></div>
     <div class="field">
-      <span class="lbl">채운 시간</span>
-      <div class="dur">
-        <input id="fH" type="number" inputmode="numeric" min="0" max="24" step="1" value="3" aria-label="시간"><span>시간</span>
-        <input id="fM" type="number" inputmode="numeric" min="0" max="59" step="1" value="0" aria-label="분"><span>분</span>
-      </div>
+      <span class="lbl">채운 시간 (분)</span>
+      <div class="min-in"><input id="fMin" type="number" inputmode="numeric" min="0" step="1" max="1440" value="50" aria-label="채운 시간(분)"><span>분</span><em class="hm" aria-hidden="true"></em></div>
       <div class="chips" id="durChips"></div>
     </div>
     <div class="field" id="catField"><span class="lbl">구분</span><div class="chips" id="catChips"></div><div class="chips sub" id="subChips"></div>
@@ -785,7 +790,7 @@ legend{font-size:13px;font-weight:600;color:var(--ink-2);padding:0;margin-bottom
   <div class="sheet-head"><h2 id="setTitle">설정</h2><button class="icon-btn" type="button" data-close aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
   <form id="setForm" autocomplete="off">
     <label class="field"><span>받는 사람 이름</span><input id="sName" maxlength="20" placeholder="예: 지은"></label>
-    <label class="field"><span>졸업까지 채울 실습 시간</span><div class="row"><input id="sTarget" type="number" inputmode="decimal" min="1" max="2000" step="0.5" required><span style="flex:none;color:var(--ink-2)">시간</span></div></label>
+    <label class="field"><span>졸업까지 채울 실습 시간 (분)</span><div class="min-in"><input id="sTarget" type="number" inputmode="numeric" min="0" step="1" max="120000" required aria-label="졸업까지 채울 실습 시간(분)"><span>분</span><em class="hm" aria-hidden="true"></em></div></label>
     <p class="hint">교외 아래에 어린이집·신경실습·경로당처럼 세부 구분을 두고, 기록할 때 고를 수 있어요.</p>
     <fieldset>
       <legend>구분 (기록할 때 고르는 항목)</legend>
@@ -864,14 +869,18 @@ legend{font-size:13px;font-weight:600;color:var(--ink-2);padding:0;margin-bottom
   <div class="sheet-head"><h2 id="schedTitle">수업 추가</h2><button class="icon-btn" type="button" data-close aria-label="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
   <form id="schedForm" autocomplete="off">
     <label class="field"><span>수업 이름</span><input id="scName" maxlength="30" placeholder="예: 언어재활실습Ⅱ (비우면 장소 이름)"></label>
-    <div class="field"><span class="lbl">이 수업 목표 시간</span>
-      <div class="dur"><input id="scTH" type="number" inputmode="numeric" min="0" max="999" step="1" placeholder="30" aria-label="목표 시간"><span>시간</span><input id="scTM" type="number" inputmode="numeric" min="0" max="59" step="1" placeholder="0" aria-label="목표 분"><span>분</span></div>
+    <div class="field"><span class="lbl">이 수업 목표 (분)</span>
+      <div class="min-in"><input id="scTarget" type="number" inputmode="numeric" min="0" step="1" max="60000" placeholder="예: 1500" aria-label="이 수업 목표(분)"><span>분</span><em class="hm" aria-hidden="true"></em></div>
     </div>
     <div class="field"><span class="lbl">장소</span><div class="chips" id="scPlaceChips"></div></div>
     <div class="field" id="scCatField"><span class="lbl">구분</span><div class="chips" id="scCats"></div><div class="chips sub" id="scSubs"></div>
       <div class="cat-add" id="scCatAddRow" hidden><input id="scCatAddName" maxlength="20" placeholder="예: 복지관, 병원, 특수학교" aria-label="새 세부 구분 이름"><button type="button" class="btn-ghost" id="btnScCatAdd">추가</button></div></div>
     <div class="field"><span class="lbl">가는 요일</span><div class="chips days" id="scDays"></div></div>
-    <div class="field"><span class="lbl">시간</span><div class="dur"><input id="scStart" type="time" value="14:00" aria-label="시작 시간"><span>부터</span><input id="scEnd" type="time" value="17:00" aria-label="끝나는 시간"><span>까지</span></div><p class="hint" id="scDurHint"></p></div>
+    <div class="field"><span class="lbl">수업 시각</span><div class="dur"><input id="scStart" type="time" value="14:00" aria-label="시작 시간"><span>부터</span><input id="scEnd" type="time" value="17:00" aria-label="끝나는 시간"><span>까지</span></div><p class="hint" id="scDurHint"></p></div>
+    <div class="field"><span class="lbl">한 번 가면 인정되는 시간</span>
+      <div class="min-in"><input id="scPer" type="number" inputmode="numeric" min="0" step="1" max="1440" placeholder="50" aria-label="한 번에 인정되는 시간(분)"><span>분</span><em class="hm" aria-hidden="true"></em></div>
+      <p class="hint">수업이 길어도 실습으로 인정되는 시간만 적어요. 예: 50분</p>
+    </div>
     <div class="field"><span class="lbl">기간</span><div class="dur"><input id="scFrom" type="date" aria-label="첫 수업 날"><span>부터</span><input id="scUntil" type="date" aria-label="마지막 수업 날"><span>까지</span></div></div>
     <div class="field"><span class="lbl">가는 날짜</span>
       <p class="plan-sum" id="scPlanSum"></p>
@@ -879,8 +888,8 @@ legend{font-size:13px;font-weight:600;color:var(--ink-2);padding:0;margin-bottom
       <div class="cat-add"><input id="scExtra" type="date" aria-label="따로 가는 날짜"><button type="button" class="btn-ghost" id="btnScExtra">날짜 추가</button></div>
       <p class="hint">날짜를 누르면 쉬는 날로 빠지고, 다시 누르면 돌아와요. 보강처럼 따로 가는 날은 날짜 추가로 넣어요.</p>
     </div>
-    <div class="field"><span class="lbl">앱에 기록하기 전, 이 수업에서 이미 채운 시간 (선택)</span>
-      <div class="dur"><input id="scBH" type="number" inputmode="numeric" min="0" max="999" step="1" placeholder="0" aria-label="이미 채운 시간"><span>시간</span><input id="scBM" type="number" inputmode="numeric" min="0" max="59" step="1" placeholder="0" aria-label="이미 채운 분"><span>분</span></div>
+    <div class="field"><span class="lbl">앱에 기록하기 전, 이 수업에서 이미 채운 시간 (분, 선택)</span>
+      <div class="min-in"><input id="scBefore" type="number" inputmode="numeric" min="0" step="1" max="60000" placeholder="0" aria-label="이미 채운 시간(분)"><span>분</span><em class="hm" aria-hidden="true"></em></div>
       <p class="hint">수업 실적에만 더해요. 구슬병에는 더하지 않아요(처음에 넣은 '이미 채운 시간'에 들어 있어요).</p>
     </div>
     <label class="field"><span>알림</span>
@@ -1027,7 +1036,7 @@ const CHEERS = [
   '오늘의 {h}이 졸업장의 한 귀퉁이를 채웠어요.',
   '{h} 더 채웠어요. 오늘도 해냈어요.',
 ];
-const DUR_CHIPS = [40, 50, 60, 80, 100, 120, 180, 240];   // minutes
+const DUR_CHIPS = [50, 100, 150, 200, 250, 300];   // minutes
 
 /* ================= utils ================= */
 const $ = (s, el = document) => el.querySelector(s);
@@ -1046,8 +1055,12 @@ function korDateY(s){ const d = parseD(s); return `${d.getFullYear()}년 ${d.get
 function mondayOf(s){ const d = parseD(s); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return fmtD(d); }
 function fmtNum(h){ const r = Math.round(h * 10) / 10; return Number.isInteger(r) ? String(r) : r.toFixed(1); }
 function fmtShort(h){ const m = Math.round(h * 60); if (m < 60) return `${m}분`; const hh = Math.floor(m / 60), mm = m % 60; return mm ? `${hh}:${pad(mm)}` : `${hh}시간`; }
-function durHTML(h){ const m = Math.round(h * 60), hh = Math.floor(m / 60), mm = m % 60; return (hh ? `${hh}<small>시간</small>` : '') + (mm || !hh ? `${hh ? ' ' : ''}${mm}<small>분</small>` : ''); }
-function fmtDur(h){ const m = Math.round(h * 60); const hh = Math.floor(m / 60), mm = m % 60; if (!hh) return `${mm}분`; return mm ? `${hh}시간 ${mm}분` : `${hh}시간`; }
+function durHTML(h){ const m = Math.round(h * 60), hh = Math.floor(m / 60), mm = m % 60; return (hh ? `${hh}<small>시간</small>` : '') + (mm || !hh ? `${hh ? ' ' : ''}${mm}<small>분</small>` : '') + (m >= 60 ? `<small class="mm">${minsText(h)}</small>` : ''); }
+function fmtHM(h){ const m = Math.round(h * 60); const hh = Math.floor(m / 60), mm = m % 60; if (!hh) return `${mm}분`; return mm ? `${hh}시간 ${mm}분` : `${hh}시간`; }
+const minsText = h => `${Math.round(h * 60).toLocaleString('ko-KR')}분`;
+// 시간+분, with the plain minute count beside it once it reaches an hour
+function fmtDur(h){ const m = Math.round(h * 60); return m >= 60 ? `${fmtHM(h)} (${minsText(h)})` : fmtHM(h); }
+function dm(h){ const m = Math.round(h * 60); return esc(fmtHM(h)) + (m >= 60 ? `<small class="mm">${minsText(h)}</small>` : ''); }
 const uid = p => p + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
 const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
 const clone = o => (o == null ? o : JSON.parse(JSON.stringify(o)));
@@ -1192,7 +1205,7 @@ function derive(st){
   const nowD = new Date(), nowMin = nowD.getHours() * 60 + nowD.getMinutes();
   const schedules = (st.schedules || []).filter(x => x && x.id && Array.isArray(x.days) && /^\d\d:\d\d$/.test(x.start || '') && /^\d\d:\d\d$/.test(x.end || '')
     && (x.days.length || (Array.isArray(x.extra) && x.extra.some(isDs))));
-  const schedDur = sc => Math.max(0, toMin(sc.end) - toMin(sc.start)) / 60;
+  const schedDur = sc => (Number(sc.perMin) > 0 ? Math.round(Number(sc.perMin)) : Math.max(0, toMin(sc.end) - toMin(sc.start))) / 60;
   const schedMap = new Map(schedules.map(sc => [sc.id, sc]));
   const cInfo = new Map(schedules.map(sc => { const dates = classDatesOf(sc, today); return [sc.id, { dates, set:new Set(dates), list:[] }]; }));
   const classOf = new Map();
@@ -1214,7 +1227,7 @@ function derive(st){
     if (id){ classOf.set(x.id, id); cInfo.get(id).list.push(x); }
   }
   const classes = schedules.map((sc, idx) => {
-    const ci = cInfo.get(sc.id), durMin = Math.max(0, toMin(sc.end) - toMin(sc.start)), dur = durMin / 60, endMin = toMin(sc.end);
+    const ci = cInfo.get(sc.id), durMin = Number(sc.perMin) > 0 ? Math.round(Number(sc.perMin)) : Math.max(0, toMin(sc.end) - toMin(sc.start)), dur = durMin / 60, endMin = toMin(sc.end);
     const p = (sc.placeId && placeMap.get(sc.placeId)) || null;
     const recDates = new Set(ci.list.map(x => x.date));
     const loggedMin = ci.list.reduce((t, x) => t + minsOf(x), 0);
@@ -1887,7 +1900,7 @@ function renderHero(ready){
   const over = jar && jar.slots.length ? D.marbles.length - jar.slots.length : 0;
   $('#jarCap').textContent = `구슬 1개 = ${unitLabel(D.unit)}` + (over > 0 ? ` · 병 밖으로 넘친 구슬 ${over}개` : '');
   if (!has) return;
-  $('#targetNum').textContent = fmtDur(D.target);
+  $('#targetNum').innerHTML = dm(D.target);
   $('#sessCount').textContent = `실습 ${D.count}회`;
   if (!animating) setHeroNumbers(D.total, D);
   $('#remainText').textContent = D.remaining > 0 ? `남은 시간 ${fmtDur(D.remaining)}` : (D.total > D.target ? `목표보다 ${fmtDur(D.total - D.target)} 더 채웠어요` : '목표를 다 채웠어요');
@@ -1899,7 +1912,7 @@ function renderHero(ready){
     const idx = STAGES.indexOf(D.nextStage), prev = STAGES.slice(0, idx).reverse().find(b => b.pct != null);
     const from = prev ? D.target * prev.pct / 100 : 0;
     nb.hidden = false; nb.textContent = D.nextStage.say; nb.style.setProperty('--c', MARBLES[D.nextStage.ci]);
-    ns.innerHTML = `다음 배지 <b>${esc(D.nextStage.title)}</b>까지 <b>${esc(fmtDur(Math.max(0, need)))}</b>`;
+    ns.innerHTML = `다음 배지 <b>${esc(D.nextStage.title)}</b>까지 <b>${dm((Math.max(0, need)))}</b>`;
     nbar.style.width = clamp((D.total - from) / Math.max(0.01, at - from), 0, 1) * 100 + '%';
   } else { nb.hidden = true; ns.innerHTML = '<b>모든 단계를 채웠어요.</b> 졸업 실습 시간 완료를 축하해요.'; nbar.style.width = '100%'; }
   const bars = D.cats.filter(c => Number(c.target) > 0).map(c => {
@@ -1907,11 +1920,11 @@ function renderHero(ready){
     const subs = D.subsOf(c.id).map(sc => [sc.name, D.subTotals.get(sc.id) || 0]).filter(x => x[1] > 0);
     const own = h - subs.reduce((a, x) => a + x[1], 0);
     if (subs.length && own > 0.001) subs.push(['세부 미지정', own]);
-    return `<div class="cat-bar"><span>${esc(c.name)}</span><span class="num">${esc(fmtDur(h))} / ${esc(fmtDur(Number(c.target)))}</span><div class="meter" aria-hidden="true"><i style="width:${p}%"></i></div>`
-      + (subs.length ? `<div class="cat-subtotals">${subs.map(([n, v]) => `<span>${esc(n)} ${esc(fmtDur(v))}</span>`).join('')}</div>` : '') + '</div>';
+    return `<div class="cat-bar"><span>${esc(c.name)}</span><span class="num">${dm((h))} / ${dm((Number(c.target)))}</span><div class="meter" aria-hidden="true"><i style="width:${p}%"></i></div>`
+      + (subs.length ? `<div class="cat-subtotals">${subs.map(([n, v]) => `<span>${esc(n)} ${dm((v))}</span>`).join('')}</div>` : '') + '</div>';
   });
   const loose = D.catTotals.get('') || 0;
-  if (bars.length && loose > 0) bars.push(`<p class="hint">구분 없이 넣은 시간 ${esc(fmtDur(loose))} (이전 기록 포함)</p>`);
+  if (bars.length && loose > 0) bars.push(`<p class="hint">구분 없이 넣은 시간 ${dm((loose))} (이전 기록 포함)</p>`);
   $('#catBars').innerHTML = bars.join('');
 }
 
@@ -1928,21 +1941,21 @@ function renderPace(){
   $('#weeks').innerHTML = D.weeks.map((w, i) => {
     const label = w.hours > 0 && (w.now || i === maxIdx) ? esc(fmtShort(w.hours)) : '';
     const h = w.hours > 0 ? Math.max(3, w.hours / max * 100) : 0;
-    return `<div class="wk${w.hours > 0 ? ' has' : ''}${w.now ? ' now' : ''}" style="--i:${i}" tabindex="0" data-i="${i}" aria-label="${esc(korDateShort(w.start))}부터 한 주, ${esc(fmtDur(w.hours))}"><span class="val">${label}</span><span class="bar" style="height:calc((100% - 20px) * ${h / 100})"></span></div>`;
+    return `<div class="wk${w.hours > 0 ? ' has' : ''}${w.now ? ' now' : ''}" style="--i:${i}" tabindex="0" data-i="${i}" aria-label="${esc(korDateShort(w.start))}부터 한 주, ${dm((w.hours))}"><span class="val">${label}</span><span class="bar" style="height:calc((100% - 20px) * ${h / 100})"></span></div>`;
   }).join('');
   $('#weekLabels').innerHTML = D.weeks.map(w => { const d = parseD(w.start); return `<span class="${w.now ? 'now' : ''}">${w.now ? '이번 주' : `${d.getMonth() + 1}/${d.getDate()}`}</span>`; }).join('');
   let line = '';
   const hasPlan = D.plan.length > 0;
   if (!D.settings) line = '';
   else if (D.remaining > 0 && hasPlan){
-    line = D.projDate ? `수업 일정대로면 <b>${esc(korDateY(D.projDate))}</b>에 목표 ${esc(fmtDur(D.target))}을 채워요.`
-      : `지금 잡힌 수업이 다 끝나도 <b>${esc(fmtDur(D.target - D.projTotal))}</b>이 모자라요. 수업 탭에서 확인해 보세요.`;
-    if (D.perWeek) line += ` 최근 속도는 주 ${esc(fmtDur(D.perWeek))}이에요.`;
+    line = D.projDate ? `수업 일정대로면 <b>${esc(korDateY(D.projDate))}</b>에 목표 ${dm((D.target))}을 채워요.`
+      : `지금 잡힌 수업이 다 끝나도 <b>${dm((D.target - D.projTotal))}</b>이 모자라요. 수업 탭에서 확인해 보세요.`;
+    if (D.perWeek) line += ` 최근 속도는 주 ${dm((D.perWeek))}이에요.`;
   }
   else if (D.remaining <= 0) line = '<b>목표 시간을 모두 채웠어요.</b>';
   else if (D.perWeek) {
-    line = `최근 속도는 주 <b>${esc(fmtDur(D.perWeek))}</b>이에요. 이대로면 <b>${esc(korDateY(D.projected))}</b>쯤 병이 가득 차요.`;
-    if (D.needPerWeek) line += ` 졸업 목표일(${esc(korDateY(D.settings.gradDate))})까지는 주 ${esc(fmtDur(D.needPerWeek))}씩 채우면 돼요.`;
+    line = `최근 속도는 주 <b>${dm((D.perWeek))}</b>이에요. 이대로면 <b>${esc(korDateY(D.projected))}</b>쯤 병이 가득 차요.`;
+    if (D.needPerWeek) line += ` 졸업 목표일(${esc(korDateY(D.settings.gradDate))})까지는 주 ${dm((D.needPerWeek))}씩 채우면 돼요.`;
   } else if (D.perWeek === 0) line = '최근 8주 동안 기록이 없어요. 다시 시작하면 다 채우는 날을 계산해 드려요.';
   else line = '실습을 두 번 이상 기록하면 병이 가득 차는 날을 예상해 드려요.';
   if (D.settings && D.settings.gradDate && D.remaining > 0 && D.daysLeft != null && D.daysLeft <= 0) line += ' 졸업 목표일이 지났어요. 설정에서 날짜를 바꿀 수 있어요.';
@@ -1985,14 +1998,14 @@ function renderHistory(){
   const byDay = new Map();
   for (const x of D.sessions) if (x.date.slice(0, 7) === calMonth && x.kind !== 'carry') byDay.set(x.date, (byDay.get(x.date) || 0) + minsOf(x) / 60);
   const monthSum = [...byDay.values()].reduce((a, b) => a + b, 0);
-  $('#calTitle').innerHTML = `${y}년 ${m}월${monthSum ? `<span class="sum">${esc(fmtDur(monthSum))}</span>` : ''}`;
+  $('#calTitle').innerHTML = `${y}년 ${m}월${monthSum ? `<span class="sum">${dm((monthSum))}</span>` : ''}`;
   let html = DOW.map(d => `<span class="cal-dow">${d}</span>`).join('');
   for (let i = 0; i < first.getDay(); i++) html += '<span class="cal-day out" aria-hidden="true"></span>';
   for (let d = 1; d <= days; d++){
     const ds = `${calMonth}-${pad(d)}`, h = byDay.get(ds);
     const cls = 'cal-day' + (ds === D.today ? ' today' : '') + (h ? ' has' : '');
     html += h
-      ? `<button type="button" class="${cls}" data-day="${ds}" aria-label="${m}월 ${d}일, ${esc(fmtDur(h))}">${d}<span class="mini-stamp">${esc(fmtShort(h))}</span></button>`
+      ? `<button type="button" class="${cls}" data-day="${ds}" aria-label="${m}월 ${d}일, ${dm((h))}">${d}<span class="mini-stamp">${esc(fmtShort(h))}</span></button>`
       : `<span class="${cls}">${d}</span>`;
   }
   $('#calGrid').innerHTML = html;
@@ -2010,12 +2023,12 @@ function renderHistory(){
     if (k !== cur){
       if (cur) out += '</ul>';
       cur = k; const [yy, mm] = k.split('-').map(Number);
-      out += `<div class="month-h"><b>${yy}년 ${mm}월</b><span>${esc(fmtDur(monthTotals.get(k)))}</span></div><ul class="recs">`;
+      out += `<div class="month-h"><b>${yy}년 ${mm}월</b><span>${dm((monthTotals.get(k)))}</span></div><ul class="recs">`;
     }
     const d = parseD(x.date);
     out += `<li><button type="button" class="rec" data-id="${esc(x.id)}" data-date="${x.date}"><span class="rec-date"><b>${d.getDate()}</b><span>${DOW[d.getDay()]}</span></span>`
       + `<span class="rec-main"><span class="rec-title"><i class="rec-dot" style="background:${colorOf(x)}"></i>${esc(catName(x))}${x.place ? `<span> · ${esc(x.place)}</span>` : ''}</span>`
-      + `${x.memo ? `<span class="rec-memo">${esc(x.memo)}</span>` : ''}</span><span class="rec-hours">${esc(fmtDur(Number(x.hours)))}</span></button></li>`;
+      + `${x.memo ? `<span class="rec-memo">${esc(x.memo)}</span>` : ''}</span><span class="rec-hours">${dm((Number(x.hours)))}</span></button></li>`;
   }
   out += '</ul>';
   if (list.length > listLimit) out += `<div class="more-row"><button type="button" class="btn-ghost" id="btnMore">기록 더 보기 (${list.length - listLimit}개)</button></div>`;
@@ -2208,13 +2221,15 @@ function renderTabDots(){
 
 /* ================= add / edit session ================= */
 let editingId = null, pickedCat = '';
-function durChipsHTML(){ return DUR_CHIPS.map(m => `<button type="button" class="chip" data-min="${m}">${esc(fmtDur(m / 60))}</button>`).join(''); }
+function durChipsHTML(){ return DUR_CHIPS.map(m => `<button type="button" class="chip" data-min="${m}">${m}분</button>`).join(''); }
+// minute boxes show their 시간+분 reading beside them
+function refreshHM(root = document){ $$('.min-in', root).forEach(w => { const v = parseInt($('input', w).value, 10) || 0, e = $('.hm', w); if (e) e.textContent = v >= 60 ? `= ${fmtHM(v / 60)}` : ''; }); }
 function setDur(hours){
   const mins = Math.round(hours * 60);
-  $('#fH').value = Math.floor(mins / 60); $('#fM').value = mins % 60; markDurChips();
+  $('#fMin').value = mins; markDurChips(); refreshHM($('#sheetSession'));
 }
 function markDurChips(){
-  const t = (Number($('#fH').value) || 0) * 60 + (Number($('#fM').value) || 0);
+  const t = Number($('#fMin').value) || 0;
   $$('#durChips .chip').forEach(c => c.setAttribute('aria-pressed', String(Number(c.dataset.min) === t)));
 }
 let catAddParent = '';
@@ -2273,12 +2288,11 @@ function openSession(id, pre){
 }
 async function submitSession(e){
   e.preventDefault();
-  const h = parseInt($('#fH').value || '0', 10) || 0, m = parseInt($('#fM').value || '0', 10) || 0, hours = (h * 60 + m) / 60;
-  if (m < 0 || m > 59 || h < 0){ $('#sessErr').textContent = '분은 0~59 사이로 적어 주세요.'; return; }
+  const mins = parseInt($('#fMin').value || '0', 10) || 0, hours = mins / 60;
   const date = $('#fDate').value, err = $('#sessErr');
   if (!/^\d{4}-\d\d-\d\d$/.test(date)){ err.textContent = '날짜를 골라 주세요.'; return; }
   if (!(hours > 0)){ err.textContent = '채운 시간을 입력해 주세요.'; return; }
-  if (hours > 24){ err.textContent = '하루에 24시간까지 기록할 수 있어요.'; return; }
+  if (hours > 24){ err.textContent = '하루에 1,440분(24시간)까지 기록할 수 있어요.'; return; }
   const dd = derive(Store.view()), pname = $('#fPlace').value.trim().slice(0, 40), pm = (pickedPlace && dd.placeMap.get(pickedPlace)) || dd.places.find(p => p.name === pname);
   const base = { date, hours, cat:pickedCat || '', place:pname, placeId: pm ? pm.id : '', schedId:pickedClass || '', memo:$('#fMemo').value.trim().slice(0, 300) };
   if (editingId){
@@ -2326,7 +2340,7 @@ function pickCheer(hours){
   let i = Math.floor(Math.random() * CHEERS.length);
   if (i === prefs.lastCheer) i = (i + 1) % CHEERS.length;
   prefs.lastCheer = i; savePrefs();
-  return CHEERS[i].replace('{h}', fmtDur(hours));
+  return CHEERS[i].replace('{h}', fmtHM(hours));
 }
 let shareText = '';
 function showStamp(data, before, after, sid){
@@ -2348,8 +2362,8 @@ function showStamp(data, before, after, sid){
     $('#stampCheer').textContent = pickCheer(data.hours);
     const cl = after.classes.find(c => c.id === (after.classOf.get(sid) || '')), sc$ = $('#stampClass');
     sc$.hidden = !cl;
-    if (cl) sc$.innerHTML = `<b>${esc(cl.name)}</b> ${esc(fmtDur(cl.done))}${cl.target > 0 ? ` / ${esc(fmtDur(cl.target))}` : ''}`
-      + (cl.target > 0 ? (cl.reached ? ' · 수업 목표 달성!' : cl.remain.length ? ` · 남은 수업 ${cl.remain.length}회` + (cl.willReach ? '' : ` · ${esc(fmtDur(cl.short))} 부족 예상`) : '') : '');
+    if (cl) sc$.innerHTML = `<b>${esc(cl.name)}</b> ${dm((cl.done))}${cl.target > 0 ? ` / ${dm((cl.target))}` : ''}`
+      + (cl.target > 0 ? (cl.reached ? ' · 수업 목표 달성!' : cl.remain.length ? ` · 남은 수업 ${cl.remain.length}회` + (cl.willReach ? '' : ` · ${dm((cl.short))} 부족 예상`) : '') : '');
     shareText = `오늘 실습 ${fmtDur(data.hours)} 채웠어요. 지금까지 ${fmtDur(after.total)} / ${fmtDur(after.target)} (${pctInt(after)}%)` + (gotNow.length ? ` · '${gotNow[gotNow.length - 1].title}' 배지 획득` : '');
     const mark = $('#stampMark'), card = $('#stampCard');
     mark.classList.remove('slam'); card.classList.remove('shake'); void mark.offsetWidth;
@@ -2554,14 +2568,14 @@ function catRowsHTML(){
   return draftTops().map(t => {
     const i = catDraft.indexOf(t), subs = catDraft.filter(c => c.parent === t.id);
     return `<div class="cat-row" data-i="${i}"><input class="cName" value="${esc(t.name)}" maxlength="20" placeholder="큰 구분 이름" aria-label="큰 구분 이름">`
-      + `<input class="cTarget" type="number" inputmode="decimal" min="0" step="0.5" value="${t.target === '' || t.target == null || !Number(t.target) ? '' : esc(t.target)}" placeholder="목표 시간" aria-label="${esc(t.name || '구분')} 목표 시간">`
+      + `<input class="cTarget" type="number" inputmode="numeric" min="0" step="1" value="${t.target === '' || t.target == null || !Number(t.target) ? '' : esc(t.target)}" placeholder="목표(분)" aria-label="${esc(t.name || '구분')} 목표(분)">`
       + `<button type="button" class="icon-btn cDel" aria-label="${esc(t.name || '구분')} 삭제">${XICON}</button></div>`
       + subs.map(sc => `<div class="cat-row sub" data-i="${catDraft.indexOf(sc)}"><input class="cName" value="${esc(sc.name)}" maxlength="20" placeholder="세부 구분 이름" aria-label="세부 구분 이름"><button type="button" class="icon-btn cDel" aria-label="${esc(sc.name || '세부 구분')} 삭제">${XICON}</button></div>`).join('')
       + `<button type="button" class="link-btn cat-add-sub" data-addsub="${esc(t.id)}">+ ${esc(t.name || '이 구분')} 세부 구분</button>`;
   }).join('');
 }
 function readCatRows(){ $$('#catRows .cat-row').forEach(r => { const i = Number(r.dataset.i), t = $('.cTarget', r); catDraft[i].name = $('.cName', r).value; if (t) catDraft[i].target = t.value; }); }
-function updateCatSum(){ const sum = draftTops().reduce((t, c) => t + (Number(c.target) || 0), 0); $('#catSum').textContent = sum ? `큰 구분 목표 합계 ${fmtDur(sum)}` : ''; }
+function updateCatSum(){ const sum = draftTops().reduce((t, c) => t + (Number(c.target) || 0), 0) / 60; $('#catSum').textContent = sum ? `큰 구분 목표 합계 ${fmtDur(sum)}` : ''; }
 function catOptions(list){
   const map = new Map(list.map(c => [c.id, c])), out = [];
   for (const t of list.filter(c => !c.parent || !map.has(c.parent))){ out.push({ id:t.id, label:t.name }); for (const s of list.filter(c => c.parent === t.id)) out.push({ id:s.id, label:`${t.name} · ${s.name}` }); }
@@ -2571,33 +2585,33 @@ function carryRowsHTML(rows, cats){
   const opts = catOptions(cats);
   return rows.map((r, i) => `<div class="carry-row" data-i="${i}"><select class="crCat" aria-label="구분">${opts.map(o => `<option value="${esc(o.id)}"${o.id === r.cat ? ' selected' : ''}>${esc(o.label)}</option>`).join('')}<option value=""${r.cat ? '' : ' selected'}>구분 없음</option></select>`
     + `<button type="button" class="icon-btn crDel" aria-label="이 줄 지우기">${XICON}</button>`
-    + (() => { const m = Math.round((Number(r.hours) || 0) * 60); return `<div class="cr-dur"><input class="crH" type="number" inputmode="numeric" min="0" max="2000" step="1" value="${m ? Math.floor(m / 60) : ''}" placeholder="0" aria-label="시간"><span>시간</span><input class="crM" type="number" inputmode="numeric" min="0" max="59" step="1" value="${m % 60 ? m % 60 : ''}" placeholder="0" aria-label="분"><span>분</span></div>`; })()
+    + (() => { const m = Math.round((Number(r.hours) || 0) * 60); return `<div class="min-in cr-min"><input class="crMin" type="number" inputmode="numeric" min="0" max="120000" step="1" value="${m || ''}" placeholder="0" aria-label="분"><span>분</span><em class="hm" aria-hidden="true">${m >= 60 ? `= ${esc(fmtHM(m / 60))}` : ''}</em></div>`; })()
     + '</div>').join('');
 }
-function readCarryRows(sel, rows){ $$(sel + ' .carry-row').forEach(r => { const i = Number(r.dataset.i); rows[i].cat = $('.crCat', r).value; rows[i].hours = ((parseInt($('.crH', r).value, 10) || 0) * 60 + clamp(parseInt($('.crM', r).value, 10) || 0, 0, 59)) / 60; }); return rows; }
+function readCarryRows(sel, rows){ $$(sel + ' .carry-row').forEach(r => { const i = Number(r.dataset.i); rows[i].cat = $('.crCat', r).value; rows[i].hours = (parseInt($('.crMin', r).value, 10) || 0) / 60; }); return rows; }
 function updateCarrySum(){ const sum = carryDraft.reduce((t, r) => t + (Number(r.hours) || 0), 0); $('#carrySum').textContent = sum ? `합계 ${fmtDur(sum)}` : ''; }
 function openSettings(){
   const s = D.settings || defaultSettings();
-  $('#sName').value = s.name || ''; $('#sTarget').value = s.target || 120; $('#sGrad').value = s.gradDate || '';
+  $('#sName').value = s.name || ''; $('#sTarget').value = Math.round((Number(s.target) || 90) * 60); $('#sGrad').value = s.gradDate || '';
   $('#sSound').checked = !!prefs.sound;
   $('#sRound').checked = s.roundTrip !== false;
   $('#sOriginName').textContent = `출발지: ${(s.origin && s.origin.name) || DEFAULT_ORIGIN.name}`;
-  catDraft = clone(s.categories || []).map(c => ({ id:c.id, name:c.name, target:c.target, parent:c.parent || '' }));
+  catDraft = clone(s.categories || []).map(c => ({ id:c.id, name:c.name, target:Number(c.target) > 0 ? Math.round(Number(c.target) * 60) : '', parent:c.parent || '' }));
   $('#catRows').innerHTML = catRowsHTML(); updateCatSum(); $('#setErr').textContent = '';
   carryOrig = S.sessions.filter(x => x.kind === 'carry');
   carryDraft = carryOrig.map(x => ({ id:x.id, cat:x.cat || '', hours:Number(x.hours) }));
   if (!carryDraft.length) carryDraft = [{ cat:'', hours:0 }];
   $('#setCarryRows').innerHTML = carryRowsHTML(carryDraft, catDraft); updateCarrySum();
-  openLayer($('#sheetSettings'));
+  refreshHM($('#sheetSettings')); openLayer($('#sheetSettings'));
 }
 async function submitSettings(e){
   e.preventDefault(); readCatRows(); readCarryRows('#setCarryRows', carryDraft);
-  const target = parseFloat($('#sTarget').value);
+  const target = (parseInt($('#sTarget').value, 10) || 0) / 60;
   if (!(target > 0)){ $('#setErr').textContent = '졸업까지 채울 시간을 입력해 주세요.'; return; }
   const named = catDraft.filter(c => String(c.name).trim()), ids = new Set(named.map(c => c.id));
   const cats = named.filter(c => !c.parent || ids.has(c.parent)).map(c => (c.parent ? { id:c.id || uid('k'), name:String(c.name).trim().slice(0, 20), parent:c.parent }
-    : { id:c.id || uid('k'), name:String(c.name).trim().slice(0, 20), target: Number(c.target) > 0 ? Math.round(Number(c.target) * 10) / 10 : 0 }));
-  const data = Object.assign(D.settings ? clone(D.settings) : defaultSettings(), { name:$('#sName').value.trim().slice(0, 20), target:Math.round(target * 10) / 10, gradDate:$('#sGrad').value || '', categories:cats, roundTrip:$('#sRound').checked });
+    : { id:c.id || uid('k'), name:String(c.name).trim().slice(0, 20), target: Number(c.target) > 0 ? Math.round(Number(c.target)) / 60 : 0 }));
+  const data = Object.assign(D.settings ? clone(D.settings) : defaultSettings(), { name:$('#sName').value.trim().slice(0, 20), target, gradDate:$('#sGrad').value || '', categories:cats, roundTrip:$('#sRound').checked });
   prefs.sound = $('#sSound').checked; savePrefs();
   closeLayer($('#sheetSettings'));
   await Store.exec({ t:'settings', data });
@@ -2634,7 +2648,7 @@ async function importBackup(file){
 
 /* ================= setup ================= */
 let suCarry = [{ cat:'in', hours:0 }, { cat:'out', hours:0 }];
-function renderSuCarry(){ $('#suCarryRows').innerHTML = carryRowsHTML(suCarry, defaultCats()); }
+function renderSuCarry(){ $('#suCarryRows').innerHTML = carryRowsHTML(suCarry, defaultCats()); refreshHM($('#setupCard')); }
 async function pourCarries(rows){
   animating = true;
   const before = derive(Store.view()), from = jar.count, t0 = Date.now();
@@ -2650,7 +2664,7 @@ async function pourCarries(rows){
 }
 async function submitSetup(e){
   e.preventDefault(); ensureAudio();
-  const target = parseFloat($('#suTarget').value);
+  const target = (parseInt($('#suTarget').value, 10) || 0) / 60;
   readCarryRows('#suCarryRows', suCarry);
   const rows = suCarry.filter(r => r.hours > 0), carry = rows.reduce((t, r) => t + r.hours, 0);
   if (!(target > 0)){ toast('졸업까지 채울 시간을 입력해 주세요'); return; }
@@ -2699,7 +2713,8 @@ function wire(){
   $('#nKind').addEventListener('change', setKindRows);
   $('#durChips').innerHTML = durChipsHTML();
   $('#durChips').addEventListener('click', e => { const c = e.target.closest('.chip'); if (c) setDur(Number(c.dataset.min) / 60); });
-  $('#fH').addEventListener('input', markDurChips); $('#fM').addEventListener('input', markDurChips);
+  $('#fMin').addEventListener('input', markDurChips);
+  document.addEventListener('input', e => { const w = e.target.closest && e.target.closest('.min-in'); if (w) refreshHM(w.parentElement); });
   const onCatChip = e => {
     const c = e.target.closest('.chip'); if (!c) return;
     if (c.dataset.add){ catAddParent = c.dataset.add; $('#catAddRow').hidden = false; $('#catAddName').focus(); return; }
@@ -3179,7 +3194,7 @@ function classStatus(c){
   if (!(c.target > 0)) return { t:'목표 미정', k:'idle' };
   if (c.reached) return { t:'목표 달성', k:'' };
   if (c.willReach) return { t:c.finish ? `${md(c.finish)} 달성 예상` : '달성 예상', k:'' };
-  return { t:`${fmtDur(c.short)} 부족 예상`, k:'warn' };
+  return { t:`${fmtHM(c.short)} 부족 예상`, k:'warn' };
 }
 // done | planned bar, scaled to whichever is larger: the goal or the plan
 function pbarHTML(done, expected, goal, thin){
@@ -3216,18 +3231,18 @@ function renderSched(){
     let st;
     if (D.remaining <= 0) st = { t:'목표 달성', k:'' };
     else if (D.projDate) st = { t:`${md(D.projDate)} 달성 예상`, k:'' };
-    else st = { t:`${fmtDur(D.target - D.projTotal)} 부족 예상`, k:'warn' };
+    else st = { t:`${fmtHM(D.target - D.projTotal)} 부족 예상`, k:'warn' };
     const rows = D.cats.filter(c => Number(c.target) > 0).map(c => {
       const done = D.catTotals.get(c.id) || 0, plan = D.planCat.get(c.id) || 0, goal = Number(c.target), exp = done + plan;
       const gap = goal - exp;
-      return `<div class="prow"><b>${esc(c.name)}</b><span class="st ${gap > 1 / 120 ? 'warn' : ''}">${gap > 1 / 120 ? `${esc(fmtDur(gap))} 부족 예상` : '목표 채움 예상'}</span><small>${esc(fmtDur(done))}${plan > 0 ? ` → 예상 ${esc(fmtDur(exp))}` : ''} · 목표 ${esc(fmtDur(goal))}</small>${pbarHTML(done, exp, goal, true)}</div>`;
+      return `<div class="prow"><b>${esc(c.name)}</b><span class="st ${gap > 1 / 120 ? 'warn' : ''}">${gap > 1 / 120 ? `${esc(fmtHM(gap))} 부족 예상` : '목표 채움 예상'}</span><small>${dm((done))}${plan > 0 ? ` → 예상 ${dm((exp))}` : ''} · 목표 ${dm((goal))}</small>${pbarHTML(done, exp, goal, true)}</div>`;
     }).join('');
     let note;
-    if (D.remaining <= 0) note = `목표 ${esc(fmtDur(D.target))}을 모두 채웠어요.`;
-    else if (D.projDate) note = `남은 수업을 다 가면 <b>${esc(fmtDur(D.projTotal))}</b>. <b>${esc(korDateY(D.projDate))}</b>에 목표 ${esc(fmtDur(D.target))}을 채워요.`;
-    else note = `남은 수업을 다 가도 <b>${esc(fmtDur(D.projTotal))}</b>이에요. 목표까지 <b>${esc(fmtDur(D.target - D.projTotal))}</b>이 모자라서 수업을 더 잡아야 해요.`;
-    pc.innerHTML = `<div class="proj-top"><p class="eyebrow">졸업 목표 ${esc(fmtDur(D.target))} 실적·예상</p><span class="st ${st.k}">${esc(st.t)}</span></div>`
-      + `<p class="proj-big">${durHTML(D.total)}${D.planHours > 0 ? `<span class="plus">+ 남은 수업 ${esc(fmtDur(D.planHours))}</span>` : ''}</p>`
+    if (D.remaining <= 0) note = `목표 ${dm((D.target))}을 모두 채웠어요.`;
+    else if (D.projDate) note = `남은 수업을 다 가면 <b>${dm((D.projTotal))}</b>. <b>${esc(korDateY(D.projDate))}</b>에 목표 ${dm((D.target))}을 채워요.`;
+    else note = `남은 수업을 다 가도 <b>${dm((D.projTotal))}</b>이에요. 목표까지 <b>${dm((D.target - D.projTotal))}</b>이 모자라서 수업을 더 잡아야 해요.`;
+    pc.innerHTML = `<div class="proj-top"><p class="eyebrow">졸업 목표 ${esc(fmtHM(D.target))} 실적·예상</p><span class="st ${st.k}">${esc(st.t)}</span></div>`
+      + `<p class="proj-big">${durHTML(D.total)}${D.planHours > 0 ? `<span class="plus">+ 남은 수업 ${dm((D.planHours))}</span>` : ''}</p>`
       + pbarHTML(D.total, D.projTotal, D.target)
       + `<div class="legend"><span><i></i>채운 시간</span><span><i class="p"></i>남은 수업 예상</span>${D.projTotal > D.target ? '<span><i class="g"></i>목표</span>' : ''}</div>`
       + `<p class="proj-note">${note}</p>` + (rows ? `<div class="prows">${rows}</div>` : '');
@@ -3236,25 +3251,25 @@ function renderSched(){
   $('#schedList').innerHTML = active.length ? active.map((c, i) => {
     const st = classStatus(c), col = classColor(c), place = c.place ? c.place.name : (c.sc.placeName || '');
     const cat = D.catLabel(c.sc.cat);
-    const meta = [`기록 <b>${c.count}회</b>` + (c.before > 0 ? ` + 이전 ${esc(fmtDur(c.before))}` : ''),
-      c.openEnded ? '' : c.remain.length ? `남은 수업 <b>${c.remain.length}회 · ${esc(fmtDur(c.remain.length * c.dur))}</b>` : '남은 수업 없음',
-      c.openEnded ? '<b>마지막 수업 날을 정하면 예상 시간을 계산해요</b>' : `예상 <b>${esc(fmtDur(c.expected))}</b>`];
+    const meta = [`기록 <b>${c.count}회</b>` + (c.before > 0 ? ` + 이전 ${dm((c.before))}` : ''),
+      c.openEnded ? '' : c.remain.length ? `남은 수업 <b>${c.remain.length}회 · ${dm((c.remain.length * c.dur))}</b>` : '남은 수업 없음',
+      c.openEnded ? '<b>마지막 수업 날을 정하면 예상 시간을 계산해요</b>' : `예상 <b>${dm((c.expected))}</b>`];
     const miss = D.missed.filter(m => m.c.id === c.id);
     let foot = '';
-    if (c.todayState === 'due') foot = `<div class="cc-foot due"><span><b>오늘 ${esc(c.sc.end)}</b>에 끝났어요. 기록할까요?</span><button type="button" class="mini-btn" data-quick="${esc(D.today)}|${esc(c.id)}">${esc(fmtDur(c.dur))} 기록</button></div>`;
+    if (c.todayState === 'due') foot = `<div class="cc-foot due"><span><b>오늘 ${esc(c.sc.end)}</b>에 끝났어요. 기록할까요?</span><button type="button" class="mini-btn" data-quick="${esc(D.today)}|${esc(c.id)}">${esc(fmtHM(c.dur))} 기록</button></div>`;
     else if (c.todayState === 'now' || c.todayState === 'soon') foot = `<div class="cc-foot"><span><b>오늘 ${esc(c.sc.start)}</b> 수업이 있어요</span><button type="button" class="mini-btn" data-quick="${esc(D.today)}|${esc(c.id)}">기록</button></div>`;
     else if (miss.length) foot = `<div class="cc-foot due"><span><b>${esc(mdw(miss[0].date))}</b> 기록이 없어요${miss.length > 1 ? ` 외 ${miss.length - 1}번` : ''}</span><button type="button" class="mini-btn" data-quick="${esc(miss[0].date)}|${esc(c.id)}">기록</button></div>`;
     else if (c.next) foot = `<div class="cc-foot"><span>다음 수업 <b>${esc(mdw(c.next))} ${esc(c.sc.start)}</b></span>${c.todayState === 'done' ? '<span class="st">오늘 기록 완료</span>' : ''}</div>`;
     return `<article class="class-card" style="--c:${col};--i:${i}"><button type="button" class="cc-main" data-sched="${esc(c.id)}" aria-label="${esc(c.name)} 고치기">`
       + `<span class="cc-head"><span class="dot" aria-hidden="true"></span><b>${esc(c.name)}</b><span class="st ${st.k}">${esc(st.t)}</span></span>`
       + `<span class="cc-sub">${esc(classWhen(c))}${place ? ` · ${esc(place)}` : ''}${cat ? ` · ${esc(cat)}` : ''}</span>`
-      + `<span class="cc-nums"><span><b>${durHTML(c.done)}</b> / ${c.target > 0 ? esc(fmtDur(c.target)) : '목표 미정'}</span><span>${c.target > 0 ? Math.min(100, Math.floor(c.done / c.target * 100)) + '%' : ''}</span></span>`
+      + `<span class="cc-nums"><span><b>${durHTML(c.done)}</b> / ${c.target > 0 ? dm((c.target)) : '목표 미정'}</span><span>${c.target > 0 ? Math.min(100, Math.floor(c.done / c.target * 100)) + '%' : ''}</span></span>`
       + pbarHTML(c.done, c.expected, c.target)
       + `<span class="cc-meta">${meta.filter(Boolean).join(' · ')}</span></button>${foot}</article>`;
   }).join('') : `<p class="empty">${D.classes.length ? '진행 중인 수업이 없어요.' : '수업을 추가하면 목표 시간과 가는 날, 알림이 한 번에 정리되고<br>실적과 예상 실습 시간을 여기서 보여 줘요.'}</p>`;
   $('#endedWrap').innerHTML = ended.length ? `<details class="ended"><summary>끝난 수업 ${ended.length}개</summary>${ended.map(c => {
     const st = classStatus(c);
-    return `<button type="button" class="ended-row" data-sched="${esc(c.id)}"><b>${esc(c.name)}</b><span class="st ${st.k === 'warn' ? 'warn' : ''}">${c.target > 0 ? (c.reached ? '달성' : `${esc(fmtDur(c.target - c.done))} 모자람`) : ''}</span><small>${esc(fmtDur(c.done))}${c.target > 0 ? ` / ${esc(fmtDur(c.target))}` : ''} · 기록 ${c.count}회${c.last ? ` · ${esc(md(c.last))} 끝` : ''}</small></button>`;
+    return `<button type="button" class="ended-row" data-sched="${esc(c.id)}"><b>${esc(c.name)}</b><span class="st ${st.k === 'warn' ? 'warn' : ''}">${c.target > 0 ? (c.reached ? '달성' : `${esc(fmtHM(c.target - c.done))} 모자람`) : ''}</span><small>${dm((c.done))}${c.target > 0 ? ` / ${dm((c.target))}` : ''} · 기록 ${c.count}회${c.last ? ` · ${esc(md(c.last))} 끝` : ''}</small></button>`;
   }).join('')}</details>` : '';
   $('#btnCal').hidden = !D.classes.some(c => c.remain.length);
 }
@@ -3265,7 +3280,7 @@ function renderTodayBanner(has){
   const live = D.todayItems.find(c => c.todayState === 'now' || c.todayState === 'soon');
   const miss = D.missed[0];
   let html = '', cls = 'today';
-  if (due){ cls += ' due'; html = `<span class="today-ic">오늘</span><span class="today-t"><b>${esc(due.name)}</b> 끝났어요?</span><button type="button" class="today-btn" data-quick="${esc(D.today)}|${esc(due.id)}">${esc(fmtDur(due.dur))} 기록</button><button type="button" class="today-skip" data-skip="${esc(D.today)}|${esc(due.id)}">안 갔어요</button>`; }
+  if (due){ cls += ' due'; html = `<span class="today-ic">오늘</span><span class="today-t"><b>${esc(due.name)}</b> 끝났어요?</span><button type="button" class="today-btn" data-quick="${esc(D.today)}|${esc(due.id)}">${esc(fmtHM(due.dur))} 기록</button><button type="button" class="today-skip" data-skip="${esc(D.today)}|${esc(due.id)}">안 갔어요</button>`; }
   else if (miss){ cls += ' due'; const n = D.missed.length; html = `<span class="today-ic">놓침</span><span class="today-t"><b>${esc(mdw(miss.date))}</b> ${esc(miss.c.name)} 기록이 없어요${n > 1 ? ` 외 ${n - 1}건` : ''}</span><button type="button" class="today-btn" data-quick="${esc(miss.date)}|${esc(miss.c.id)}">기록</button><button type="button" class="today-skip" data-skip="${esc(miss.date)}|${esc(miss.c.id)}">안 갔어요</button>`; }
   else if (live){ html = `<span class="today-ic">오늘</span><span class="today-t"><b>${esc(live.sc.start)}</b> ${esc(live.name)} 수업이 있어요</span><button type="button" class="today-btn" data-quick="${esc(D.today)}|${esc(live.id)}">기록</button>`; }
   else if (D.todayItems.length){ cls += ' done'; html = `<span class="today-ic">오늘</span><span class="today-t"><b>기록 완료</b> ${esc(D.todayItems[0].name)}, 수고했어요</span>`; }
@@ -3274,10 +3289,10 @@ function renderTodayBanner(has){
 
 /* ---- class editor ---- */
 let scEdit = null, scDays = [], scPlace = '', scCat = '', scSkip = new Set(), scExtra = new Set();
-const readHM = (h, m) => ((parseInt($(h).value, 10) || 0) * 60 + clamp(parseInt($(m).value, 10) || 0, 0, 59)) / 60;
-const writeHM = (h, m, hours) => { const t = Math.round((Number(hours) || 0) * 60); $(h).value = t ? Math.floor(t / 60) : ''; $(m).value = t % 60 ? t % 60 : ''; };
+const readMin = id => (parseInt($(id).value, 10) || 0) / 60;
+const writeMin = (id, hours) => { const t = Math.round((Number(hours) || 0) * 60); $(id).value = t || ''; };
 function draftClass(){
-  return { days:scDays.slice(), from:$('#scFrom').value, until:$('#scUntil').value, start:$('#scStart').value, end:$('#scEnd').value, skip:[], extra:[...scExtra] };
+  return { days:scDays.slice(), from:$('#scFrom').value, until:$('#scUntil').value, start:$('#scStart').value, end:$('#scEnd').value, perMin:parseInt($('#scPer').value, 10) || 0, skip:[], extra:[...scExtra] };
 }
 function renderScChips(){
   const d = derive(Store.view());
@@ -3287,7 +3302,8 @@ function renderScChips(){
   const h = catChips(scCat, d, true);
   $('#scCats').innerHTML = h.tops; $('#scSubs').innerHTML = h.subs;
   const s = $('#scStart').value, e = $('#scEnd').value, mins = D.toMin(e) - D.toMin(s);
-  $('#scDurHint').textContent = s && e ? (mins > 0 ? `한 번에 ${fmtDur(mins / 60)}` : '끝나는 시간이 시작 시간보다 늦어야 해요') : '';
+  $('#scDurHint').textContent = s && e ? (mins > 0 ? `수업 ${mins}분 (${fmtHM(mins / 60)})` : '끝나는 시간이 시작 시간보다 늦어야 해요') : '';
+  $('#scPer').placeholder = mins > 0 ? String(mins) : '50';
   renderScDates(d);
 }
 function renderScDates(d = derive(Store.view())){
@@ -3301,16 +3317,16 @@ function renderScDates(d = derive(Store.view())){
     const lab = `${md(ds)} ${DAY_KO[parseD(ds).getDay()]}요일` + (scExtra.has(ds) ? ', 따로 가는 날' : scSkip.has(ds) ? ', 쉬는 날' : '') + (rec.has(ds) ? ', 기록함' : '');
     return `<button type="button" class="${cls}" data-ds="${ds}" aria-label="${esc(lab)}">${parseD(ds).getDate()}</button>`;
   }).join('')}</div></div>`).join('');
-  const dur = Math.max(0, D.toMin(tmp.end) - D.toMin(tmp.start)) / 60, n = live.length, total = n * dur;
-  const target = readHM('#scTH', '#scTM'), before = readHM('#scBH', '#scBM');
+  const dur = (tmp.perMin > 0 ? tmp.perMin : Math.max(0, D.toMin(tmp.end) - D.toMin(tmp.start))) / 60, n = live.length, total = n * dur;
+  const target = readMin('#scTarget'), before = readMin('#scBefore');
   const future = live.filter(ds => ds >= d.today && !rec.has(ds)).length;
   let line;
   if (!n) line = tmp.days.length ? '이 기간에 해당하는 날짜가 없어요.' : '가는 요일을 고르거나 날짜를 추가해 주세요.';
   else {
-    line = `총 <b>${n}회</b> × ${esc(fmtDur(dur))} = <b>${esc(fmtDur(total))}</b>` + (future < n ? ` · 앞으로 ${future}회` : '');
+    line = `총 <b>${n}회</b> × ${Math.round(dur * 60)}분 = <b>${dm((total))}</b>` + (future < n ? ` · 앞으로 ${future}회` : '');
     if (target > 0){
       const exp = (c ? c.logged : 0) + before + future * dur, gap = target - exp;
-      line += gap > 1 / 120 ? ` · <span class="warn">목표 ${esc(fmtDur(target))}보다 ${esc(fmtDur(gap))} 모자라요</span>` : ` · <span class="ok">목표 ${esc(fmtDur(target))} 채울 수 있어요</span>`;
+      line += gap > 1 / 120 ? ` · <span class="warn">목표 ${dm((target))}보다 ${dm((gap))} 모자라요</span>` : ` · <span class="ok">목표 ${dm((target))} 채울 수 있어요</span>`;
     }
   }
   $('#scPlanSum').innerHTML = line;
@@ -3323,22 +3339,22 @@ function openSched(id){
   $('#schedTitle').textContent = x ? '수업 고치기' : '수업 추가';
   $('#scCatAddRow').hidden = true; $('#scCatAddName').value = '';
   $('#scName').value = x ? x.name || '' : '';
-  writeHM('#scTH', '#scTM', x ? x.target : 0); writeHM('#scBH', '#scBM', x ? x.doneBefore : 0);
+  writeMin('#scTarget', x ? x.target : 0); writeMin('#scBefore', x ? x.doneBefore : 0); $('#scPer').value = x && Number(x.perMin) > 0 ? x.perMin : (x ? '' : 50);
   $('#scStart').value = x ? x.start : '14:00'; $('#scEnd').value = x ? x.end : '17:00';
   $('#scFrom').value = x ? x.from || D.today : D.today; $('#scUntil').value = x ? x.until || '' : addDays(D.today, 7 * 15 - 1);
   $('#scExtra').value = '';
   $('#scRemind').value = String(x ? x.remind ?? 60 : 60); $('#scRecAlarm').checked = x ? x.recordAlarm !== false : true;
   $('#btnDelSched').hidden = !x; $('#btnSchedCal').hidden = !x; $('#scErr').textContent = '';
   $('#btnSaveSched').textContent = x ? '저장' : '수업 저장';
-  renderScChips();
+  renderScChips(); refreshHM($('#sheetSched'));
   openLayer($('#sheetSched'));
 }
 async function saveSched(e){
   e.preventDefault();
   const err = $('#scErr'), start = $('#scStart').value, end = $('#scEnd').value, from = $('#scFrom').value, until = $('#scUntil').value;
-  const target = readHM('#scTH', '#scTM'), before = readHM('#scBH', '#scBM'), d = derive(Store.view());
+  const target = readMin('#scTarget'), before = readMin('#scBefore'), d = derive(Store.view()), per = parseInt($('#scPer').value, 10) || 0;
   const fail = (msg, el) => { err.textContent = msg; if (el) el.focus({ preventScroll:false }); };
-  if (!(target > 0)) return fail('이 수업의 목표 시간을 적어 주세요.', $('#scTH'));
+  if (!(target > 0)) return fail('이 수업의 목표를 분으로 적어 주세요.', $('#scTarget'));
   if (d.cats.length && !scCat) return fail('구분(교내·교외)을 골라 주세요.');
   if (!/^\d\d:\d\d$/.test(start) || !/^\d\d:\d\d$/.test(end) || D.toMin(end) <= D.toMin(start)) return fail('시간을 확인해 주세요. 끝나는 시간이 시작 시간보다 늦어야 해요.');
   if (scDays.length && !until) return fail('마지막 수업 날을 골라 주세요. 예상 시간을 계산할 때 써요.', $('#scUntil'));
@@ -3347,14 +3363,14 @@ async function saveSched(e){
   const all = classDatesOf(tmp, d.today), patt = new Set(classDatesOf(Object.assign({}, tmp, { extra:[] }), d.today));
   if (!all.filter(ds => !scSkip.has(ds) || scExtra.has(ds)).length) return fail('가는 날짜가 하나도 없어요. 요일이나 날짜를 넣어 주세요.');
   const p = d.placeMap.get(scPlace), old = scEdit ? S.schedules.find(v => v.id === scEdit) : null;
-  const data = { name:$('#scName').value.trim().slice(0, 30), target:Math.round(target * 60) / 60, doneBefore:Math.round(before * 60) / 60,
+  const data = { name:$('#scName').value.trim().slice(0, 30), target:Math.round(target * 60) / 60, doneBefore:Math.round(before * 60) / 60, perMin:per > 0 ? per : 0,
     placeId:p ? p.id : '', placeName:p ? p.name : '', days:scDays.slice().sort(), start, end, cat:scCat,
     from:from || D.today, until:until || '', skip:[...scSkip].filter(ds => patt.has(ds)).sort(), extra:[...scExtra].filter(ds => !patt.has(ds) || scSkip.has(ds)).sort(),
     remind:Number($('#scRemind').value), recordAlarm:$('#scRecAlarm').checked, createdAt:old && old.createdAt ? old.createdAt : new Date().toISOString() };
   // an extra day that sits on the weekly pattern is simply "not skipped"
   data.skip = data.skip.filter(ds => !scExtra.has(ds)); data.extra = data.extra.filter(ds => !patt.has(ds));
   const id = scEdit || uid('c'), isNew = !scEdit;
-  const timing = old && (old.start !== start || old.end !== end || old.from !== data.from || old.until !== data.until || String(old.days) !== String(data.days) || String(old.skip || []) !== String(data.skip) || String(old.extra || []) !== String(data.extra) || Number(old.remind) !== data.remind || (old.recordAlarm !== false) !== data.recordAlarm);
+  const timing = old && (old.start !== start || old.end !== end || old.from !== data.from || old.until !== data.until || String(old.days) !== String(data.days) || String(old.skip || []) !== String(data.skip) || String(old.extra || []) !== String(data.extra) || Number(old.remind) !== data.remind || Number(old.perMin || 0) !== data.perMin || (old.recordAlarm !== false) !== data.recordAlarm);
   closeLayer($('#sheetSched'));
   await Store.exec({ t:'sched', id, data });
   if (isNew){ await sleep(RM ? 0 : 260); openCalSheet([id], true); }
@@ -3517,7 +3533,7 @@ function wireSched(){
   $('#scCatAddName').addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); doScAdd(); } });
   ['#scStart', '#scEnd'].forEach(id => $(id).addEventListener('input', renderScChips));
   ['#scFrom', '#scUntil'].forEach(id => $(id).addEventListener('change', () => renderScDates()));
-  ['#scTH', '#scTM', '#scBH', '#scBM'].forEach(id => $(id).addEventListener('input', () => renderScDates()));
+  ['#scTarget', '#scBefore', '#scPer'].forEach(id => $(id).addEventListener('input', () => renderScDates()));
   $('#scDates').addEventListener('click', e => {
     const b = e.target.closest('[data-ds]'); if (!b) return;
     const ds = b.dataset.ds;
@@ -3567,7 +3583,7 @@ render();
 installHint();
 Store.init().then(() => { scheduleRender(); setTimeout(() => runMissions(false), 1200); setTimeout(() => Router.fill(), 2500); });
 if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js', { updateViaCache:'none' }).catch(() => {});
-const APP_VERSION = '20261007215418';
+const APP_VERSION = '20261007220122';
 let updating = false;
 async function checkUpdate(){
   if (updating || location.protocol !== 'https:') return;
