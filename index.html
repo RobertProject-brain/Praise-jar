@@ -2063,9 +2063,28 @@ function confirmBox(title, text, yes = '삭제'){
 /* ================= sound ================= */
 // iPhone: the audio engine can come back from the background "interrupted" or silently stalled,
 // so every tap re-checks it and rebuilds it when needed. Silent mode on the phone still mutes web sounds.
-let actx = null, audioStale = false;
+let actx = null, audioStale = false, mediaEl = null, mediaT = 0;
+// iPhone silent mode mutes Web Audio. Asking for the "playback" audio session (newer iOS),
+// or keeping a silent <audio> element playing (older iOS), moves our sounds to the media channel.
+function silentWavUrl(){
+  const n = 4000, buf = new ArrayBuffer(44 + n), v = new DataView(buf), w = (o, t) => { for (let i = 0; i < t.length; i++) v.setUint8(o + i, t.charCodeAt(i)); };
+  w(0, 'RIFF'); v.setUint32(4, 36 + n, true); w(8, 'WAVE'); w(12, 'fmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+  v.setUint32(24, 8000, true); v.setUint32(28, 8000, true); v.setUint16(32, 1, true); v.setUint16(34, 8, true); w(36, 'data'); v.setUint32(40, n, true);
+  for (let i = 0; i < n; i++) v.setUint8(44 + i, 128);
+  return URL.createObjectURL(new Blob([buf], { type:'audio/wav' }));
+}
+function mediaChannel(){
+  try { if (navigator.audioSession && navigator.audioSession.type !== 'playback') navigator.audioSession.type = 'playback'; } catch (e) {}
+  if (!/iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent) || !('ontouchend' in document)) return;
+  try {
+    if (!mediaEl){ mediaEl = document.createElement('audio'); mediaEl.src = silentWavUrl(); mediaEl.loop = true; mediaEl.setAttribute('playsinline', ''); mediaEl.setAttribute('x-webkit-airplay', 'deny'); mediaEl.preload = 'auto'; }
+    if (mediaEl.paused){ const p = mediaEl.play(); if (p && p.catch) p.catch(() => {}); }
+    clearTimeout(mediaT); mediaT = setTimeout(() => { try { mediaEl.pause(); } catch (e) {} }, 15000);
+  } catch (e) {}
+}
 function ensureAudio(){
   if (!prefs.sound) return Promise.resolve(false);
+  mediaChannel();
   try {
     const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return Promise.resolve(false);
     if (actx && (actx.state === 'closed' || audioStale)){ try { actx.close(); } catch (e) {} actx = null; }
@@ -2786,6 +2805,7 @@ function wire(){
   // wake the audio engine on any touch (iPhone needs a tap before it can make sound)
   document.addEventListener('pointerdown', e => {
     if (e.target && e.target.closest && e.target.closest('#envMis')) pendingSecretSfx = false;
+    if (prefs.sound) mediaChannel();
     if (!prefs.sound || (actx && actx.state === 'running' && !audioStale)) return;
     ensureAudio().then(ok => { if (ok && pendingSecretSfx && $('#modalMission') && !$('#modalMission').hidden){ pendingSecretSfx = false; sfxSecret(); } });
   }, true);
@@ -2794,7 +2814,7 @@ function wire(){
   if (mq){ if (mq.addEventListener) mq.addEventListener('change', retheme); else if (mq.addListener) mq.addListener(retheme); }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden){ suppressMissions = secretOpen; if (actx && actx.state === 'running') { try { actx.suspend(); } catch (e) {} } return; }
+    if (document.hidden){ suppressMissions = secretOpen; if (actx && actx.state === 'running') { try { actx.suspend(); } catch (e) {} } if (mediaEl) { try { mediaEl.pause(); } catch (e) {} } return; }
     if (!secretOpen && !layers.length && !animating) setTimeout(() => runMissions(false), 600);
   });
   Store.setNotifier(kind => { if (kind === 'localfail') toast('이 폰에서 저장이 막혀 있어요. 개인정보 보호 모드가 아닌지 확인해 주세요.', 4600); });
@@ -3533,7 +3553,7 @@ render();
 installHint();
 Store.init().then(() => { scheduleRender(); setTimeout(() => runMissions(false), 1200); setTimeout(() => Router.fill(), 2500); });
 if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js', { updateViaCache:'none' }).catch(() => {});
-const APP_VERSION = '20261007214413';
+const APP_VERSION = '20261007215125';
 let updating = false;
 async function checkUpdate(){
   if (updating || location.protocol !== 'https:') return;
