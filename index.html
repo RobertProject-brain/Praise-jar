@@ -545,9 +545,9 @@ legend{font-size:13px;font-weight:600;color:var(--ink-2);padding:0;margin-bottom
       <p>실습을 다녀올 때마다 채운 시간만큼 구슬이 병에 담겨요. 병이 가득 차면 졸업 실습 시간 완료예요.</p>
       <label class="field"><span>받는 사람 이름</span><input id="suName" maxlength="20" placeholder="예: 지은" autocomplete="off"></label>
       <label class="field"><span>졸업까지 채울 실습 시간</span>
-        <div class="row"><input id="suTarget" type="number" inputmode="decimal" min="1" max="2000" step="0.5" value="120" required><span style="flex:none;color:var(--ink-2)">시간</span></div>
+        <div class="row"><input id="suTarget" type="number" inputmode="decimal" min="1" max="2000" step="0.5" value="90" required><span style="flex:none;color:var(--ink-2)">시간</span></div>
       </label>
-      <p class="hint">기본값 120시간은 언어재활사 2급 응시 기준(언어재활관찰 30시간 + 언어진단·재활실습 90시간)이에요. 학과 기준이 다르면 그 숫자로 바꿔 주세요.</p>
+      <p class="hint">기본값 90시간은 언어진단실습·언어재활실습 합계 기준(교내 45시간 이상 포함)이에요. 언어재활관찰 30시간까지 여기서 채우려면 120으로 바꿔 주세요.</p>
       <label class="field"><span>이미 채운 시간 (선택)</span>
         <div class="row"><input id="suCarry" type="number" inputmode="decimal" min="0" max="2000" step="0.5" placeholder="0"><span style="flex:none;color:var(--ink-2)">시간</span></div>
       </label>
@@ -662,7 +662,7 @@ legend{font-size:13px;font-weight:600;color:var(--ink-2);padding:0;margin-bottom
   <form id="setForm" autocomplete="off">
     <label class="field"><span>받는 사람 이름</span><input id="sName" maxlength="20" placeholder="예: 지은"></label>
     <label class="field"><span>졸업까지 채울 실습 시간</span><div class="row"><input id="sTarget" type="number" inputmode="decimal" min="1" max="2000" step="0.5" required><span style="flex:none;color:var(--ink-2)">시간</span></div></label>
-    <p class="hint">언어재활사 2급 응시 기준은 언어재활관찰 30시간 이상, 언어진단실습·언어재활실습 합계 90시간 이상(교내 45시간 이상 포함)이에요. 학과 내규가 다르면 그 기준을 따라 주세요.</p>
+    <p class="hint">실습(언어진단실습·언어재활실습)은 합계 90시간 이상, 그중 교내 45시간 이상이에요. 언어재활관찰 30시간은 따로 채우는 기준이에요. 학과 내규가 다르면 그 기준을 따라 주세요.</p>
     <fieldset>
       <legend>구분 (기록할 때 고르는 항목)</legend>
       <div id="catRows" style="display:grid;gap:8px"></div>
@@ -914,8 +914,8 @@ const LS = {
 };
 const DEFAULT_ORIGIN = { name:'양재역', lat:37.4840, lng:127.0347 };
 function defaultSettings(){
-  return { name:'', target:120, gradDate:'', sender:'', createdAt:new Date().toISOString(),
-    categories:[{id:'obs', name:'관찰', target:30}, {id:'clin', name:'진단·재활 실습', target:90}],
+  return { name:'', target:90, gradDate:'', sender:'', createdAt:new Date().toISOString(),
+    categories:[{id:'in', name:'교내 실습', target:45}, {id:'out', name:'교외 실습', target:45}],
     origin:Object.assign({}, DEFAULT_ORIGIN), roundTrip:true };
 }
 function haversine(a, b){
@@ -1111,12 +1111,12 @@ const Store = (() => {
 function makeDemo(){
   const t = todayStr();
   const plan = [
-    [-62, 2, 'obs', '다온언어치료센터'], [-59, 2.5, 'obs', '다온언어치료센터'], [-55, 3, 'obs', '한빛아동발달센터'],
-    [-52, 2, 'obs', '한빛아동발달센터'], [-48, 3, 'obs', '다온언어치료센터'], [-45, 2.5, 'obs', '한빛아동발달센터'],
-    [-41, 3, 'obs', '다온언어치료센터'], [-38, 2, 'obs', '한빛아동발달센터'], [-34, 3, 'clin', '학교 부설 언어치료실'],
-    [-30, 3, 'clin', '학교 부설 언어치료실'], [-27, 2, 'clin', '학교 부설 언어치료실'], [-23, 3, 'clin', '학교 부설 언어치료실'],
-    [-19, 3, 'clin', '다온언어치료센터'], [-16, 2.5, 'clin', '다온언어치료센터'], [-12, 3, 'clin', '학교 부설 언어치료실'],
-    [-9, 2, 'clin', '다온언어치료센터'], [-5, 3, 'clin', '학교 부설 언어치료실'], [-2, 2.5, 'clin', '다온언어치료센터'],
+    [-62, 2, 'out', '다온언어치료센터'], [-59, 2.5, 'out', '다온언어치료센터'], [-55, 3, 'out', '한빛아동발달센터'],
+    [-52, 2, 'out', '한빛아동발달센터'], [-48, 3, 'out', '다온언어치료센터'], [-45, 2.5, 'out', '한빛아동발달센터'],
+    [-41, 3, 'out', '다온언어치료센터'], [-38, 2, 'out', '한빛아동발달센터'], [-34, 3, 'in', '학교 부설 언어치료실'],
+    [-30, 3, 'in', '학교 부설 언어치료실'], [-27, 2, 'in', '학교 부설 언어치료실'], [-23, 3, 'in', '학교 부설 언어치료실'],
+    [-19, 3, 'out', '다온언어치료센터'], [-16, 2.5, 'out', '다온언어치료센터'], [-12, 3, 'in', '학교 부설 언어치료실'],
+    [-9, 2, 'out', '다온언어치료센터'], [-5, 3, 'in', '학교 부설 언어치료실'], [-2, 2.5, 'out', '다온언어치료센터'],
   ];
   const memos = ['조음 지도할 때 시각 단서를 같이 주니 반응이 달라졌다', '', '부모 상담 장면을 처음 관찰했다', '', '긴장했지만 회기 계획대로 마쳤다', ''];
   const sessions = new Map();
@@ -1140,8 +1140,8 @@ function makeDemo(){
   const byName = { '다온언어치료센터':'dp1', '한빛아동발달센터':'dp2', '학교 부설 언어치료실':'dp3' };
   for (const x of sessions.values()) x.placeId = byName[x.place] || '';
   const schedules = new Map([
-    ['ds1', { id:'ds1', placeId:'dp1', days:[1, 3], start:'14:00', end:'16:30', cat:'clin', from:addDays(t, -40), until:addDays(t, 80), remind:60, recordAlarm:true }],
-    ['ds2', { id:'ds2', placeId:'dp3', days:[t ? parseD(t).getDay() : 5], start:'10:00', end:'13:00', cat:'clin', from:addDays(t, -10), until:addDays(t, 80), remind:60, recordAlarm:true }],
+    ['ds1', { id:'ds1', placeId:'dp1', days:[1, 3], start:'14:00', end:'16:30', cat:'out', from:addDays(t, -40), until:addDays(t, 80), remind:60, recordAlarm:true }],
+    ['ds2', { id:'ds2', placeId:'dp3', days:[t ? parseD(t).getDay() : 5], start:'10:00', end:'13:00', cat:'out', from:addDays(t, -10), until:addDays(t, 80), remind:60, recordAlarm:true }],
   ]);
   return { settings, sessions, notes, places, schedules, opened:{ dn1:addDays(t, -5), dn2:addDays(t, -2) } };
 }
