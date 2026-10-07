@@ -461,6 +461,22 @@ legend{font-size:13px;font-weight:600;color:var(--ink-2);padding:0;margin-bottom
 .sched-card .wk-days i.on{background:var(--board);color:var(--board-ink);font-weight:700}
 .chips.days .chip{min-width:42px;justify-content:center;text-align:center}
 @media (max-width:440px){.sched-card .wk-days{display:none}}
+.chips.sub{margin-top:-2px;padding:8px 0 0 12px;border-left:2px solid var(--rule)}
+.chips.sub:empty{display:none}
+.chips.sub .chip{min-height:34px;padding:6px 12px;font-size:13.5px}
+.cat-add{display:flex;gap:8px;margin-top:2px}
+.cat-add input{flex:1}
+.cat-add .btn-ghost{flex:none;min-height:44px}
+.carry-rows{display:grid;gap:8px}
+.carry-row{display:grid;grid-template-columns:minmax(0,1fr) 84px auto 40px;gap:8px;align-items:center}
+.carry-row span{font-size:14px;color:var(--ink-2)}
+.cat-row.sub{grid-template-columns:18px minmax(0,1fr) 40px;padding-left:6px}
+.cat-row.sub::before{content:"";align-self:stretch;border-left:2px solid var(--rule);border-bottom:2px solid var(--rule);border-radius:0 0 0 8px;height:60%}
+.cat-add-sub{justify-self:start;margin:-2px 0 4px 26px;font-size:13px}
+.cat-subtotals{display:flex;flex-wrap:wrap;gap:6px;grid-column:1/-1;margin-top:2px}
+.cat-subtotals span{font-size:11.5px;padding:2px 8px;border-radius:999px;background:var(--sheet);border:1px solid var(--rule);color:var(--ink-2)}
+.update-bar{position:fixed;left:0;right:0;top:0;z-index:80;display:flex;justify-content:center;padding:calc(8px + env(safe-area-inset-top,0px)) 16px 8px;pointer-events:none}
+.update-bar button{pointer-events:auto;border:0;border-radius:999px;padding:9px 16px;background:var(--ink);color:var(--paper);font-size:13.5px;font-weight:600;box-shadow:0 10px 24px -10px rgba(0,0,0,.45);animation:toast-in .35s var(--spring)}
 .steps{margin:0;padding-left:20px;display:grid;gap:6px;font-size:14px;color:var(--ink-2)}
 .steps b{color:var(--ink)}
 
@@ -547,10 +563,11 @@ legend{font-size:13px;font-weight:600;color:var(--ink-2);padding:0;margin-bottom
       <label class="field"><span>졸업까지 채울 실습 시간</span>
         <div class="row"><input id="suTarget" type="number" inputmode="decimal" min="1" max="2000" step="0.5" value="90" required><span style="flex:none;color:var(--ink-2)">시간</span></div>
       </label>
-      <p class="hint">기본값 90시간은 언어진단실습·언어재활실습 합계 기준(교내 45시간 이상 포함)이에요. 언어재활관찰 30시간까지 여기서 채우려면 120으로 바꿔 주세요.</p>
-      <label class="field"><span>이미 채운 시간 (선택)</span>
-        <div class="row"><input id="suCarry" type="number" inputmode="decimal" min="0" max="2000" step="0.5" placeholder="0"><span style="flex:none;color:var(--ink-2)">시간</span></div>
-      </label>
+      <p class="hint">학과 기준 시간이 다르면 그 숫자로 바꿔 주세요. 교내·교외 목표는 설정에서 고칠 수 있어요.</p>
+      <div class="field"><span class="lbl">이미 채운 시간 (선택)</span>
+        <div class="carry-rows" id="suCarryRows"></div>
+        <button type="button" class="link-btn" id="btnSuCarryAdd" style="justify-self:start">+ 세부 구분으로 나눠 넣기</button>
+      </div>
       <button class="btn-primary" type="submit">구슬병 시작하기</button>
       <button class="link-btn" type="button" id="btnDemo">예시로 먼저 둘러보기</button>
     </form>
@@ -646,7 +663,8 @@ legend{font-size:13px;font-weight:600;color:var(--ink-2);padding:0;margin-bottom
       </div>
       <div class="chips" id="durChips"></div>
     </div>
-    <div class="field" id="catField"><span class="lbl">구분</span><div class="chips" id="catChips"></div></div>
+    <div class="field" id="catField"><span class="lbl">구분</span><div class="chips" id="catChips"></div><div class="chips sub" id="subChips"></div>
+      <div class="cat-add" id="catAddRow" hidden><input id="catAddName" maxlength="20" placeholder="새 구분 이름 (예: 복지관)" aria-label="새 구분 이름"><button type="button" class="btn-ghost" id="btnCatAdd">추가</button></div></div>
     <div class="field"><span class="lbl">기관</span><div class="chips" id="placeChips"></div><input id="fPlace" list="placeList" maxlength="40" placeholder="지도에 없는 곳은 이름만 적어도 돼요" aria-label="기관 이름"><datalist id="placeList"></datalist></div>
     <label class="field"><span>오늘의 한 줄 (선택)</span><textarea id="fMemo" rows="2" maxlength="300" placeholder="기억하고 싶은 장면이나 배운 점"></textarea></label>
     <p class="hint" id="sessErr" role="alert"></p>
@@ -662,11 +680,16 @@ legend{font-size:13px;font-weight:600;color:var(--ink-2);padding:0;margin-bottom
   <form id="setForm" autocomplete="off">
     <label class="field"><span>받는 사람 이름</span><input id="sName" maxlength="20" placeholder="예: 지은"></label>
     <label class="field"><span>졸업까지 채울 실습 시간</span><div class="row"><input id="sTarget" type="number" inputmode="decimal" min="1" max="2000" step="0.5" required><span style="flex:none;color:var(--ink-2)">시간</span></div></label>
-    <p class="hint">실습(언어진단실습·언어재활실습)은 합계 90시간 이상, 그중 교내 45시간 이상이에요. 언어재활관찰 30시간은 따로 채우는 기준이에요. 학과 내규가 다르면 그 기준을 따라 주세요.</p>
+    <p class="hint">교외 아래에 어린이집·신경실습·경로당처럼 세부 구분을 두고, 기록할 때 고를 수 있어요.</p>
     <fieldset>
       <legend>구분 (기록할 때 고르는 항목)</legend>
       <div id="catRows" style="display:grid;gap:8px"></div>
-      <div class="row" style="justify-content:space-between"><button class="link-btn" type="button" id="btnAddCat">+ 구분 추가</button><span class="hint" id="catSum"></span></div>
+      <div class="row" style="justify-content:space-between"><button class="link-btn" type="button" id="btnAddCat">+ 큰 구분 추가</button><span class="hint" id="catSum"></span></div>
+    </fieldset>
+    <fieldset>
+      <legend>이전에 채운 시간</legend>
+      <div class="carry-rows" id="setCarryRows"></div>
+      <div class="row" style="justify-content:space-between"><button class="link-btn" type="button" id="btnSetCarryAdd">+ 줄 추가</button><span class="hint" id="carrySum"></span></div>
     </fieldset>
     <label class="field"><span>졸업 목표일 (선택)</span><input type="date" id="sGrad"></label>
     <div class="field"><span class="lbl">이동 거리</span>
@@ -737,7 +760,7 @@ legend{font-size:13px;font-weight:600;color:var(--ink-2);padding:0;margin-bottom
     <div class="field"><span class="lbl">장소</span><div class="chips" id="scPlaceChips"></div></div>
     <div class="field"><span class="lbl">요일</span><div class="chips days" id="scDays"></div></div>
     <div class="field"><span class="lbl">시간</span><div class="dur"><input id="scStart" type="time" value="14:00" aria-label="시작 시간"><span>부터</span><input id="scEnd" type="time" value="17:00" aria-label="끝나는 시간"><span>까지</span></div><p class="hint" id="scDurHint"></p></div>
-    <div class="field" id="scCatField"><span class="lbl">구분</span><div class="chips" id="scCats"></div></div>
+    <div class="field" id="scCatField"><span class="lbl">구분</span><div class="chips" id="scCats"></div><div class="chips sub" id="scSubs"></div></div>
     <div class="field"><span class="lbl">기간</span><div class="dur"><input id="scFrom" type="date" aria-label="시작일"><span>부터</span><input id="scUntil" type="date" aria-label="종료일"><span>까지</span></div></div>
     <label class="field"><span>알림</span>
       <select id="scRemind"><option value="60">실습 1시간 전</option><option value="30">실습 30분 전</option><option value="120">실습 2시간 전</option><option value="1440">전날 같은 시간</option><option value="0">시작 전 알림 없음</option></select>
@@ -913,9 +936,21 @@ const LS = {
   del(k){ try { localStorage.removeItem(k); } catch (e) {} },
 };
 const DEFAULT_ORIGIN = { name:'양재역', lat:37.4840, lng:127.0347 };
+const DEFAULT_SUBS = [{ id:'out-daycare', name:'어린이집', parent:'out' }, { id:'out-neuro', name:'신경실습', parent:'out' }, { id:'out-senior', name:'경로당', parent:'out' }];
+const defaultCats = () => [{ id:'in', name:'교내 실습', target:45 }, { id:'out', name:'교외 실습', target:45 }].concat(DEFAULT_SUBS.map(c => Object.assign({}, c)));
+// one-time upgrades for phones that set up with an earlier version
+function upgradeSettings(s){
+  if (!s) return null;
+  let changed = false;
+  const ids = (s.categories || []).map(c => c.id).join(',');
+  if (Number(s.target) === 120 && ids === 'obs,clin' && !s.migrated90){ s.target = 90; s.categories = defaultCats(); s.subsSeeded = true; s.migrated90 = true; changed = true; }
+  const cats = s.categories || [];
+  if (!s.subsSeeded && cats.some(c => c.id === 'out' && !c.parent) && !cats.some(c => c.parent === 'out')){ s.categories = cats.concat(DEFAULT_SUBS.map(c => Object.assign({}, c))); s.subsSeeded = true; changed = true; }
+  return changed ? s : null;
+}
 function defaultSettings(){
   return { name:'', target:90, gradDate:'', sender:'', createdAt:new Date().toISOString(),
-    categories:[{id:'in', name:'교내 실습', target:45}, {id:'out', name:'교외 실습', target:45}],
+    categories:defaultCats(), subsSeeded:true,
     origin:Object.assign({}, DEFAULT_ORIGIN), roundTrip:true };
 }
 function haversine(a, b){
@@ -930,8 +965,12 @@ const fmtKm = km => (km >= 100 ? Math.round(km).toLocaleString('ko-KR') : (Math.
 function derive(st){
   const s = st.settings || null;
   const target = s ? Math.max(0.5, Number(s.target) || 120) : 120;
-  const cats = s && Array.isArray(s.categories) ? s.categories.filter(c => c && c.name) : [];
-  const catMap = new Map(cats.map(c => [c.id, c]));
+  const allCats = s && Array.isArray(s.categories) ? s.categories.filter(c => c && c.name) : [];
+  const catMap = new Map(allCats.map(c => [c.id, c]));
+  const cats = allCats.filter(c => !c.parent || !catMap.has(c.parent));
+  const subsOf = id => allCats.filter(c => c.parent === id && catMap.has(id));
+  const topOf = id => { const c = catMap.get(id); if (!c) return null; return c.parent && catMap.has(c.parent) ? catMap.get(c.parent) : c; };
+  const catLabel = id => { const c = catMap.get(id); if (!c) return ''; const p = c.parent && catMap.get(c.parent); return p ? `${p.name} · ${c.name}` : c.name; };
   const sessions = (st.sessions || []).filter(x => x && Number(x.hours) > 0 && /^\d{4}-\d\d-\d\d$/.test(x.date || ''));
   const cmpCreated = (a, b) => String(a.createdAt || '').localeCompare(String(b.createdAt || '')) || String(a.id).localeCompare(String(b.id));
   const byCreated = sessions.slice().sort(cmpCreated);
@@ -981,8 +1020,13 @@ function derive(st){
   if (perWeek && perWeek > 0 && remaining > 0) projected = addDays(today, Math.ceil(remaining / perWeek * 7));
   if (s && s.gradDate && remaining > 0){ daysLeft = daysBetween(today, s.gradDate); if (daysLeft > 0) needPerWeek = remaining / (daysLeft / 7); }
 
-  const catTotals = new Map();
-  for (const x of sessions){ const k = catMap.has(x.cat) ? x.cat : ''; catTotals.set(k, (catTotals.get(k) || 0) + Number(x.hours)); }
+  const catTotals = new Map(), subTotals = new Map();
+  for (const x of sessions){
+    const t = topOf(x.cat), k = t ? t.id : '';
+    catTotals.set(k, (catTotals.get(k) || 0) + Number(x.hours));
+    const c = catMap.get(x.cat);
+    if (c && c.parent && catMap.has(c.parent)) subTotals.set(c.id, (subTotals.get(c.id) || 0) + Number(x.hours));
+  }
 
   const origin = s && s.origin && isFinite(s.origin.lat) && isFinite(s.origin.lng) ? s.origin : DEFAULT_ORIGIN;
   const roundTrip = !s || s.roundTrip !== false, oKey = originKey(origin);
@@ -1020,7 +1064,7 @@ function derive(st){
 
   return { settings:s, target, unit, total, remaining, pct: total / target * 100, count, realHours, marbles, targetMarbles,
     reached, reachedBy, byDate, byCreated, sessions, thisWeek, thisMonth, weeks, perWeek, projected, needPerWeek, daysLeft,
-    cats, catMap, catTotals, noteInfo, nextStage, today,
+    cats, allCats, catMap, catTotals, subTotals, subsOf, topOf, catLabel, noteInfo, nextStage, today,
     origin, roundTrip, oKey, places, placeMap, placeDist, routed, resolvePlace, trips, totalKm, visits, unmapped,
     schedules, schedDur, activeOn, todayScheds, missed, toMin, nowMin, recordedToday: recorded.has(today) };
 }
@@ -1087,7 +1131,10 @@ const Store = (() => {
     applyTo(data, op); if (!save()) notifier('localfail'); emit(); return true;
   }
   async function init(){
-    load(); mode = 'local'; emit();
+    load();
+    const up = upgradeSettings(data.settings ? clone(data.settings) : null);
+    if (up){ data.settings = up; save(); }
+    mode = 'local'; emit();
     try {
       const r = await fetch('notes.dat', { cache:'no-store' });
       if (r.ok){ const txt = (await r.text()).trim(); if (txt){ const arr = decodeBlob(txt); if (Array.isArray(arr)) remote = arr.filter(n => n && n.id && n.text).map(n => Object.assign({ remote:true }, n)); } }
@@ -1098,7 +1145,8 @@ const Store = (() => {
   function importText(txt){
     const o = decodeBlob(txt);
     if (!o || o.app !== 'praise-jar' || !Array.isArray(o.sessions)) throw new Error('not a backup');
-    fill(o); save(); emit(); return o.sessions.length;
+    fill(o); const up = upgradeSettings(data.settings ? clone(data.settings) : null); if (up) data.settings = up;
+    save(); emit(); return o.sessions.length;
   }
   function startDemo(){ if (mode === 'demo') return; prevMode = mode; demo = makeDemo(); mode = 'demo'; emit(); }
   function stopDemo(){ if (mode !== 'demo') return; mode = prevMode; demo = null; emit(); }
@@ -1494,7 +1542,7 @@ const savePrefs = () => LS.set(PREF_KEY, JSON.stringify(prefs));
 const colorOf = x => MARBLES[(((x.c | 0) % MARBLES.length) + MARBLES.length) % MARBLES.length];
 const unitLabel = u => (u === 0.5 ? '30분' : `${u}시간`);
 const pctInt = d => (d.total >= d.target ? 100 : Math.floor(d.pct));
-const catName = x => (x.kind === 'carry' ? '이전까지 채운 시간' : (D.catMap.get(x.cat) || {}).name || '실습');
+const catName = x => { const l = D.catLabel(x.cat); return x.kind === 'carry' ? '이전까지 채운 시간' + (l ? ` · ${l}` : '') : (l || '실습'); };
 
 let queued = false;
 function scheduleRender(){ if (queued) return; queued = true; requestAnimationFrame(() => { queued = false; render(); }); }
@@ -1576,7 +1624,11 @@ function renderHero(ready){
   } else { nb.hidden = true; ns.innerHTML = '<b>모든 단계를 채웠어요.</b> 졸업 실습 시간 완료를 축하해요.'; nbar.style.width = '100%'; }
   const bars = D.cats.filter(c => Number(c.target) > 0).map(c => {
     const h = D.catTotals.get(c.id) || 0, p = Math.min(100, h / Number(c.target) * 100);
-    return `<div class="cat-bar"><span>${esc(c.name)}</span><span class="num">${esc(fmtNum(h))} / ${esc(fmtNum(Number(c.target)))}시간</span><div class="meter" aria-hidden="true"><i style="width:${p}%"></i></div></div>`;
+    const subs = D.subsOf(c.id).map(sc => [sc.name, D.subTotals.get(sc.id) || 0]).filter(x => x[1] > 0);
+    const own = h - subs.reduce((a, x) => a + x[1], 0);
+    if (subs.length && own > 0.001) subs.push(['세부 미지정', own]);
+    return `<div class="cat-bar"><span>${esc(c.name)}</span><span class="num">${esc(fmtNum(h))} / ${esc(fmtNum(Number(c.target)))}시간</span><div class="meter" aria-hidden="true"><i style="width:${p}%"></i></div>`
+      + (subs.length ? `<div class="cat-subtotals">${subs.map(([n, v]) => `<span>${esc(n)} ${esc(fmtNum(v))}h</span>`).join('')}</div>` : '') + '</div>';
   });
   const loose = D.catTotals.get('') || 0;
   if (bars.length && loose > 0) bars.push(`<p class="hint">구분 없이 넣은 시간 ${esc(fmtDur(loose))} (이전 기록 포함)</p>`);
@@ -1817,9 +1869,35 @@ function markDurChips(){
   const h = Number($('#fH').value) || 0, m = Number($('#fM').value) || 0;
   $$('#durChips .chip').forEach(c => c.setAttribute('aria-pressed', String(Number(c.dataset.h) === h && Number(c.dataset.m) === m)));
 }
+let catAddParent = '';
+function catChips(sel, d, withAdd){
+  const top = d.topOf(sel), subs = top ? d.subsOf(top.id) : [];
+  const shortName = n => String(n).replace(/\s*실습$/, '');
+  return {
+    tops: d.cats.map(c => `<button type="button" class="chip" data-cat="${esc(c.id)}" aria-pressed="${!!top && top.id === c.id}">${esc(c.name)}</button>`).join(''),
+    subs: top ? subs.map(c => `<button type="button" class="chip" data-cat="${esc(c.id)}" aria-pressed="${c.id === sel}">${esc(c.name)}</button>`).join('')
+      + (withAdd ? `<button type="button" class="chip add" data-add="${esc(top.id)}">+ ${esc(shortName(top.name))} 구분 추가</button>` : '') : '',
+  };
+}
+function pickCat(cur, id, d){
+  const c = d.catMap.get(id); if (!c) return cur;
+  if (c.parent && d.catMap.has(c.parent)) return cur === id ? c.parent : id;   // sub chip: toggle back to its parent
+  const top = d.topOf(cur); return top && top.id === id ? '' : id;             // top chip: toggle
+}
 function renderCatChips(){
-  $('#catField').hidden = !D.cats.length;
-  $('#catChips').innerHTML = D.cats.map(c => `<button type="button" class="chip" data-cat="${esc(c.id)}" aria-pressed="${c.id === pickedCat}">${esc(c.name)}</button>`).join('');
+  const d = derive(Store.view());
+  $('#catField').hidden = !d.cats.length;
+  const h = catChips(pickedCat, d, true);
+  $('#catChips').innerHTML = h.tops; $('#subChips').innerHTML = h.subs;
+}
+async function addCategory(name, parent){
+  const d = derive(Store.view()); if (!d.settings) return '';
+  const exist = d.allCats.find(c => c.name === name && (c.parent || '') === (parent || ''));
+  if (exist) return exist.id;
+  const id = uid('k'), data = clone(d.settings);
+  data.categories = (data.categories || []).concat([{ id, name, parent:parent || undefined }]);
+  await Store.exec({ t:'settings', data });
+  return id;
 }
 function openSession(id, pre){
   editingId = id || null;
@@ -1829,6 +1907,7 @@ function openSession(id, pre){
   $('#fDate').value = x ? x.date : (pre && pre.date) || D.today;
   setDur(x ? Number(x.hours) : pre && pre.hours ? pre.hours : last ? Number(last.hours) : 3);
   pickedCat = x ? (x.cat || '') : pre && pre.cat ? pre.cat : (last && D.catMap.has(last.cat) ? last.cat : (D.cats[0] ? D.cats[0].id : ''));
+  $('#catAddRow').hidden = true; $('#catAddName').value = '';
   renderCatChips();
   const places = [...new Set(D.byDate.slice().reverse().map(s => s.place).filter(Boolean))].slice(0, 12);
   $('#placeList').innerHTML = places.map(p => `<option value="${esc(p)}"></option>`).join('');
@@ -1901,8 +1980,8 @@ function pickCheer(hours){
 let shareText = '';
 function showStamp(data, before, after){
   return new Promise(resolve => {
-    const cat = after.catMap.get(data.cat), mins = Math.round(data.hours * 60), hh = Math.floor(mins / 60), mm = mins % 60;
-    $('#stampWhen').textContent = korDate(data.date) + (cat ? ` · ${cat.name}` : '');
+    const cat = after.catLabel(data.cat), mins = Math.round(data.hours * 60), hh = Math.floor(mins / 60), mm = mins % 60;
+    $('#stampWhen').textContent = korDate(data.date) + (cat ? ` · ${cat}` : '');
     $('#stampGain').innerHTML = '+' + (hh ? `${hh}<small>시간</small>` : '') + (mm ? `${hh ? ' ' : ''}${mm}<small>분</small>` : '');
     const added = after.marbles.length - before.marbles.length;
     $('#stampSub').textContent = added > 0 ? `구슬 ${added}개가 병에 들어갔어요` : '조금 더 모이면 구슬이 돼요';
@@ -2111,33 +2190,69 @@ function viewBadge(id){
 }
 
 /* ================= settings & backup ================= */
-let catDraft = [];
+let catDraft = [], carryDraft = [], carryOrig = [];
+const XICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+const draftTops = () => catDraft.filter(c => !c.parent || !catDraft.some(p => p.id === c.parent));
 function catRowsHTML(){
-  return catDraft.map((c, i) => `<div class="cat-row" data-i="${i}"><input class="cName" value="${esc(c.name)}" maxlength="20" placeholder="구분 이름" aria-label="구분 이름">`
-    + `<input class="cTarget" type="number" inputmode="decimal" min="0" step="0.5" value="${c.target === '' || c.target == null ? '' : esc(c.target)}" placeholder="목표 시간" aria-label="${esc(c.name || '구분')} 목표 시간">`
-    + `<button type="button" class="icon-btn cDel" aria-label="${esc(c.name || '구분')} 삭제"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>`).join('');
+  return draftTops().map(t => {
+    const i = catDraft.indexOf(t), subs = catDraft.filter(c => c.parent === t.id);
+    return `<div class="cat-row" data-i="${i}"><input class="cName" value="${esc(t.name)}" maxlength="20" placeholder="큰 구분 이름" aria-label="큰 구분 이름">`
+      + `<input class="cTarget" type="number" inputmode="decimal" min="0" step="0.5" value="${t.target === '' || t.target == null || !Number(t.target) ? '' : esc(t.target)}" placeholder="목표 시간" aria-label="${esc(t.name || '구분')} 목표 시간">`
+      + `<button type="button" class="icon-btn cDel" aria-label="${esc(t.name || '구분')} 삭제">${XICON}</button></div>`
+      + subs.map(sc => `<div class="cat-row sub" data-i="${catDraft.indexOf(sc)}"><input class="cName" value="${esc(sc.name)}" maxlength="20" placeholder="세부 구분 이름" aria-label="세부 구분 이름"><button type="button" class="icon-btn cDel" aria-label="${esc(sc.name || '세부 구분')} 삭제">${XICON}</button></div>`).join('')
+      + `<button type="button" class="link-btn cat-add-sub" data-addsub="${esc(t.id)}">+ ${esc(t.name || '이 구분')} 세부 구분</button>`;
+  }).join('');
 }
-function readCatRows(){ $$('#catRows .cat-row').forEach(r => { const i = Number(r.dataset.i); catDraft[i].name = $('.cName', r).value; catDraft[i].target = $('.cTarget', r).value; }); }
-function updateCatSum(){ const sum = catDraft.reduce((t, c) => t + (Number(c.target) || 0), 0); $('#catSum').textContent = sum ? `구분 목표 합계 ${fmtNum(sum)}시간` : ''; }
+function readCatRows(){ $$('#catRows .cat-row').forEach(r => { const i = Number(r.dataset.i), t = $('.cTarget', r); catDraft[i].name = $('.cName', r).value; if (t) catDraft[i].target = t.value; }); }
+function updateCatSum(){ const sum = draftTops().reduce((t, c) => t + (Number(c.target) || 0), 0); $('#catSum').textContent = sum ? `큰 구분 목표 합계 ${fmtNum(sum)}시간` : ''; }
+function catOptions(list){
+  const map = new Map(list.map(c => [c.id, c])), out = [];
+  for (const t of list.filter(c => !c.parent || !map.has(c.parent))){ out.push({ id:t.id, label:t.name }); for (const s of list.filter(c => c.parent === t.id)) out.push({ id:s.id, label:`${t.name} · ${s.name}` }); }
+  return out;
+}
+function carryRowsHTML(rows, cats){
+  const opts = catOptions(cats);
+  return rows.map((r, i) => `<div class="carry-row" data-i="${i}"><select class="crCat" aria-label="구분">${opts.map(o => `<option value="${esc(o.id)}"${o.id === r.cat ? ' selected' : ''}>${esc(o.label)}</option>`).join('')}<option value=""${r.cat ? '' : ' selected'}>구분 없음</option></select>`
+    + `<input class="crH" type="number" inputmode="decimal" min="0" max="2000" step="0.5" value="${r.hours ? esc(r.hours) : ''}" placeholder="0" aria-label="시간"><span>시간</span>`
+    + `<button type="button" class="icon-btn crDel" aria-label="이 줄 지우기">${XICON}</button></div>`).join('');
+}
+function readCarryRows(sel, rows){ $$(sel + ' .carry-row').forEach(r => { const i = Number(r.dataset.i); rows[i].cat = $('.crCat', r).value; rows[i].hours = parseFloat($('.crH', r).value) || 0; }); return rows; }
+function updateCarrySum(){ const sum = carryDraft.reduce((t, r) => t + (Number(r.hours) || 0), 0); $('#carrySum').textContent = sum ? `합계 ${fmtDur(sum)}` : ''; }
 function openSettings(){
   const s = D.settings || defaultSettings();
   $('#sName').value = s.name || ''; $('#sTarget').value = s.target || 120; $('#sGrad').value = s.gradDate || '';
   $('#sSound').checked = !!prefs.sound;
   $('#sRound').checked = s.roundTrip !== false;
   $('#sOriginName').textContent = `출발지: ${(s.origin && s.origin.name) || DEFAULT_ORIGIN.name}`;
-  catDraft = clone(s.categories || []).map(c => ({ id:c.id, name:c.name, target:c.target }));
+  catDraft = clone(s.categories || []).map(c => ({ id:c.id, name:c.name, target:c.target, parent:c.parent || '' }));
   $('#catRows').innerHTML = catRowsHTML(); updateCatSum(); $('#setErr').textContent = '';
+  carryOrig = S.sessions.filter(x => x.kind === 'carry');
+  carryDraft = carryOrig.map(x => ({ id:x.id, cat:x.cat || '', hours:Number(x.hours) }));
+  if (!carryDraft.length) carryDraft = [{ cat:'', hours:0 }];
+  $('#setCarryRows').innerHTML = carryRowsHTML(carryDraft, catDraft); updateCarrySum();
   openLayer($('#sheetSettings'));
 }
 async function submitSettings(e){
-  e.preventDefault(); readCatRows();
+  e.preventDefault(); readCatRows(); readCarryRows('#setCarryRows', carryDraft);
   const target = parseFloat($('#sTarget').value);
   if (!(target > 0)){ $('#setErr').textContent = '졸업까지 채울 시간을 입력해 주세요.'; return; }
-  const cats = catDraft.filter(c => String(c.name).trim()).map(c => ({ id:c.id || uid('k'), name:String(c.name).trim().slice(0, 20), target: Number(c.target) > 0 ? Math.round(Number(c.target) * 10) / 10 : 0 }));
+  const named = catDraft.filter(c => String(c.name).trim()), ids = new Set(named.map(c => c.id));
+  const cats = named.filter(c => !c.parent || ids.has(c.parent)).map(c => (c.parent ? { id:c.id || uid('k'), name:String(c.name).trim().slice(0, 20), parent:c.parent }
+    : { id:c.id || uid('k'), name:String(c.name).trim().slice(0, 20), target: Number(c.target) > 0 ? Math.round(Number(c.target) * 10) / 10 : 0 }));
   const data = Object.assign(D.settings ? clone(D.settings) : defaultSettings(), { name:$('#sName').value.trim().slice(0, 20), target:Math.round(target * 10) / 10, gradDate:$('#sGrad').value || '', categories:cats, roundTrip:$('#sRound').checked });
   prefs.sound = $('#sSound').checked; savePrefs();
   closeLayer($('#sheetSettings'));
-  if (await Store.exec({ t:'settings', data })) toast('설정을 저장했어요');
+  await Store.exec({ t:'settings', data });
+  // earlier hours: update, add, or remove the carried-over records
+  const keep = new Set(), day = carryOrig.length ? carryOrig.map(x => x.date).sort()[0] : todayStr(), t0 = Date.now();
+  for (let i = 0; i < carryDraft.length; i++){
+    const r = carryDraft[i], h = Math.min(Number(r.hours) || 0, 2000);
+    const old = r.id && carryOrig.find(x => x.id === r.id);
+    if (old && h > 0){ keep.add(old.id); if (old.cat !== r.cat || Number(old.hours) !== h){ const d2 = Object.assign({}, old, { cat:r.cat, hours:h }); delete d2.id; await Store.exec({ t:'session', id:old.id, data:d2 }); } }
+    else if (!old && h > 0) await Store.exec({ t:'session', id:uid('s'), data:{ date:day, hours:h, cat:r.cat, place:'', placeId:'', memo:'', kind:'carry', c:0, createdAt:new Date(t0 + i).toISOString() } });
+  }
+  for (const x of carryOrig) if (!keep.has(x.id)) await Store.exec({ t:'delSession', id:x.id });
+  toast('설정을 저장했어요');
   scheduleRender();
 }
 async function exportBackup(){
@@ -2160,15 +2275,31 @@ async function importBackup(file){
 }
 
 /* ================= setup ================= */
+let suCarry = [{ cat:'in', hours:0 }, { cat:'out', hours:0 }];
+function renderSuCarry(){ $('#suCarryRows').innerHTML = carryRowsHTML(suCarry, defaultCats()); }
+async function pourCarries(rows){
+  animating = true;
+  const before = derive(Store.view()), from = jar.count, t0 = Date.now();
+  for (let i = 0; i < rows.length; i++)
+    await Store.exec({ t:'session', id:uid('s'), data:{ date:todayStr(), hours:Math.min(rows[i].hours, 2000), cat:rows[i].cat || '', place:'', placeId:'', memo:'', kind:'carry', c:0, createdAt:new Date(t0 + i).toISOString() } });
+  const after = derive(Store.view());
+  jar.setCapacity(after.targetMarbles, after.target);
+  await jar.animateTo(after.marbles, from, (landed, n) => { if (landed % 6 === 0) clink(); setHeroNumbers(before.total + (after.total - before.total) * landed / n, after); }, { intro:true });
+  setHeroNumbers(after.total, after);
+  animating = false; scheduleRender();
+  await sleep(RM ? 0 : 250);
+  return derive(Store.view());
+}
 async function submitSetup(e){
   e.preventDefault(); ensureAudio();
-  const target = parseFloat($('#suTarget').value), carry = parseFloat($('#suCarry').value) || 0;
+  const target = parseFloat($('#suTarget').value);
+  readCarryRows('#suCarryRows', suCarry);
+  const rows = suCarry.filter(r => r.hours > 0), carry = rows.reduce((t, r) => t + r.hours, 0);
   if (!(target > 0)){ toast('졸업까지 채울 시간을 입력해 주세요'); return; }
   const data = Object.assign(defaultSettings(), { name:$('#suName').value.trim().slice(0, 20), target:Math.round(target * 10) / 10 });
   await Store.exec({ t:'settings', data });
   if (carry > 0){
-    const before = derive(Store.view());
-    const after = await dropIn(uid('s'), { date:todayStr(), hours:Math.min(carry, 2000), cat:'', place:'', memo:'', kind:'carry', c:0, createdAt:new Date().toISOString() }, before);
+    const after = await pourCarries(rows);
     if (!after) return;
     const crossed = STAGES.filter(b => b.pct != null && after.reached[b.id]);
     if (crossed.length) await showMilestone(crossed[crossed.length - 1], after, crossed.slice(0, -1));
@@ -2210,7 +2341,25 @@ function wire(){
   $('#durChips').innerHTML = durChipsHTML();
   $('#durChips').addEventListener('click', e => { const c = e.target.closest('.chip'); if (c) setDur(Number(c.dataset.h) + Number(c.dataset.m) / 60); });
   $('#fH').addEventListener('input', markDurChips); $('#fM').addEventListener('change', markDurChips);
-  $('#catChips').addEventListener('click', e => { const c = e.target.closest('.chip'); if (!c) return; pickedCat = pickedCat === c.dataset.cat ? '' : c.dataset.cat; renderCatChips(); });
+  const onCatChip = e => {
+    const c = e.target.closest('.chip'); if (!c) return;
+    if (c.dataset.add){ catAddParent = c.dataset.add; $('#catAddRow').hidden = false; $('#catAddName').focus(); return; }
+    pickedCat = pickCat(pickedCat, c.dataset.cat, derive(Store.view())); renderCatChips();
+  };
+  $('#catChips').addEventListener('click', onCatChip); $('#subChips').addEventListener('click', onCatChip);
+  const doAddCat = async () => {
+    const name = $('#catAddName').value.trim().slice(0, 20); if (!name){ $('#catAddName').focus(); return; }
+    const id = await addCategory(name, catAddParent); if (!id) return;
+    pickedCat = id; $('#catAddName').value = ''; $('#catAddRow').hidden = true; renderCatChips(); toast(`'${name}' 구분을 만들었어요`);
+  };
+  $('#btnCatAdd').addEventListener('click', doAddCat);
+  $('#catAddName').addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); doAddCat(); } });
+  renderSuCarry();
+  $('#btnSuCarryAdd').addEventListener('click', () => { readCarryRows('#suCarryRows', suCarry); suCarry.push({ cat:'out-daycare', hours:0 }); renderSuCarry(); });
+  $('#suCarryRows').addEventListener('click', e => { const d = e.target.closest('.crDel'); if (!d) return; readCarryRows('#suCarryRows', suCarry); suCarry.splice(Number(d.closest('.carry-row').dataset.i), 1); if (!suCarry.length) suCarry.push({ cat:'', hours:0 }); renderSuCarry(); });
+  $('#btnSetCarryAdd').addEventListener('click', () => { readCatRows(); readCarryRows('#setCarryRows', carryDraft); carryDraft.push({ cat:'', hours:0 }); $('#setCarryRows').innerHTML = carryRowsHTML(carryDraft, catDraft); updateCarrySum(); });
+  $('#setCarryRows').addEventListener('click', e => { const d = e.target.closest('.crDel'); if (!d) return; readCatRows(); readCarryRows('#setCarryRows', carryDraft); carryDraft.splice(Number(d.closest('.carry-row').dataset.i), 1); $('#setCarryRows').innerHTML = carryRowsHTML(carryDraft, catDraft); updateCarrySum(); });
+  $('#setCarryRows').addEventListener('input', () => { readCarryRows('#setCarryRows', carryDraft); updateCarrySum(); });
   $('#btnDelSession').addEventListener('click', async () => {
     const x = S.sessions.find(s => s.id === editingId); if (!x) return;
     if (!(await confirmBox('이 기록을 지울까요?', `${korDate(x.date)} · ${fmtDur(Number(x.hours))} 기록이 지워지고, 그만큼 구슬이 병에서 빠져요.`))) return;
@@ -2260,8 +2409,19 @@ function wire(){
     const rec = $(`.rec[data-date="${b.dataset.day}"]`);
     if (rec){ rec.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block:'center' }); rec.classList.remove('flash'); void rec.offsetWidth; rec.classList.add('flash'); }
   });
-  $('#btnAddCat').addEventListener('click', () => { readCatRows(); catDraft.push({ id:uid('k'), name:'', target:'' }); $('#catRows').innerHTML = catRowsHTML(); updateCatSum(); const r = $$('#catRows .cName'); if (r.length) r[r.length - 1].focus(); });
-  $('#catRows').addEventListener('click', e => { const d = e.target.closest('.cDel'); if (!d) return; readCatRows(); catDraft.splice(Number(d.closest('.cat-row').dataset.i), 1); $('#catRows').innerHTML = catRowsHTML(); updateCatSum(); });
+  const redrawCats = focusId => {
+    $('#catRows').innerHTML = catRowsHTML(); updateCatSum();
+    readCarryRows('#setCarryRows', carryDraft); $('#setCarryRows').innerHTML = carryRowsHTML(carryDraft, catDraft);
+    if (focusId){ const r = $(`#catRows .cat-row[data-i="${catDraft.findIndex(c => c.id === focusId)}"] .cName`); if (r) r.focus(); }
+  };
+  $('#btnAddCat').addEventListener('click', () => { readCatRows(); const id = uid('k'); catDraft.push({ id, name:'', target:'', parent:'' }); redrawCats(id); });
+  $('#catRows').addEventListener('click', e => {
+    const a = e.target.closest('[data-addsub]');
+    if (a){ readCatRows(); const id = uid('k'); catDraft.push({ id, name:'', parent:a.dataset.addsub }); redrawCats(id); return; }
+    const d = e.target.closest('.cDel'); if (!d) return;
+    readCatRows(); const gone = catDraft[Number(d.closest('.cat-row').dataset.i)];
+    catDraft = catDraft.filter(c => c !== gone && c.parent !== gone.id); redrawCats();
+  });
   $('#catRows').addEventListener('input', () => { readCatRows(); updateCatSum(); });
   const tipHost = $('.chart-card'); let tip = null;
   const showTip = el => {
@@ -2669,7 +2829,8 @@ function renderScChips(){
   $('#scPlaceChips').innerHTML = d.places.map(p => `<button type="button" class="chip" data-pid="${esc(p.id)}" aria-pressed="${p.id === scPlace}">${esc(p.name)}</button>`).join('') + '<button type="button" class="chip add" data-pid="+">+ 지도에서 추가</button>';
   $('#scDays').innerHTML = DAY_ORDER.map(dd => `<button type="button" class="chip" data-day="${dd}" aria-pressed="${scDays.includes(dd)}">${DAY_KO[dd]}</button>`).join('');
   $('#scCatField').hidden = !d.cats.length;
-  $('#scCats').innerHTML = d.cats.map(c => `<button type="button" class="chip" data-cat="${esc(c.id)}" aria-pressed="${c.id === scCat}">${esc(c.name)}</button>`).join('');
+  const h = catChips(scCat, d, false);
+  $('#scCats').innerHTML = h.tops; $('#scSubs').innerHTML = h.subs;
   const s = $('#scStart').value, e = $('#scEnd').value, mins = D.toMin(e) - D.toMin(s);
   $('#scDurHint').textContent = s && e ? (mins > 0 ? `한 번에 ${fmtDur(mins / 60)} 실습` : '끝나는 시간이 시작 시간보다 늦어야 해요') : '';
 }
@@ -2719,7 +2880,7 @@ function buildICS(){
   const L = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//praise-jar//KO', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', 'X-WR-CALNAME:칭찬 구슬병 실습', 'X-WR-TIMEZONE:Asia/Seoul',
     'BEGIN:VTIMEZONE', 'TZID:Asia/Seoul', 'BEGIN:STANDARD', 'DTSTART:19700101T000000', 'TZOFFSETFROM:+0900', 'TZOFFSETTO:+0900', 'TZNAME:KST', 'END:STANDARD', 'END:VTIMEZONE'];
   for (const sc of D.schedules){
-    const day1 = firstDate(sc), name = schedName(sc), cat = (D.catMap.get(sc.cat) || {}).name || '실습';
+    const day1 = firstDate(sc), name = schedName(sc), cat = D.catLabel(sc.cat) || '실습';
     const rrule = 'RRULE:FREQ=WEEKLY;BYDAY=' + DAY_ORDER.filter(d => sc.days.includes(d)).map(d => ICS_DAY[d]).join(',') + (sc.until ? ';UNTIL=' + icsUntil(sc.until) : '');
     L.push('BEGIN:VEVENT', `UID:class-${sc.id}@praise-jar`, `DTSTAMP:${stamp}`, `DTSTART;TZID=Asia/Seoul:${icsLocal(day1, sc.start)}`, `DTEND;TZID=Asia/Seoul:${icsLocal(day1, sc.end)}`, rrule,
       `SUMMARY:${icsText(`언어재활 ${cat} · ${name}`)}`, `LOCATION:${icsText(name)}`, `DESCRIPTION:${icsText(`칭찬 구슬병 ${appUrl}`)}`, `URL:${appUrl}`);
@@ -2772,7 +2933,7 @@ function wireSched(){
     scPlace = scPlace === c.dataset.pid ? '' : c.dataset.pid; renderScChips();
   });
   $('#scDays').addEventListener('click', e => { const c = e.target.closest('[data-day]'); if (!c) return; const d = Number(c.dataset.day); scDays = scDays.includes(d) ? scDays.filter(x => x !== d) : scDays.concat(d); renderScChips(); });
-  $('#scCats').addEventListener('click', e => { const c = e.target.closest('[data-cat]'); if (!c) return; scCat = scCat === c.dataset.cat ? '' : c.dataset.cat; renderScChips(); });
+  $('#scCatField').addEventListener('click', e => { const c = e.target.closest('[data-cat]'); if (!c) return; scCat = pickCat(scCat, c.dataset.cat, derive(Store.view())); renderScChips(); });
   ['#scStart', '#scEnd'].forEach(id => $(id).addEventListener('input', renderScChips));
   $('#btnDelSched').addEventListener('click', async () => {
     if (!scEdit) return;
@@ -2795,7 +2956,26 @@ Store.onChange(() => { scheduleRender(); if (secretOpen) setTimeout(renderSecret
 render();
 installHint();
 Store.init().then(() => { scheduleRender(); setTimeout(() => runMissions(false), 1200); setTimeout(() => Router.fill(), 2500); });
-if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
+if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js', { updateViaCache:'none' }).catch(() => {});
+const APP_VERSION = '20261007204823';
+let updating = false;
+async function checkUpdate(){
+  if (updating || location.protocol !== 'https:') return;
+  try {
+    const r = await fetch('version.txt?t=' + Date.now(), { cache:'no-store' }); if (!r.ok) return;
+    const v = (await r.text()).trim(); if (!v || v === APP_VERSION) return;
+    updating = true;
+    try { const reg = await navigator.serviceWorker?.getRegistration(); if (reg) await reg.update(); } catch (e) {}
+    if (!layers.length && !animating){ toast('새 버전으로 바꾸는 중이에요…', 1500); setTimeout(() => location.reload(), 700); return; }
+    const bar = document.createElement('div'); bar.className = 'update-bar';
+    bar.innerHTML = '<button type="button">새 버전이 있어요 · 눌러서 적용</button>';
+    bar.firstChild.addEventListener('click', () => location.reload());
+    document.body.appendChild(bar);
+  } catch (e) {}
+}
+setTimeout(checkUpdate, 2500);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) checkUpdate(); });
+window.addEventListener('pageshow', e => { if (e.persisted) checkUpdate(); });
 try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {}); } catch (e) {}
 })();
 </script>
