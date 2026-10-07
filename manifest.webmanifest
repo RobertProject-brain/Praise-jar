@@ -1,7 +1,7 @@
 {
-  "name": "칭찬 구슬병",
-  "short_name": "칭찬 구슬병",
-  "description": "언어재활 실습을 다녀올 때마다 채운 시간만큼 구슬이 병에 담기는 실습 시간 기록 앱",
+  "name": "실습구슬 모으기",
+  "short_name": "실습구슬",
+  "description": "언어재활 실습을 다녀올 때마다 채운 시간만큼 구슬이 병에 모이는 실습 시간 기록 앱",
   "lang": "ko",
   "start_url": "./",
   "scope": "./",
@@ -9,8 +9,21 @@
   "background_color": "#F1F4EE",
   "theme_color": "#F1F4EE",
   "icons": [
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
-    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }
