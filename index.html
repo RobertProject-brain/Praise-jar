@@ -2250,8 +2250,16 @@ function pickCat(cur, id, d){
 function renderCatChips(){
   const d = derive(Store.view());
   $('#catField').hidden = !d.cats.length;
-  const h = catChips(pickedCat, d, true);
+  const h = catChips(pickedCat, d, false), top = d.topOf(pickedCat);
   $('#catChips').innerHTML = h.tops; $('#subChips').innerHTML = h.subs;
+  catAddParent = top ? top.id : '';
+  $('#catAddRow').hidden = !top;
+  if (top) $('#catAddName').placeholder = `${String(top.name).replace(/\s*실습$/, '')} 세부 구분 직접 입력 (예: 복지관)`;
+}
+// a typed sub-category becomes a real one when the form is saved
+async function takeTypedCat(input, parent){
+  const name = input.value.trim().slice(0, 20); if (!name || !parent) return '';
+  const id = await addCategory(name, parent); input.value = ''; return id;
 }
 async function addCategory(name, parent){
   const d = derive(Store.view()); if (!d.settings) return '';
@@ -2268,9 +2276,9 @@ function openSession(id, pre){
   const last = D.byCreated.filter(s => s.kind !== 'carry').slice(-1)[0];
   $('#sessTitle').textContent = x ? (x.kind === 'carry' ? '이전까지 채운 시간' : '기록 고치기') : '실습 기록하기';
   $('#fDate').value = x ? x.date : (pre && pre.date) || D.today;
-  setDur(x ? Number(x.hours) : pre && pre.hours ? pre.hours : last ? Number(last.hours) : 3);
+  setDur(x ? Number(x.hours) : pre && pre.hours ? pre.hours : last ? Number(last.hours) : 50 / 60);
   pickedCat = x ? (x.cat || '') : pre && pre.cat ? pre.cat : (last && D.catMap.has(last.cat) ? last.cat : (D.cats[0] ? D.cats[0].id : ''));
-  $('#catAddRow').hidden = true; $('#catAddName').value = '';
+  $('#catAddName').value = '';
   renderCatChips();
   const places = [...new Set(D.byDate.slice().reverse().map(s => s.place).filter(Boolean))].slice(0, 12);
   $('#placeList').innerHTML = places.map(p => `<option value="${esc(p)}"></option>`).join('');
@@ -2293,6 +2301,7 @@ async function submitSession(e){
   if (!/^\d{4}-\d\d-\d\d$/.test(date)){ err.textContent = '날짜를 골라 주세요.'; return; }
   if (!(hours > 0)){ err.textContent = '채운 시간을 입력해 주세요.'; return; }
   if (hours > 24){ err.textContent = '하루에 1,440분(24시간)까지 기록할 수 있어요.'; return; }
+  const typed = await takeTypedCat($('#catAddName'), catAddParent); if (typed) pickedCat = typed;
   const dd = derive(Store.view()), pname = $('#fPlace').value.trim().slice(0, 40), pm = (pickedPlace && dd.placeMap.get(pickedPlace)) || dd.places.find(p => p.name === pname);
   const base = { date, hours, cat:pickedCat || '', place:pname, placeId: pm ? pm.id : '', schedId:pickedClass || '', memo:$('#fMemo').value.trim().slice(0, 300) };
   if (editingId){
@@ -2576,19 +2585,29 @@ function catRowsHTML(){
 }
 function readCatRows(){ $$('#catRows .cat-row').forEach(r => { const i = Number(r.dataset.i), t = $('.cTarget', r); catDraft[i].name = $('.cName', r).value; if (t) catDraft[i].target = t.value; }); }
 function updateCatSum(){ const sum = draftTops().reduce((t, c) => t + (Number(c.target) || 0), 0) / 60; $('#catSum').textContent = sum ? `큰 구분 목표 합계 ${fmtDur(sum)}` : ''; }
+function resolveNewCats(rows, cats){
+  for (const r of rows){
+    if (!String(r.cat).startsWith('new:')) continue;
+    const parent = r.cat.slice(4), name = (r.newName || '').trim();
+    if (!name){ r.cat = parent; continue; }
+    const ex = cats.find(c => c.parent === parent && c.name === name);
+    if (ex) r.cat = ex.id; else { const id = uid('k'); cats.push({ id, name, parent }); r.cat = id; }
+  }
+}
 function catOptions(list){
   const map = new Map(list.map(c => [c.id, c])), out = [];
-  for (const t of list.filter(c => !c.parent || !map.has(c.parent))){ out.push({ id:t.id, label:t.name }); for (const s of list.filter(c => c.parent === t.id)) out.push({ id:s.id, label:`${t.name} · ${s.name}` }); }
+  for (const t of list.filter(c => !c.parent || !map.has(c.parent))){ out.push({ id:t.id, label:t.name, top:true }); for (const s of list.filter(c => c.parent === t.id)) out.push({ id:s.id, label:`${t.name} · ${s.name}` }); }
   return out;
 }
 function carryRowsHTML(rows, cats){
   const opts = catOptions(cats);
-  return rows.map((r, i) => `<div class="carry-row" data-i="${i}"><select class="crCat" aria-label="구분">${opts.map(o => `<option value="${esc(o.id)}"${o.id === r.cat ? ' selected' : ''}>${esc(o.label)}</option>`).join('')}<option value=""${r.cat ? '' : ' selected'}>구분 없음</option></select>`
+  return rows.map((r, i) => `<div class="carry-row" data-i="${i}"><select class="crCat" aria-label="구분">${opts.map(o => `<option value="${esc(o.id)}"${o.id === r.cat ? ' selected' : ''}>${esc(o.label)}</option>`).join('')}${opts.filter(o => o.top).map(o => `<option value="new:${esc(o.id)}"${r.cat === 'new:' + o.id ? ' selected' : ''}>${esc(o.label)} · 직접 입력…</option>`).join('')}<option value=""${r.cat ? '' : ' selected'}>구분 없음</option></select>`
     + `<button type="button" class="icon-btn crDel" aria-label="이 줄 지우기">${XICON}</button>`
+    + (String(r.cat).startsWith('new:') ? `<input class="crNew" maxlength="20" value="${esc(r.newName || '')}" placeholder="세부 구분 이름 (예: 복지관)" aria-label="세부 구분 이름" style="grid-column:1/-1">` : '')
     + (() => { const m = Math.round((Number(r.hours) || 0) * 60); return `<div class="min-in cr-min"><input class="crMin" type="number" inputmode="numeric" min="0" max="120000" step="1" value="${m || ''}" placeholder="0" aria-label="분"><span>분</span><em class="hm" aria-hidden="true">${m >= 60 ? `= ${esc(fmtHM(m / 60))}` : ''}</em></div>`; })()
     + '</div>').join('');
 }
-function readCarryRows(sel, rows){ $$(sel + ' .carry-row').forEach(r => { const i = Number(r.dataset.i); rows[i].cat = $('.crCat', r).value; rows[i].hours = (parseInt($('.crMin', r).value, 10) || 0) / 60; }); return rows; }
+function readCarryRows(sel, rows){ $$(sel + ' .carry-row').forEach(r => { const i = Number(r.dataset.i); rows[i].cat = $('.crCat', r).value; const nw = $('.crNew', r); rows[i].newName = nw ? nw.value.trim().slice(0, 20) : ''; rows[i].hours = (parseInt($('.crMin', r).value, 10) || 0) / 60; }); return rows; }
 function updateCarrySum(){ const sum = carryDraft.reduce((t, r) => t + (Number(r.hours) || 0), 0); $('#carrySum').textContent = sum ? `합계 ${fmtDur(sum)}` : ''; }
 function openSettings(){
   const s = D.settings || defaultSettings();
@@ -2611,6 +2630,7 @@ async function submitSettings(e){
   const named = catDraft.filter(c => String(c.name).trim()), ids = new Set(named.map(c => c.id));
   const cats = named.filter(c => !c.parent || ids.has(c.parent)).map(c => (c.parent ? { id:c.id || uid('k'), name:String(c.name).trim().slice(0, 20), parent:c.parent }
     : { id:c.id || uid('k'), name:String(c.name).trim().slice(0, 20), target: Number(c.target) > 0 ? Math.round(Number(c.target)) / 60 : 0 }));
+  resolveNewCats(carryDraft, cats);
   const data = Object.assign(D.settings ? clone(D.settings) : defaultSettings(), { name:$('#sName').value.trim().slice(0, 20), target, gradDate:$('#sGrad').value || '', categories:cats, roundTrip:$('#sRound').checked });
   prefs.sound = $('#sSound').checked; savePrefs();
   closeLayer($('#sheetSettings'));
@@ -2668,7 +2688,8 @@ async function submitSetup(e){
   readCarryRows('#suCarryRows', suCarry);
   const rows = suCarry.filter(r => r.hours > 0), carry = rows.reduce((t, r) => t + r.hours, 0);
   if (!(target > 0)){ toast('졸업까지 채울 시간을 입력해 주세요'); return; }
-  const data = Object.assign(defaultSettings(), { name:$('#suName').value.trim().slice(0, 20), target:Math.round(target * 10) / 10 });
+  const data = Object.assign(defaultSettings(), { name:$('#suName').value.trim().slice(0, 20), target });
+  resolveNewCats(rows, data.categories);
   await Store.exec({ t:'settings', data });
   if (carry > 0){
     const after = await pourCarries(rows);
@@ -2717,14 +2738,13 @@ function wire(){
   document.addEventListener('input', e => { const w = e.target.closest && e.target.closest('.min-in'); if (w) refreshHM(w.parentElement); });
   const onCatChip = e => {
     const c = e.target.closest('.chip'); if (!c) return;
-    if (c.dataset.add){ catAddParent = c.dataset.add; $('#catAddRow').hidden = false; $('#catAddName').focus(); return; }
     pickedCat = pickCat(pickedCat, c.dataset.cat, derive(Store.view())); renderCatChips();
   };
   $('#catChips').addEventListener('click', onCatChip); $('#subChips').addEventListener('click', onCatChip);
   const doAddCat = async () => {
     const name = $('#catAddName').value.trim().slice(0, 20); if (!name){ $('#catAddName').focus(); return; }
     const id = await addCategory(name, catAddParent); if (!id) return;
-    pickedCat = id; $('#catAddName').value = ''; $('#catAddRow').hidden = true; renderCatChips(); toast(`'${name}' 구분을 만들었어요`);
+    pickedCat = id; $('#catAddName').value = ''; renderCatChips(); toast(`'${name}' 구분을 만들었어요`);
   };
   $('#btnCatAdd').addEventListener('click', doAddCat);
   $('#catAddName').addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); doAddCat(); } });
@@ -2734,6 +2754,8 @@ function wire(){
   $('#btnSetCarryAdd').addEventListener('click', () => { readCatRows(); readCarryRows('#setCarryRows', carryDraft); carryDraft.push({ cat:'', hours:0 }); $('#setCarryRows').innerHTML = carryRowsHTML(carryDraft, catDraft); updateCarrySum(); });
   $('#setCarryRows').addEventListener('click', e => { const d = e.target.closest('.crDel'); if (!d) return; readCatRows(); readCarryRows('#setCarryRows', carryDraft); carryDraft.splice(Number(d.closest('.carry-row').dataset.i), 1); $('#setCarryRows').innerHTML = carryRowsHTML(carryDraft, catDraft); updateCarrySum(); });
   $('#setCarryRows').addEventListener('input', () => { readCarryRows('#setCarryRows', carryDraft); updateCarrySum(); });
+  $('#setCarryRows').addEventListener('change', e => { if (!e.target.classList.contains('crCat')) return; readCarryRows('#setCarryRows', carryDraft); $('#setCarryRows').innerHTML = carryRowsHTML(carryDraft, catDraft); refreshHM($('#setCarryRows')); const n = $('#setCarryRows .crNew'); if (n && !n.value) n.focus(); });
+  $('#suCarryRows').addEventListener('change', e => { if (!e.target.classList.contains('crCat')) return; readCarryRows('#suCarryRows', suCarry); renderSuCarry(); const n = $('#suCarryRows .crNew'); if (n && !n.value) n.focus(); });
   $('#btnDelSession').addEventListener('click', async () => {
     const x = S.sessions.find(s => s.id === editingId); if (!x) return;
     if (!(await confirmBox('이 기록을 지울까요?', `${korDate(x.date)} · ${fmtDur(Number(x.hours))} 기록이 지워지고, 그만큼 구슬이 병에서 빠져요.`))) return;
@@ -3205,7 +3227,7 @@ function pbarHTML(done, expected, goal, thin){
 
 function quickRecord(date, c){
   const p = c.place;
-  openSession(null, { date, hours:c.dur || 3, placeId:p ? p.id : '', place:p ? p.name : (c.sc.placeName || ''), cat:c.sc.cat || '', schedId:c.id });
+  openSession(null, { date, hours:c.dur || 50 / 60, placeId:p ? p.id : '', place:p ? p.name : (c.sc.placeName || ''), cat:c.sc.cat || '', schedId:c.id });
 }
 async function skipDate(date, id){
   const sc = Store.view().schedules.find(x => x.id === id); if (!sc) return;
@@ -3288,6 +3310,7 @@ function renderTodayBanner(has){
 }
 
 /* ---- class editor ---- */
+let scAddParent = '';
 let scEdit = null, scDays = [], scPlace = '', scCat = '', scSkip = new Set(), scExtra = new Set();
 const readMin = id => (parseInt($(id).value, 10) || 0) / 60;
 const writeMin = (id, hours) => { const t = Math.round((Number(hours) || 0) * 60); $(id).value = t || ''; };
@@ -3299,8 +3322,10 @@ function renderScChips(){
   $('#scPlaceChips').innerHTML = d.places.map(p => `<button type="button" class="chip" data-pid="${esc(p.id)}" aria-pressed="${p.id === scPlace}">${esc(p.name)}</button>`).join('') + '<button type="button" class="chip add" data-pid="+">+ 지도에서 추가</button>';
   $('#scDays').innerHTML = DAY_ORDER.map(dd => `<button type="button" class="chip" data-day="${dd}" aria-pressed="${scDays.includes(dd)}">${DAY_KO[dd]}</button>`).join('');
   $('#scCatField').hidden = !d.cats.length;
-  const h = catChips(scCat, d, true);
+  const h = catChips(scCat, d, false), top = d.topOf(scCat);
   $('#scCats').innerHTML = h.tops; $('#scSubs').innerHTML = h.subs;
+  scAddParent = top ? top.id : ''; $('#scCatAddRow').hidden = !top;
+  if (top) $('#scCatAddName').placeholder = `${String(top.name).replace(/\s*실습$/, '')} 세부 구분 직접 입력 (예: 복지관)`;
   const s = $('#scStart').value, e = $('#scEnd').value, mins = D.toMin(e) - D.toMin(s);
   $('#scDurHint').textContent = s && e ? (mins > 0 ? `수업 ${mins}분 (${fmtHM(mins / 60)})` : '끝나는 시간이 시작 시간보다 늦어야 해요') : '';
   $('#scPer').placeholder = mins > 0 ? String(mins) : '50';
@@ -3337,7 +3362,7 @@ function openSched(id){
   scCat = x ? x.cat || '' : '';
   scSkip = new Set(x && Array.isArray(x.skip) ? x.skip : []); scExtra = new Set(x && Array.isArray(x.extra) ? x.extra : []);
   $('#schedTitle').textContent = x ? '수업 고치기' : '수업 추가';
-  $('#scCatAddRow').hidden = true; $('#scCatAddName').value = '';
+  $('#scCatAddName').value = '';
   $('#scName').value = x ? x.name || '' : '';
   writeMin('#scTarget', x ? x.target : 0); writeMin('#scBefore', x ? x.doneBefore : 0); $('#scPer').value = x && Number(x.perMin) > 0 ? x.perMin : (x ? '' : 50);
   $('#scStart').value = x ? x.start : '14:00'; $('#scEnd').value = x ? x.end : '17:00';
@@ -3352,6 +3377,7 @@ function openSched(id){
 async function saveSched(e){
   e.preventDefault();
   const err = $('#scErr'), start = $('#scStart').value, end = $('#scEnd').value, from = $('#scFrom').value, until = $('#scUntil').value;
+  const typed = await takeTypedCat($('#scCatAddName'), scAddParent); if (typed) scCat = typed;
   const target = readMin('#scTarget'), before = readMin('#scBefore'), d = derive(Store.view()), per = parseInt($('#scPer').value, 10) || 0;
   const fail = (msg, el) => { err.textContent = msg; if (el) el.focus({ preventScroll:false }); };
   if (!(target > 0)) return fail('이 수업의 목표를 분으로 적어 주세요.', $('#scTarget'));
@@ -3518,16 +3544,14 @@ function wireSched(){
     scPlace = scPlace === c.dataset.pid ? '' : c.dataset.pid; renderScChips();
   });
   $('#scDays').addEventListener('click', e => { const c = e.target.closest('[data-day]'); if (!c) return; const d = Number(c.dataset.day); scDays = scDays.includes(d) ? scDays.filter(x => x !== d) : scDays.concat(d); renderScChips(); });
-  let scAddParent = '';
   $('#scCatField').addEventListener('click', e => {
     const a = e.target.closest('[data-add]');
-    if (a){ scAddParent = a.dataset.add; $('#scCatAddRow').hidden = false; $('#scCatAddName').focus(); return; }
     const c = e.target.closest('[data-cat]'); if (!c) return; scCat = pickCat(scCat, c.dataset.cat, derive(Store.view())); renderScChips();
   });
   const doScAdd = async () => {
     const name = $('#scCatAddName').value.trim().slice(0, 20); if (!name){ $('#scCatAddName').focus(); return; }
     const id = await addCategory(name, scAddParent); if (!id) return;
-    scCat = id; $('#scCatAddName').value = ''; $('#scCatAddRow').hidden = true; renderScChips(); toast(`'${name}' 구분을 만들었어요`);
+    scCat = id; $('#scCatAddName').value = ''; renderScChips(); toast(`'${name}' 구분을 만들었어요`);
   };
   $('#btnScCatAdd').addEventListener('click', doScAdd);
   $('#scCatAddName').addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); doScAdd(); } });
@@ -3583,7 +3607,7 @@ render();
 installHint();
 Store.init().then(() => { scheduleRender(); setTimeout(() => runMissions(false), 1200); setTimeout(() => Router.fill(), 2500); });
 if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js', { updateViaCache:'none' }).catch(() => {});
-const APP_VERSION = '20261007220122';
+const APP_VERSION = '20261007220734';
 let updating = false;
 async function checkUpdate(){
   if (updating || location.protocol !== 'https:') return;
