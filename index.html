@@ -770,7 +770,7 @@ legend{font-size:13px;font-weight:600;color:var(--ink-2);padding:0;margin-bottom
       <div class="chips" id="durChips"></div>
     </div>
     <div class="field" id="catField"><span class="lbl">구분</span><div class="chips" id="catChips"></div><div class="chips sub" id="subChips"></div>
-      <div class="cat-add" id="catAddRow" hidden><input id="catAddName" maxlength="20" placeholder="새 구분 이름 (예: 복지관)" aria-label="새 구분 이름"><button type="button" class="btn-ghost" id="btnCatAdd">추가</button></div></div>
+      <div class="cat-add" id="catAddRow" hidden><input id="catAddName" maxlength="20" placeholder="예: 복지관, 병원, 특수학교" aria-label="새 구분 이름"><button type="button" class="btn-ghost" id="btnCatAdd">추가</button></div></div>
     <div class="field"><span class="lbl">기관</span><div class="chips" id="placeChips"></div><input id="fPlace" list="placeList" maxlength="40" placeholder="지도에 없는 곳은 이름만 적어도 돼요" aria-label="기관 이름"><datalist id="placeList"></datalist></div>
     <label class="field"><span>오늘의 한 줄 (선택)</span><textarea id="fMemo" rows="2" maxlength="300" placeholder="기억하고 싶은 장면이나 배운 점"></textarea></label>
     <p class="hint" id="sessErr" role="alert"></p>
@@ -868,7 +868,8 @@ legend{font-size:13px;font-weight:600;color:var(--ink-2);padding:0;margin-bottom
       <div class="dur"><input id="scTH" type="number" inputmode="numeric" min="0" max="999" step="1" placeholder="30" aria-label="목표 시간"><span>시간</span><input id="scTM" type="number" inputmode="numeric" min="0" max="59" step="1" placeholder="0" aria-label="목표 분"><span>분</span></div>
     </div>
     <div class="field"><span class="lbl">장소</span><div class="chips" id="scPlaceChips"></div></div>
-    <div class="field" id="scCatField"><span class="lbl">구분</span><div class="chips" id="scCats"></div><div class="chips sub" id="scSubs"></div></div>
+    <div class="field" id="scCatField"><span class="lbl">구분</span><div class="chips" id="scCats"></div><div class="chips sub" id="scSubs"></div>
+      <div class="cat-add" id="scCatAddRow" hidden><input id="scCatAddName" maxlength="20" placeholder="예: 복지관, 병원, 특수학교" aria-label="새 세부 구분 이름"><button type="button" class="btn-ghost" id="btnScCatAdd">추가</button></div></div>
     <div class="field"><span class="lbl">가는 요일</span><div class="chips days" id="scDays"></div></div>
     <div class="field"><span class="lbl">시간</span><div class="dur"><input id="scStart" type="time" value="14:00" aria-label="시작 시간"><span>부터</span><input id="scEnd" type="time" value="17:00" aria-label="끝나는 시간"><span>까지</span></div><p class="hint" id="scDurHint"></p></div>
     <div class="field"><span class="lbl">기간</span><div class="dur"><input id="scFrom" type="date" aria-label="첫 수업 날"><span>부터</span><input id="scUntil" type="date" aria-label="마지막 수업 날"><span>까지</span></div></div>
@@ -2223,7 +2224,7 @@ function catChips(sel, d, withAdd){
   return {
     tops: d.cats.map(c => `<button type="button" class="chip" data-cat="${esc(c.id)}" aria-pressed="${!!top && top.id === c.id}">${esc(c.name)}</button>`).join(''),
     subs: top ? subs.map(c => `<button type="button" class="chip" data-cat="${esc(c.id)}" aria-pressed="${c.id === sel}">${esc(c.name)}</button>`).join('')
-      + (withAdd ? `<button type="button" class="chip add" data-add="${esc(top.id)}">+ ${esc(shortName(top.name))} 구분 추가</button>` : '') : '',
+      + (withAdd ? `<button type="button" class="chip add" data-add="${esc(top.id)}">+ ${esc(shortName(top.name))} 직접 입력</button>` : '') : '',
   };
 }
 function pickCat(cur, id, d){
@@ -3283,7 +3284,7 @@ function renderScChips(){
   $('#scPlaceChips').innerHTML = d.places.map(p => `<button type="button" class="chip" data-pid="${esc(p.id)}" aria-pressed="${p.id === scPlace}">${esc(p.name)}</button>`).join('') + '<button type="button" class="chip add" data-pid="+">+ 지도에서 추가</button>';
   $('#scDays').innerHTML = DAY_ORDER.map(dd => `<button type="button" class="chip" data-day="${dd}" aria-pressed="${scDays.includes(dd)}">${DAY_KO[dd]}</button>`).join('');
   $('#scCatField').hidden = !d.cats.length;
-  const h = catChips(scCat, d, false);
+  const h = catChips(scCat, d, true);
   $('#scCats').innerHTML = h.tops; $('#scSubs').innerHTML = h.subs;
   const s = $('#scStart').value, e = $('#scEnd').value, mins = D.toMin(e) - D.toMin(s);
   $('#scDurHint').textContent = s && e ? (mins > 0 ? `한 번에 ${fmtDur(mins / 60)}` : '끝나는 시간이 시작 시간보다 늦어야 해요') : '';
@@ -3320,6 +3321,7 @@ function openSched(id){
   scCat = x ? x.cat || '' : '';
   scSkip = new Set(x && Array.isArray(x.skip) ? x.skip : []); scExtra = new Set(x && Array.isArray(x.extra) ? x.extra : []);
   $('#schedTitle').textContent = x ? '수업 고치기' : '수업 추가';
+  $('#scCatAddRow').hidden = true; $('#scCatAddName').value = '';
   $('#scName').value = x ? x.name || '' : '';
   writeHM('#scTH', '#scTM', x ? x.target : 0); writeHM('#scBH', '#scBM', x ? x.doneBefore : 0);
   $('#scStart').value = x ? x.start : '14:00'; $('#scEnd').value = x ? x.end : '17:00';
@@ -3500,7 +3502,19 @@ function wireSched(){
     scPlace = scPlace === c.dataset.pid ? '' : c.dataset.pid; renderScChips();
   });
   $('#scDays').addEventListener('click', e => { const c = e.target.closest('[data-day]'); if (!c) return; const d = Number(c.dataset.day); scDays = scDays.includes(d) ? scDays.filter(x => x !== d) : scDays.concat(d); renderScChips(); });
-  $('#scCatField').addEventListener('click', e => { const c = e.target.closest('[data-cat]'); if (!c) return; scCat = pickCat(scCat, c.dataset.cat, derive(Store.view())); renderScChips(); });
+  let scAddParent = '';
+  $('#scCatField').addEventListener('click', e => {
+    const a = e.target.closest('[data-add]');
+    if (a){ scAddParent = a.dataset.add; $('#scCatAddRow').hidden = false; $('#scCatAddName').focus(); return; }
+    const c = e.target.closest('[data-cat]'); if (!c) return; scCat = pickCat(scCat, c.dataset.cat, derive(Store.view())); renderScChips();
+  });
+  const doScAdd = async () => {
+    const name = $('#scCatAddName').value.trim().slice(0, 20); if (!name){ $('#scCatAddName').focus(); return; }
+    const id = await addCategory(name, scAddParent); if (!id) return;
+    scCat = id; $('#scCatAddName').value = ''; $('#scCatAddRow').hidden = true; renderScChips(); toast(`'${name}' 구분을 만들었어요`);
+  };
+  $('#btnScCatAdd').addEventListener('click', doScAdd);
+  $('#scCatAddName').addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); doScAdd(); } });
   ['#scStart', '#scEnd'].forEach(id => $(id).addEventListener('input', renderScChips));
   ['#scFrom', '#scUntil'].forEach(id => $(id).addEventListener('change', () => renderScDates()));
   ['#scTH', '#scTM', '#scBH', '#scBM'].forEach(id => $(id).addEventListener('input', () => renderScDates()));
@@ -3553,7 +3567,7 @@ render();
 installHint();
 Store.init().then(() => { scheduleRender(); setTimeout(() => runMissions(false), 1200); setTimeout(() => Router.fill(), 2500); });
 if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js', { updateViaCache:'none' }).catch(() => {});
-const APP_VERSION = '20261007215125';
+const APP_VERSION = '20261007215418';
 let updating = false;
 async function checkUpdate(){
   if (updating || location.protocol !== 'https:') return;
