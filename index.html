@@ -527,6 +527,18 @@ legend{font-size:13px;font-weight:600;color:var(--ink-2);padding:0;margin-bottom
 .cat-pills{display:flex;flex-wrap:wrap;gap:6px}
 .cat-pills span{font-size:12px;padding:4px 10px;border-radius:999px;background:var(--sheet);border:1px solid var(--rule);color:var(--ink-2)}
 .cat-pills b{color:var(--ink);margin-right:3px}
+.pbars{display:grid;gap:10px}
+.pb-row{appearance:none;width:100%;text-align:left;display:grid;gap:8px;padding:14px 14px 12px;border-radius:18px;border:1px solid var(--rule);background:var(--sheet);box-shadow:var(--shadow);cursor:pointer;animation:rise .45s var(--ease-out) both;animation-delay:calc(var(--i,0) * 60ms)}
+.pb-row.ended{opacity:.6}
+.pb-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.pb-top b{font-size:16px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pb-val{flex:none;font-size:14px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pb-val em{font-style:normal;font-weight:500;color:var(--ink-3)}
+.pb-val .mm{display:none}
+.pb-track{position:relative;height:22px;border-radius:999px;background:var(--meter-track);overflow:hidden}
+.pb-track i{position:absolute;inset:0 auto 0 0;border-radius:999px;background:linear-gradient(90deg,color-mix(in srgb,var(--c) 75%,#000 0%),var(--c));transition:width .9s var(--ease-out)}
+.pb-pct{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:12px;font-weight:700;color:var(--ink-2)}
+.pb-sub{font-size:12.5px;color:var(--ink-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .cc-note{font-size:12.5px;color:var(--ink-2);background:var(--sheet-2);border-radius:10px;padding:7px 10px;line-height:1.45}
 .no-class{display:grid;gap:10px;padding:12px 14px;border-radius:14px;border:1px dashed color-mix(in srgb,var(--board) 45%,var(--rule-strong));background:color-mix(in srgb,var(--board) 6%,var(--sheet));font-size:13.5px;color:var(--ink-2);line-height:1.5}
 .no-class .btn-ghost{justify-self:start;min-height:40px;padding:8px 14px}
@@ -3359,48 +3371,19 @@ function renderSched(){
   $('#schedBlock').hidden = !has;
   renderTodayBanner(has);
   if (!has) return;
-  const active = D.classes.filter(c => !c.ended), ended = D.classes.filter(c => c.ended);
-  $('#schedSub').textContent = D.classes.length ? `진행 중 ${active.length}개` + (ended.length ? ` · 끝남 ${ended.length}개` : '') : '';
-  // the overall goal in plain words
-  const pc = $('#projCard');
-  pc.hidden = false;
-  {
-    const left = Math.max(0, D.target - D.total);
-    let say;
-    if (left <= 0) say = `<b>${dm((D.target))}</b>을 모두 채웠어요. 축하해요!`;
-    else if (!D.planHours) say = `아직 <b>${dm((left))}</b> 더 채워야 해요.<br>다닐 실습을 등록하면 언제쯤 다 채우는지 알려 줘요.`;
-    else if (D.projDate) say = `아직 <b>${dm((left))}</b> 남았어요.<br>등록한 실습을 일정대로 다니면 <b>${esc(korDateY(D.projDate))}</b>에 다 채워요.`;
-    else say = `아직 <b>${dm((left))}</b> 남았어요.<br>등록한 실습을 다 다녀도 <b class="warn-t">${dm((D.target - D.projTotal))}</b>이 더 필요해요. 실습을 더 등록해야 해요.`;
-    const cats = D.cats.filter(c => Number(c.target) > 0).map(c => { const h = D.catTotals.get(c.id) || 0; return `<span><b>${esc(String(c.name).replace(/\s*실습$/, ''))}</b> ${dm((h))} / ${dm((Number(c.target)))}</span>`; }).join('');
-    pc.innerHTML = `<div class="proj-top"><p class="eyebrow">졸업까지 ${esc(fmtHM(D.target))}</p><span class="st">${pctInt(D)}% 채움</span></div>`
-      + pbarHTML(D.total, D.projTotal, D.target)
-      + `<div class="legend"><span><i></i>채운 시간</span>${D.planHours > 0 ? '<span><i class="p"></i>등록한 실습을 다 가면</span>' : ''}</div>`
-      + `<p class="proj-note">${say}</p>` + (cats ? `<div class="cat-pills">${cats}</div>` : '');
-  }
-  // practicum cards
-  $('#schedList').innerHTML = active.length ? active.map((c, i) => {
-    const st = classStatus(c), col = classColor(c), place = c.place ? c.place.name : (c.sc.placeName || ''), cat = D.catLabel(c.sc.cat);
-    const pct = c.target > 0 ? Math.min(100, Math.floor(c.done / c.target * 100)) : 0;
-    const note = c.openEnded ? '끝나는 날을 정해 주세요. 눌러서 고칠 수 있어요.'
-      : c.target > 0 && !c.reached && !c.willReach ? `일정대로 다 가도 목표보다 ${dm((c.short))} 적어요. 날짜를 더 넣거나 목표를 확인해 주세요.` : '';
-    const miss = D.missed.filter(m => m.c.id === c.id);
-    let foot = '';
-    if (c.todayState === 'due' || c.todayState === 'now' || c.todayState === 'soon') foot = `<div class="cc-foot due"><span><b>오늘</b> 가는 날이에요</span><button type="button" class="mini-btn" data-quick="${esc(D.today)}|${esc(c.id)}">${c.durMin}분 기록</button></div>`;
-    else if (miss.length) foot = `<div class="cc-foot due"><span><b>${esc(mdw(miss[0].date))}</b> 기록을 안 했어요</span><button type="button" class="mini-btn" data-quick="${esc(miss[0].date)}|${esc(c.id)}">기록</button></div>`;
-    else if (c.next) foot = `<div class="cc-foot"><span>다음에 가는 날 <b>${esc(mdw(c.next))}</b></span>${c.todayState === 'done' ? '<span class="st">오늘 기록 완료</span>' : ''}</div>`;
-    return `<article class="class-card" style="--c:${col};--i:${i}"><button type="button" class="cc-main" data-sched="${esc(c.id)}" aria-label="${esc(c.name)} 고치기">`
-      + `<span class="cc-head"><span class="dot" aria-hidden="true"></span><b>${esc(c.name)}</b><span class="st ${st.k}">${esc(st.t)}</span></span>`
-      + `<span class="cc-sub">${[cat, place].filter(Boolean).map(esc).join(' · ')}${cat || place ? ' · ' : ''}${esc(classWhen(c))}</span>`
-      + `<span class="cc-nums"><span><b>${durHTML(c.done)}</b> 채움 / 목표 ${c.target > 0 ? dm((c.target)) : '-'}</span><span>${pct}%</span></span>`
-      + pbarHTML(c.done, c.done, c.target)
-      + (note ? `<span class="cc-note">${note}</span>` : '')
-      + `</button>${foot}</article>`;
-  }).join('') : `<div class="empty"><b>먼저 다닐 실습을 등록해 주세요.</b><br>기간, 요일, 한 번에 몇 분인지만 넣으면<br>갈 때마다 고르기만 하면 기록돼요.</div>`;
-  $('#endedWrap').innerHTML = ended.length ? `<details class="ended"><summary>끝난 실습 ${ended.length}개</summary>${ended.map(c => {
-    const st = classStatus(c);
-    return `<button type="button" class="ended-row" data-sched="${esc(c.id)}"><b>${esc(c.name)}</b><span class="st ${st.k === 'warn' ? 'warn' : ''}">${c.target > 0 ? (c.reached ? '달성' : `${esc(fmtHM(c.target - c.done))} 모자람`) : ''}</span><small>${dm((c.done))}${c.target > 0 ? ` / ${dm((c.target))}` : ''} · 기록 ${c.count}회${c.last ? ` · ${esc(md(c.last))} 끝` : ''}</small></button>`;
-  }).join('')}</details>` : '';
-  $('#btnCal').hidden = !D.classes.some(c => c.remain.length);
+  $('#projCard').hidden = true; $('#endedWrap').innerHTML = ''; $('#btnCal').hidden = true;
+  $('#schedSub').textContent = D.classes.length ? `${D.classes.length}개` : '';
+  // one plain bar per practicum: filled minutes against its target
+  const list = D.classes.filter(c => !c.ended).concat(D.classes.filter(c => c.ended));
+  $('#schedList').innerHTML = list.length ? `<div class="pbars">${list.map((c, i) => {
+    const goal = c.target > 0 ? c.target : c.planned, pct = goal > 0 ? Math.min(100, c.done / goal * 100) : 0;
+    const gone = c.count + (c.durMin > 0 ? Math.round(c.before * 60 / c.durMin) : 0);
+    const sub = [D.catLabel(c.sc.cat).replace(/^(\S+)\s*실습(?= ·|$)/, '$1'), c.sc.days.length ? `매주 ${daysLabel(c.sc.days)}` : '', `${c.durMin}분씩`, c.ended ? '끝남' : `${gone}번 감 · ${c.remain.length}번 남음`].filter(Boolean).join(' · ');
+    return `<button type="button" class="pb-row${c.ended ? ' ended' : ''}" data-sched="${esc(c.id)}" style="--c:${classColor(c)};--i:${i}" aria-label="${esc(c.name)} 고치기">`
+      + `<span class="pb-top"><b>${esc(c.name)}</b><span class="pb-val">${dm((c.done))} <em>/ ${dm((goal))}</em></span></span>`
+      + `<span class="pb-track"><i style="width:${pct.toFixed(1)}%"></i><span class="pb-pct">${Math.floor(pct)}%</span></span>`
+      + `<span class="pb-sub">${esc(sub)}</span></button>`;
+  }).join('')}</div>` : `<div class="empty"><b>먼저 다닐 실습을 등록해 주세요.</b><br>기간, 요일, 한 번에 몇 분인지만 넣으면<br>갈 때마다 고르기만 하면 기록돼요.</div>`;
 }
 function renderTodayBanner(has){
   const tb = $('#todayBanner');
@@ -3767,7 +3750,7 @@ render();
 installHint();
 Store.init().then(() => { scheduleRender(); setTimeout(() => runMissions(false), 1200); setTimeout(() => Router.fill(), 2500); });
 if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js', { updateViaCache:'none' }).catch(() => {});
-const APP_VERSION = '20261007224458';
+const APP_VERSION = '20261008105548';
 let updating = false;
 async function checkUpdate(){
   if (updating || location.protocol !== 'https:') return;
